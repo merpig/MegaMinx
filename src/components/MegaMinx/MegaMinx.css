@@ -1,0 +1,9 @@
+.canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+    background: radial-gradient(#343a40, #000000);
+}

@@ -1,0 +1,139 @@
+.dropdown{
+    float: right!important;
+}
+
+.navbar{
+    background-color:rgba(0,0,255,.3);
+    padding: 1rem 1rem;
+    height: 40px;
+}
+
+.cubes{
+    margin-right: 5px;
+}
+
+.cubesDropdown,.settingsDropDown{
+    display: inline-block;
+}
+
+.settingsDropDown{
+    float: right;
+    margin-right: 4px;
+}
+
+.cubesDropdown > .cubes > .dropdown-menu{
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 0px;
+}
+
+.cubesDropdown > .cubes > .dropdown-menu,.settingsDropDown > .settings > .dropdown-menu{
+    height: 100%;
+    min-height: 30vh;
+    color: #343a40!important;
+    border: 2px solid rgb(52, 58, 64);
+    overflow-y: scroll;
+    border: 2px solid rgb(52, 58, 64);
+    border-radius: .25rem;
+    background-color: transparent;
+}
+
+.cubesDropdown > .cubes > .dropdown-menu > .dropdown-item{
+    width: 100%;
+    color: #007bff;
+    border: none;
+    /* border-bottom: 1px solid grey; */
+    transition: all .4s;
+    background: rgba(0, 0, 0, .9);
+    border-radius: .25rem;
+    margin-bottom: 8px;
+}
+
+.checkbox-inline{
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.cubesDropdown > .cubes > .dropdown-menu > .dropdown-item:active{
+    opacity: 80%;
+}
+
+.cubesDropdown > .cubes > .dropdown-menu > .dropdown-item:hover{
+    background-color: rgba(100, 100, 100,.5);
+}
+
+.settingsDropDown > .settings > .dropdown-menu > ul{
+    padding-left: 8px;
+}
+
+.settingsDropDownItem{
+    width: 100%;
+    color: #007bff;
+    transition: all .4s;
+    background: rgba(0, 0, 0, .9);
+    border-radius: .25rem;
+    list-style-type: none;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    margin-bottom: 8px;
+    pointer-events: visible;
+}
+
+.nav {
+    padding-left: 0;
+    margin: 0;
+}
+
+.nav-item{
+    list-style-type: none;
+}
+
+.navbar-brand{
+    position: relative;
+    float: left;
+    font-size: 2rem;
+    margin-top: 0;
+}
+
+.navbar-brand,.settings,.cubes{
+    margin-bottom: 0px;
+    height: 100%;
+}
+
+.settingsDropDown,.cubesDropdown{
+    display: flex;
+    align-items: center;
+    float: left;
+    margin-left: 8px;
+}
+
+#infoBtn,#fullscreenBtn,.settings > button,.cubes > button{
+    height: 40px;
+    border: 2px solid blue;
+    border-radius: .25rem;
+    transition: background-color .4s ease;
+    background-color:transparent;
+    color: lightgray;
+}
+
+#infoBtn:hover,#fullscreenBtn:hover,.settings > button:hover,.cubes > button:hover{
+    background-color: blue;
+    border: 2px solid blue;
+}
+
+#closeBtn{
+    border-radius:50%;
+    -moz-border-radius:50%;
+    -webkit-border-radius:50%;
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid #007bff;
+    pointer-events: auto;
+}
+
+#closeBtn:hover{
+    border-color: #007bff!important;
+    background-color: rgba(100, 100, 100,.5);
+}
