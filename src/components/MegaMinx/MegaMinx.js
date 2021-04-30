@@ -59,7 +59,10 @@ const MegaMinx = () => {
             }, false
         );
 
-        function pentagonMesh(n,translate,rotate,color)
+        let testPiece = [];
+        let testEdges = [];
+
+        function pentagonMesh(n,translate,rotate,color,i)
         {
             let pentagonMesh,pentagonMesh2;
             const lineWidth = .97;
@@ -92,13 +95,13 @@ const MegaMinx = () => {
         
             const material = new THREE.MeshBasicMaterial({
               color: "black",
-              side: THREE.FrontSide,
-              depthWrite: false,
+              side: THREE.DoubleSide,
+              depthWrite: true,
             });
             const material2 = new THREE.MeshBasicMaterial({
                 color: color,
                 side: THREE.FrontSide,
-                depthWrite: false,
+                depthWrite: true,
               });
         
             pentagonMesh = new THREE.Mesh(geometry,material);
@@ -117,7 +120,9 @@ const MegaMinx = () => {
             pentagonMesh.translateZ(-translate?.y/2+.21||0)
             pentagonMesh.translateY(translate?.y/2-.83||0)
 
-            pentagonMesh2.translateZ(translate?.z||0)
+            i<6?
+                pentagonMesh2.translateZ(translate?.z+.01||0):
+                pentagonMesh2.translateZ(translate?.z-.01||0)
 
             pentagonMesh2.rotateZ(rotate?.z||0)
             pentagonMesh2.rotateY(rotate?.y||0)
@@ -131,11 +136,14 @@ const MegaMinx = () => {
             pentagonMesh2.translateY(translate?.y/2-.83||0)
             
 
-            //pentagonMesh.rotateX(1.5)
+
             scene.add(pentagonMesh,pentagonMesh2);
+            if(i===0){
+                testPiece.push(pentagonMesh,pentagonMesh2);
+            }
         }
 
-        function squareMesh (n,position,position2,translate,rotate,color)
+        function squareMesh (n,position,position2,translate,rotate,color,i,piece)
         {
             const square = new THREE.Shape();
             const square2 = new THREE.Shape();
@@ -156,13 +164,13 @@ const MegaMinx = () => {
 
             const material = new THREE.MeshBasicMaterial({
                 color: "black",
-                side: THREE.FrontSide,
-                depthWrite: false
+                side: THREE.DoubleSide,
+                depthWrite: true
             });
             const material2 = new THREE.MeshBasicMaterial({
-                color: color,
+                color: i===1&&piece===3?color:color,
                 side: THREE.FrontSide,
-                depthWrite: false
+                depthWrite: true
             });
 
             let squareMesh = new THREE.Mesh(geometry,material);
@@ -183,7 +191,9 @@ const MegaMinx = () => {
             squareMesh.translateZ(-translate?.y/2+.21||0)
             squareMesh.translateY(translate?.y/2-.83||0)
 
-            squareMesh2.translateZ(translate?.z||0)
+            i<6?
+                squareMesh2.translateZ(translate?.z+.01||0):
+                squareMesh2.translateZ(translate?.z-.01||0)
 
             squareMesh2.rotateZ(rotate?.z||0)
             squareMesh2.rotateY(rotate?.y||0)
@@ -198,6 +208,15 @@ const MegaMinx = () => {
             
 
             scene.add(squareMesh,squareMesh2);
+            if(i===0){
+                //scene.add(squareMesh,squareMesh2);
+                testPiece.push(squareMesh,squareMesh2);
+            }
+                
+            if(i>0&&i<6&&(piece===3||piece===4||piece===8)){
+                //scene.add(squareMesh,squareMesh2);
+                testEdges.push({object:squareMesh,face:i},{object:squareMesh2,face:i});
+            }
             
         }
 
@@ -270,31 +289,50 @@ const MegaMinx = () => {
             "white"
         ]
         
-        function decaFace(n,translate,rotate,color){
+        function decaFace(n,translate,rotate,color,i){
             
             // Place holder until middle edges are completed
             //pentagonMesh(n*2.25,"orange",translate,rotate);
 
-            pentagonMesh(n,translate,rotate,color);
+            pentagonMesh(n,translate,rotate,color,i);
 
-            squareMesh(n,Corner(n,"face1","corner1"),Corner(n,"face1","corner1",1),translate,rotate,color);
-            squareMesh(n,Corner(n,"face1","corner2"),Corner(n,"face1","corner2",1),translate,rotate,color);
-            squareMesh(n,Corner(n,"face1","corner3"),Corner(n,"face1","corner3",1),translate,rotate,color);
-            squareMesh(n,Corner(n,"face1","corner4"),Corner(n,"face1","corner4",1),translate,rotate,color);
-            squareMesh(n,Corner(n,"face1","corner5"),Corner(n,"face1","corner5",1),translate,rotate,color);
+            squareMesh(n,Corner(n,"face1","corner1"),Corner(n,"face1","corner1",1),translate,rotate,color,i,1);
+            squareMesh(n,Corner(n,"face1","corner2"),Corner(n,"face1","corner2",1),translate,rotate,color,i,2);
+            squareMesh(n,Corner(n,"face1","corner3"),Corner(n,"face1","corner3",1),translate,rotate,color,i,3);
+            squareMesh(n,Corner(n,"face1","corner4"),Corner(n,"face1","corner4",1),translate,rotate,color,i,4);
+            squareMesh(n,Corner(n,"face1","corner5"),Corner(n,"face1","corner5",1),translate,rotate,color,i,5);
 
-            squareMesh(n,Edge(n,"face1","edge1"),Edge(n,"face1","edge1",1),translate,rotate,color)
-            squareMesh(n,Edge(n,"face1","edge2"),Edge(n,"face1","edge2",1),translate,rotate,color)
-            squareMesh(n,Edge(n,"face1","edge3"),Edge(n,"face1","edge3",1),translate,rotate,color)
-            squareMesh(n,Edge(n,"face1","edge4"),Edge(n,"face1","edge4",1),translate,rotate,color)
-            squareMesh(n,Edge(n,"face1","edge5"),Edge(n,"face1","edge5",1),translate,rotate,color)
+            squareMesh(n,Edge(n,"face1","edge1"),Edge(n,"face1","edge1",1),translate,rotate,color,i,6)
+            squareMesh(n,Edge(n,"face1","edge2"),Edge(n,"face1","edge2",1),translate,rotate,color,i,7)
+            squareMesh(n,Edge(n,"face1","edge3"),Edge(n,"face1","edge3",1),translate,rotate,color,i,8)
+            squareMesh(n,Edge(n,"face1","edge4"),Edge(n,"face1","edge4",1),translate,rotate,color,i,9)
+            squareMesh(n,Edge(n,"face1","edge5"),Edge(n,"face1","edge5",1),translate,rotate,color,i,10)
         }
 
-        facePos.forEach((set,i)=>decaFace(1,set.translate,set.rotate,faceColors[i]));
+        facePos.forEach((set,i)=>decaFace(1,set.translate,set.rotate,faceColors[i],i));
 
         //scene.add( tempCube );
-        
+        let speed = 2;
         let animate = () => {
+
+            testPiece.forEach((piece,i)=>{
+                piece.rotateZ(dToR(speed));
+            })
+            testEdges.forEach((piece)=>{ // needs lots of work
+                let position = piece.object.position;
+                let face = piece.face;
+                
+
+                let xPrime = position.x*Math.cos(dToR(speed)) - position.y*Math.sin(dToR(speed));
+                let yPrime = position.x*Math.sin(dToR(speed)) + position.y*Math.cos(dToR(speed));
+                
+                piece.object.rotateX(-facePos[face].rotate?.x||0)
+                position.x = xPrime;
+                piece.object.rotateZ(dToR(speed));
+                position.y = yPrime;
+                piece.object.rotateX(facePos[face].rotate?.x||0)
+
+            })
 
             requestAnimationFrame( animate );
             controls.update();
