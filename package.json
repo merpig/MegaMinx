@@ -1,5 +1,6 @@
 {
-  "name": "my-app",
+  "homepage": "https://merpig.github.io/MegaMinx/",
+  "name": "megaminx",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
