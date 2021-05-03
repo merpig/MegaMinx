@@ -1,4 +1,4 @@
-import {dToR} from './utils';
+import {dToR,rotate_point} from './utils';
 
 const CornerDimensions = (size,face,corner,offset) =>{
 
@@ -20,6 +20,21 @@ const CornerDimensions = (size,face,corner,offset) =>{
     let x1 = c*Math.sin(dToR(54))
     let y1 = size+halfPoint;
 
+    let [p1x,p1y] = [0, size*ratio];
+    let [p2x,p2y] = [x1,y1];
+    let [p3x,p3y] = rotate_point(x1,y1,-144,{x:0,y:size});
+    let [p4x,p4y] = rotate_point(0,size*ratio,-144,{x:-x1,y:y1});
+
+    let [p1xb,p1yb] = rotate_point(0,0,-72,{x:-x1,y:y1});
+    let [p2xb,p2yb] = rotate_point(0,0,-72,{x:0,y:size*ratio});
+
+    let [holdX1,holdY1] = rotate_point(0,0,-72,{x:x1,y:y1});
+    let [holdX2,holdY2] = rotate_point(0,0,-72,{x:0,y:size});
+
+    let [p3xb,p3yb] = rotate_point(p2xb,p2yb,144,{x:holdX1,y:holdY1});
+    let [p4xb,p4yb] = rotate_point(p1xb,p1yb,144,{x:holdX2,y:holdY2});
+
+
     const faces = {
         face1 : {
             corner1 : {
@@ -29,77 +44,43 @@ const CornerDimensions = (size,face,corner,offset) =>{
                 p4 : [-x1,y1]
             },
             corner2 : {
-                p1 : [
-                        0*Math.cos(dToR(72))-size*ratio*Math.sin(dToR(72)),
-                        size*ratio*Math.cos(dToR(72))+0*Math.sin(dToR(72))
-                    ],
-                p2 : [
-                        x1*Math.cos(dToR(72))-y1*Math.sin(dToR(72)),
-                        y1*Math.cos(dToR(72))+x1*Math.sin(dToR(72))
-                    ],
-                p3 : [
-                        0*Math.cos(dToR(72))-size*Math.sin(dToR(72)),
-                        size*Math.cos(dToR(72))+0*Math.sin(dToR(72))
-                    ],
-                p4 : [
-                        -x1*Math.cos(dToR(72))-y1*Math.sin(dToR(72)),
-                        y1*Math.cos(dToR(72))+-x1*Math.sin(dToR(72))
-                    ]
+                p1 : rotate_point(0,0,-72,{x:0,y:size*ratio}), 
+                p2 : rotate_point(0,0,-72,{x:x1,y:y1}),
+                p3 : rotate_point(0,0,-72,{x:0,y:size}),
+                p4 : rotate_point(0,0,-72,{x:-x1,y:y1})
             },
             corner3 : {
-                p1 : [
-                    0*Math.cos(dToR(72*2))-size*ratio*Math.sin(dToR(72*2)),
-                    size*ratio*Math.cos(dToR(72*2))+0*Math.sin(dToR(72*2))
-                ],
-                p2 : [
-                        x1*Math.cos(dToR(72*2))-y1*Math.sin(dToR(72*2)),
-                        y1*Math.cos(dToR(72*2))+x1*Math.sin(dToR(72*2))
-                    ],
-                p3 : [
-                        0*Math.cos(dToR(72*2))-size*Math.sin(dToR(72*2)),
-                        size*Math.cos(dToR(72*2))+0*Math.sin(dToR(72*2))
-                    ],
-                p4 : [
-                        -x1*Math.cos(dToR(72*2))-y1*Math.sin(dToR(72*2)),
-                        y1*Math.cos(dToR(72*2))+-x1*Math.sin(dToR(72*2))
-                    ]
-                },
+                p1 : rotate_point(0,0,-72*2,{x:0,y:size*ratio}), 
+                p2 : rotate_point(0,0,-72*2,{x:x1,y:y1}),
+                p3 : rotate_point(0,0,-72*2,{x:0,y:size}),
+                p4 : rotate_point(0,0,-72*2,{x:-x1,y:y1})
+            },
             corner4 : {
-                p1 : [
-                    0*Math.cos(dToR(72*3))-size*ratio*Math.sin(dToR(72*3)),
-                    size*ratio*Math.cos(dToR(72*3))+0*Math.sin(dToR(72*3))
-                ],
-                p2 : [
-                        x1*Math.cos(dToR(72*3))-y1*Math.sin(dToR(72*3)),
-                        y1*Math.cos(dToR(72*3))+x1*Math.sin(dToR(72*3))
-                    ],
-                p3 : [
-                        0*Math.cos(dToR(72*3))-size*Math.sin(dToR(72*3)),
-                        size*Math.cos(dToR(72*3))+0*Math.sin(dToR(72*3))
-                    ],
-                p4 : [
-                        -x1*Math.cos(dToR(72*3))-y1*Math.sin(dToR(72*3)),
-                        y1*Math.cos(dToR(72*3))+-x1*Math.sin(dToR(72*3))
-                    ]
-                },
+                p1 : rotate_point(0,0,-72*3,{x:0,y:size*ratio}), 
+                p2 : rotate_point(0,0,-72*3,{x:x1,y:y1}),
+                p3 : rotate_point(0,0,-72*3,{x:0,y:size}),
+                p4 : rotate_point(0,0,-72*3,{x:-x1,y:y1})
+            },
             corner5 : {
-                p1 : [
-                    0*Math.cos(dToR(72*4))-size*ratio*Math.sin(dToR(72*4)),
-                    size*ratio*Math.cos(dToR(72*4))+0*Math.sin(dToR(72*4))
-                ],
-                p2 : [
-                        x1*Math.cos(dToR(72*4))-y1*Math.sin(dToR(72*4)),
-                        y1*Math.cos(dToR(72*4))+x1*Math.sin(dToR(72*4))
-                    ],
-                p3 : [
-                        0*Math.cos(dToR(72*4))-size*Math.sin(dToR(72*4)),
-                        size*Math.cos(dToR(72*4))+0*Math.sin(dToR(72*4))
-                    ],
-                p4 : [
-                        -x1*Math.cos(dToR(72*4))-y1*Math.sin(dToR(72*4)),
-                        y1*Math.cos(dToR(72*4))+-x1*Math.sin(dToR(72*4))
-                    ]
-                },
+                p1 : rotate_point(0,0,-72*4,{x:0,y:size*ratio}), 
+                p2 : rotate_point(0,0,-72*4,{x:x1,y:y1}),
+                p3 : rotate_point(0,0,-72*4,{x:0,y:size}),
+                p4 : rotate_point(0,0,-72*4,{x:-x1,y:y1})
+            },
+        },
+        sides : {
+            side1a : {
+                p1: rotate_point(0,0,36,{x:p1x,y:p1y}),
+                p2: rotate_point(0,0,36,{x:p2x,y:p2y}),
+                p3: rotate_point(0,0,36,{x:p3x,y:p3y}),
+                p4: rotate_point(0,0,36,{x:p4x,y:p4y})
+            },
+            side1b : {
+                p1: rotate_point(0,0,36,{x:p1xb,y:p1yb}),
+                p2: rotate_point(0,0,36,{x:p2xb,y:p2yb}),
+                p3: rotate_point(0,0,36,{x:p3xb,y:p3yb}),
+                p4: rotate_point(0,0,36,{x:p4xb,y:p4yb})
+            },
         }
     }
     return faces[face][corner];
