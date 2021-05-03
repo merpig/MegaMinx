@@ -3,6 +3,7 @@ import * as THREE from "three";
 import {CameraControls, dToR} from "./utils.js";
 import Corner from "./CornerDimensions";
 import Edge from "./EdgeDimensions";
+import swapColors from "./swapColors";
 import "./MegaMinx.css"
 // import MainMenu from "../MainMenu/MainMenu"
 // import SolveMenu from "../SolveMenu/SolveMenu"
@@ -11,9 +12,10 @@ import "./MegaMinx.css"
 
 const MegaMinx = () => {
 
-    const [menuId,setMenuId] = useState(0);
+    //const [menuId,setMenuId] = useState(0);
     let faceToRotate = "face0";
     let moveQueue = [];
+
     Math.csc = function(x) { return 1 / Math.sin(x); }
     
     let scene = new THREE.Scene();
@@ -155,13 +157,35 @@ const MegaMinx = () => {
         const geometry = new THREE.ShapeGeometry(square);
         const geometry2 = new THREE.ShapeGeometry(square2);
 
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (let i = 0; i < 6; i++) {
+              color += letters[Math.floor(Math.random() * 16)];
+            }
+            if(i<1){
+                if(piece===1) return "black"
+                if(piece===2) return "green"
+                if(piece===3) return "blue"
+                if(piece===4) return "white"
+                if(piece===5) return "red"
+
+                if(piece===6) return "black"
+                if(piece===7) return "green"
+                if(piece===8) return "blue"
+                if(piece===9) return "white"
+                if(piece===10) return "red"
+            }
+            return "grey";//color;
+        }
+
         const material = new THREE.MeshBasicMaterial({
             color: "black",
             side: THREE.DoubleSide,
             depthWrite: true
         });
         const material2 = new THREE.MeshBasicMaterial({
-            color: i===1&&piece===3?color:color,
+            color: color,
             side: THREE.FrontSide,
             depthWrite: true
         });
@@ -813,12 +837,144 @@ const MegaMinx = () => {
             "25": {side: 1,pos:  11},
             "27": {side: 2,pos:  5},
             "29": {side: 8,pos:  11},
+        },
+        face7 : { // Light blue
+            "1": {side:10, pos:17},
+            "3": {side:11, pos:17},
+            "5": {side:12, pos:17},
+            "7": {side:8, pos:17},
+            "9": {side:9, pos:17},
+
+            "11": {side:10, pos:9},
+            "13": {side:11, pos:9},
+            "15": {side:12, pos:9},
+            "17": {side:8, pos:9},
+            "19": {side:9, pos:9},
+
+            "21": {side:10, pos:7},
+            "23": {side:11, pos:7},
+            "25": {side:12, pos:7},
+            "27": {side:8, pos:7},
+            "29": {side:9, pos:7}
+        },
+        face8 : {// Brown
+            //center edge
+            "1": {side:2,pos:13},
+            "3": {side:9,pos:19},
+            "5": {side:7,pos:19},
+            "7": {side:12,pos:15},
+            "9": {side:6,pos:21},
+
+            //left edge
+            "11": {side: 2,pos:  5},
+            "13": {side: 9,pos:  11},
+            "15": {side: 7,pos:  11},
+            "17": {side: 12,pos:  7},
+            "19": {side: 6,pos:  3},
+
+            //right edge
+            "21": {side: 2,pos:  3},
+            "23": {side: 9,pos:  9},
+            "25": {side: 7,pos:  9},
+            "27": {side: 12,pos:  5},
+            "29": {side: 6,pos:  11}
+
+        },
+        face9 : { // Light green
+            //center edge
+            "1": {side:3,pos:13},
+            "3": {side:10,pos:19},
+            "5": {side:7,pos:21},
+            "7": {side:8,pos:15},
+            "9": {side:2,pos:21},
+
+            //left edge
+            "11": {side: 3,pos:  5},
+            "13": {side: 10,pos:  11},
+            "15": {side: 7,pos:  3},
+            "17": {side: 8,pos:  7},
+            "19": {side: 2,pos:  3},
+
+            //right edge
+            "21": {side: 3,pos:  3},
+            "23": {side: 10,pos:  9},
+            "25": {side: 7,pos:  11},
+            "27": {side: 8,pos:  5},
+            "29": {side: 2,pos:  11},
+        },
+        face10 : { // Orange
+            //center edge
+            "1": {side:4,pos:13},
+            "3": {side:11,pos:19},
+            "5": {side:7,pos:13},
+            "7": {side:9,pos:15},
+            "9": {side:3,pos:21},
+
+            //left edge
+            "11": {side: 4,pos:  5},
+            "13": {side: 11,pos:  11},
+            "15": {side: 7,pos:  5},
+            "17": {side: 9,pos:  7},
+            "19": {side: 3,pos:  3},
+
+            //right edge
+            "21": {side: 4,pos:  3},
+            "23": {side: 11,pos:  9},
+            "25": {side: 7,pos:  3},
+            "27": {side: 9,pos:  5},
+            "29": {side: 3,pos:  11},
+        },
+        face11 : { // Purple
+            //center edge
+            "1": {side:5,pos:13},
+            "3": {side:12,pos:19},
+            "5": {side:7,pos:15},
+            "7": {side:10,pos:15},
+            "9": {side:4,pos:21},
+
+            //left edge
+            "11": {side: 5,pos:  5},
+            "13": {side: 12,pos:  11},
+            "15": {side: 7,pos:  7},
+            "17": {side: 10,pos:  7},
+            "19": {side: 4,pos:  3},
+
+            //right edge
+            "21": {side: 5,pos:  3},
+            "23": {side: 12,pos:  9},
+            "25": {side: 7,pos:  5},
+            "27": {side: 10,pos:  5},
+            "29": {side: 4,pos:  11},
+        },
+        face12 : { // White
+            //center edge
+            "1": {side:6,pos:13},
+            "3": {side:8,pos:19},
+            "5": {side:7,pos:17},
+            "7": {side:11,pos:15},
+            "9": {side:5,pos:21},
+
+            //left edge
+            "11": {side: 6,pos:  5},
+            "13": {side: 8,pos:  11},
+            "15": {side: 7,pos:  9},
+            "17": {side: 11,pos:  7},
+            "19": {side: 5,pos:  3},
+
+            //right edge
+            "21": {side: 6,pos:  3},
+            "23": {side: 8,pos:  9},
+            "25": {side: 7,pos:  7},
+            "27": {side: 11,pos:  5},
+            "29": {side: 5,pos:  11},
         }
     }
 
-    let speed = -3;
+    let speed = 3;
 
     let counter = 0;
+
+    
 
     let rotateFace = (face) => {
         let tempSpeed = speed;
@@ -835,6 +991,7 @@ const MegaMinx = () => {
 
         // Controls what happens at the end of each turn
         if(Math.abs(counter) >= 72) {
+            // Rotate sides back to original position
             decaObject[face].sides.forEach((piece,i)=>{
                 piece.visible = false;
                 if(i%2){
@@ -858,17 +1015,25 @@ const MegaMinx = () => {
                     piece.translateY(-1)
                 }
             });
+
+            // Rotate face back to original position
             decaObject[face].front.forEach((piece,i)=>{
                 counter<0?
                     piece.rotateZ(dToR(Math.abs(counter))):
                     piece.rotateZ(dToR(Math.abs(counter)*-1));
             });
+
+            // Show face sides
             facesToHide[face].forEach(piece=>{
                 decaObject[`face${piece.face}`].front[piece.pos].visible=true;
             });
+
+            // Move colors around
+            swapColors(face,decaObject,speed);
+
             counter=0;
             faceToRotate="face0"
-            
+            //moveQueue.push(`face${Math.floor(Math.random() * 12)+1}`);
             speed = Math.floor(Math.random() * 2)?speed*-1:speed;
             return;
         }
@@ -929,7 +1094,7 @@ const MegaMinx = () => {
     let animate = () => {
 
         rotateFace(faceToRotate);
-        //if(counter===0) moveQueue.push(`face${Math.floor(Math.random() * 6)+1}`);
+        //if(counter===0) moveQueue.push(`face${Math.floor(Math.random() * 12)+1}`);
 
         requestAnimationFrame( animate );
         controls.update();
@@ -941,18 +1106,17 @@ const MegaMinx = () => {
         document.body.children[1].appendChild( renderer.domElement );
     },50);
 
-    animate()
-    //animate()
+    animate();
 
     let addRandomMove = () => {
         if(counter!==0) return;
-        moveQueue.push(`face${Math.floor(Math.random() * 6)+1}`);
+        moveQueue.push(`face${Math.floor(Math.random() * 6)+7}`);
     }
 
     return (
         <div>
             {
-                <button onClick={()=>addRandomMove()}>Random move (side 1-6)</button>
+                <button onClick={()=>addRandomMove()}>Random move</button>
                 // menuId === 1?<SolveMenu/>:
                 // menuId === 2?<ColorPickerMenu/>:
                 // menuId === 3?<AlgorithmMenu/>:
