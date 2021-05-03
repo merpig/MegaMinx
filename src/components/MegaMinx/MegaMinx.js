@@ -1110,7 +1110,7 @@ const MegaMinx = () => {
 
     let addRandomMove = () => {
         if(counter!==0) return;
-        moveQueue.push(`face${Math.floor(Math.random() * 6)+7}`);
+        moveQueue.push(`face${Math.floor(Math.random() * 12)+1}`);
     }
 
     return (
