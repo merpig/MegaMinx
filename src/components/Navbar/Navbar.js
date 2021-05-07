@@ -1,22 +1,10 @@
 import React from "react";
 import "./Navbar.css";
-import { DropdownButton, Dropdown } from 'react-bootstrap'
 import 'react-dropdown/style.css'
 import Popup from "reactjs-popup";
 
-const Navbar = ({changeSettings,title,cubeColors,showHints,showMoveInput}) => {
-  const navCubes = [];
+const Navbar = () => {
 
-  function reloadPage(){
-    setTimeout(function(){
-      window.location.reload();
-    }, 50);
-  }
-  for (let i = 2; i <= 10; i++) {
-    navCubes.push(
-      <Dropdown.Item key={i} href={`/MegaMinx/#id=${i}`} onClick={reloadPage}>{i} X {i}</Dropdown.Item>
-    )
-  }
   return (
     <nav className="navbar navbar-dark fixed-top">
       <ul className="nav nav-justified mr-auto">
@@ -24,35 +12,7 @@ const Navbar = ({changeSettings,title,cubeColors,showHints,showMoveInput}) => {
           <p className="navbar-brand" style={{ color: "lightgray" }}><b>MegaMinx</b></p>
 
           {/*Open model here. Show bunch of settings. Pass changeSettings down to component to apply changes*/}
-          <div className="settingsDropDown">
-            <DropdownButton className="settings" aria-label="settings" id="settings" title={<i className='fa fa-cog'></i>}>
-              <ul>
-
-                <li className="settingsDropDownItem" >
-                  <div className="checkbox-inline">
-                      {/* <input id="inputCheck" type="checkbox" data-toggle="toggle" onClick={() => changeSettings('displayMoveInput')}></input> */}
-                  </div>
-                  Move Input
-                </li>
-
-                <li className="settingsDropDownItem" >
-                  <div className="checkbox-inline">
-                      {/* <input id="hintCheck" type="checkbox" defaultChecked data-toggle="toggle" onClick={() => changeSettings('displayHints')}></input> */}
-                  </div>
-                  Move Hints
-                </li>
-
-                {/* <Dropdown.Item className="settingsDropDownItem" onClick={() => changeSettings('changeColors')}>Modify colors</Dropdown.Item> */}
-
-              </ul>
-
-            </DropdownButton>
-          </div>
-          <div className="cubesDropdown">
-            <DropdownButton title="Cubes" className="cubes">
-              {navCubes}
-            </DropdownButton>
-          </div>
+          
         </li>
       </ul>
       <div style={{ float: "right", height: "100%" }} >
@@ -72,12 +32,7 @@ const Navbar = ({changeSettings,title,cubeColors,showHints,showMoveInput}) => {
 
                   <div>
                     <div style={{ width: "100%", textAlign: "center" }}>
-                      {/* <b style={{ color: cubeColors.white, backgroundColor: "black" }}> F, </b><b style={{ color: cubeColors.white||'white', backgroundColor: "black" }}>f,</b>
-                      <b style={{ color: cubeColors.blue, backgroundColor: "black" }}> U, </b><b style={{ color: cubeColors.blue, backgroundColor: "black" }}>u,</b>
-                      <b style={{ color: cubeColors.red, backgroundColor: "black" }}> R, </b><b style={{ color: cubeColors.red, backgroundColor: "black" }}>r,</b>
-                      <b style={{ color: cubeColors.yellow, backgroundColor: "black" }}> B, </b><b style={{ color: cubeColors.yellow, backgroundColor: "black" }}>b,</b>
-                      <b style={{ color: cubeColors.orange, backgroundColor: "black" }}> L, </b><b style={{ color: cubeColors.orange, backgroundColor: "black" }}>l,</b>
-                      <b style={{ color: cubeColors.green, backgroundColor: "black" }}> D, </b><b style={{ color: cubeColors.green, backgroundColor: "black" }}>d </b> */}
+                     
                       <p style={{ width: "100%", textAlign: "center" }}>(lower case is clockwise, upper case is counterclockwise)</p>
                     </div>
                   </div>

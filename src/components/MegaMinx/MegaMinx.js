@@ -1,28 +1,31 @@
-import { useEffect, useState } from "react";
 import * as THREE from "three";
 import {CameraControls, dToR} from "./utils.js";
 import Corner from "./CornerDimensions";
 import Edge from "./EdgeDimensions";
 import swapColors from "./swapColors";
+import facesToHide from "./facesToHide";
+import colorMatchUps from "./colorMatchUps";
+import facePos from "./facePositions";
 import "./MegaMinx.css"
-// import MainMenu from "../MainMenu/MainMenu"
-// import SolveMenu from "../SolveMenu/SolveMenu"
-// import ColorPickerMenu from "../ColorPickerMenu/ColorPickerMenu"
-// import AlgorithmMenu from "../AlgorithmMenu/AlgorithmMenu"
+import { useEffect } from "react";
 
 const MegaMinx = () => {
-
-    //const [menuId,setMenuId] = useState(0);
     let faceToRotate = "face0";
     let moveQueue = [];
+    let speed = 3;
+    let counter = 0;
+    let mouseDown = false;
+
+    const decaObject = {
+    }
 
     Math.csc = function(x) { return 1 / Math.sin(x); }
     
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, .1, 1000 );
     let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    //let raycaster = new THREE.Raycaster();
-    //let mouse = new THREE.Vector2();
+    let raycaster = new THREE.Raycaster();
+    let mouse = new THREE.Vector2();
     
     let controls = CameraControls(camera, renderer,scene);
 
@@ -35,10 +38,45 @@ const MegaMinx = () => {
     camera.position.y = 0;
     camera.position.x = 0;
 
-    camera.translateZ(-2.9275/2);
+    //camera.translateZ(-2.9275/2);
     renderer.render( scene, camera );
 
+    function onMouseDown(e) {
+        e.stopPropagation();
 
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+        camera.updateMatrixWorld();
+
+        //console.log(mouse,camera);
+
+        raycaster.setFromCamera( mouse, camera );
+        const intersects = raycaster.intersectObjects( scene.children );
+        let filteredIntersects = intersects.filter(e=>e.object.name);
+        try{
+
+            filteredIntersects.forEach(e=>{
+                console.log(e.object.material.color);
+                console.log(e.object.position);
+                console.log(e.object.name)
+            })
+            console.log("-----------------------------")
+
+        }catch(e){
+
+        }
+
+        renderer.render( scene, camera );
+
+    }
+
+    function onMouseUp(e) {
+        e.stopImmediatePropagation();
+        mouseDown=false;
+    }
+
+    // Event listeners
     window.addEventListener("resize", 
         () => {
             let tanFOV = Math.tan( ( ( Math.PI / 180 ) * camera.fov / 2 ) );
@@ -56,6 +94,26 @@ const MegaMinx = () => {
             renderer.render( scene, camera );
         }, false
     );
+
+    useEffect(()=>{
+
+        function removeElementsByClass(className){
+            const elements = document.getElementsByClassName(className);
+            while(elements.length > 0){
+                elements[0].parentNode.removeChild(elements[0]);
+            }
+        }
+        removeElementsByClass("canvas");
+
+        document.body.children[1].appendChild( renderer.domElement );
+        window.addEventListener("pointerdown",onMouseDown,false);
+        window.addEventListener("pointerup",onMouseUp,false);
+
+        return function cleanup () {
+            window.removeEventListener("pointerdown",onMouseDown,false)
+            window.removeEventListener("pointerdown",onMouseUp,false)
+        }
+    })
 
     function pentagonMesh(n,translate,rotate,color,i)
     {
@@ -100,6 +158,8 @@ const MegaMinx = () => {
     
         pentagonMesh = new THREE.Mesh(geometry,material);
         pentagonMesh2 = new THREE.Mesh(geometry2,material2);
+        pentagonMesh2.name = "center";
+        
 
         let offsetZ =.205;
         let offsetY = -.81;
@@ -138,6 +198,8 @@ const MegaMinx = () => {
         decaObject[`face${i+1}`].front.push(pentagonMesh,pentagonMesh2);
     }
 
+
+    // 
     function squareMesh (n,position,position2,translate,rotate,color,i,piece)
     {
         const square = new THREE.Shape();
@@ -157,28 +219,6 @@ const MegaMinx = () => {
         const geometry = new THREE.ShapeGeometry(square);
         const geometry2 = new THREE.ShapeGeometry(square2);
 
-        function getRandomColor() {
-            var letters = '0123456789ABCDEF';
-            var color = '#';
-            for (let i = 0; i < 6; i++) {
-              color += letters[Math.floor(Math.random() * 16)];
-            }
-            if(i<1){
-                if(piece===1) return "black"
-                if(piece===2) return "green"
-                if(piece===3) return "blue"
-                if(piece===4) return "white"
-                if(piece===5) return "red"
-
-                if(piece===6) return "black"
-                if(piece===7) return "green"
-                if(piece===8) return "blue"
-                if(piece===9) return "white"
-                if(piece===10) return "red"
-            }
-            return "grey";//color;
-        }
-
         const material = new THREE.MeshBasicMaterial({
             color: "black",
             side: THREE.DoubleSide,
@@ -192,6 +232,8 @@ const MegaMinx = () => {
 
         let squareMesh = new THREE.Mesh(geometry,material);
         let squareMesh2 = new THREE.Mesh(geometry2,material2);
+        if(piece>0&&piece<6) squareMesh2.name="corner";
+        if(piece>5&&piece<11) squareMesh2.name="edge";
 
         squareMesh2.scale.set(.95,.95)
 
@@ -203,6 +245,7 @@ const MegaMinx = () => {
         let offsetZ =.205;
         let offsetY = -.81;
         
+        // Black background (outline effect)
         squareMesh.rotateZ(rotate?.z||0)
         squareMesh.rotateY(rotate?.y||0)
         
@@ -214,8 +257,7 @@ const MegaMinx = () => {
         squareMesh.translateZ(-translate?.y/2+offsetZ||0)
         squareMesh.translateY(translate?.y/2+offsetY||0)
 
-        
-
+        // Colored inner face
         squareMesh2.rotateZ(rotate?.z||0)
         squareMesh2.rotateY(rotate?.y||0)
         
@@ -226,6 +268,7 @@ const MegaMinx = () => {
 
         squareMesh2.translateZ(-translate?.y/2+offsetZ||0)
         squareMesh2.translateY(translate?.y/2+offsetY||0)
+
 
         if(piece>10){
             squareMesh.rotateZ(dToR(-36+-(72*(piece-11))))
@@ -255,62 +298,7 @@ const MegaMinx = () => {
         
     }
 
-    let decaObject = {
-    }
-
-    let faceTilt = -63.2;
-
-    let facePos = [
-        {
-            translate : {z:2.9275},
-            rotate : 0
-        },
-        {
-            translate: {y:2*2.25*Math.cos(dToR(36)),z:2.9275},
-            rotate: {z:dToR(36+72),x:dToR(faceTilt)}
-        },
-        {
-            translate: {y:2*2.25*Math.cos(dToR(36)),z:2.9275},
-            rotate: {z:dToR(36+72*2),x:dToR(faceTilt)}
-        },
-        {
-            translate: {y:2*2.25*Math.cos(dToR(36)),z:2.9275},
-            rotate: {z:dToR(36+72*3),x:dToR(faceTilt)}
-        },
-        {
-            translate: {y:2*2.25*Math.cos(dToR(36)),z:2.9275},
-            rotate: {z:dToR(36+72*4),x:dToR(faceTilt)}
-        },
-        {
-            translate: {y:2*2.25*Math.cos(dToR(36)),z:2.9275},
-            rotate: {z:dToR(36+72*5),x:dToR(faceTilt)}
-        },
-        {
-            translate : {z:-2.9275},
-            rotate : {z:dToR(180),y:dToR(180)}
-        },
-        {
-            translate: {y:2*2.25*Math.cos(dToR(36)),z:-2.9275},
-            rotate: {z:dToR(72),x:dToR(faceTilt),y:dToR(180)}
-        },
-        {
-            translate: {y:2*2.25*Math.cos(dToR(36)),z:-2.9275},
-            rotate: {z:dToR(72*2),x:dToR(faceTilt),y:dToR(180)}
-        },
-        {
-            translate: {y:2*2.25*Math.cos(dToR(36)),z:-2.9275},
-            rotate: {z:dToR(72*3),x:dToR(faceTilt),y:dToR(180)}
-        },
-        {
-            translate: {y:2*2.25*Math.cos(dToR(36)),z:-2.9275},
-            rotate: {z:dToR(72*4),x:dToR(faceTilt),y:dToR(180)}
-        },
-        {
-            translate: {y:2*2.25*Math.cos(dToR(36)),z:-2.9275},
-            rotate: {z:dToR(72*5),x:dToR(faceTilt),y:dToR(180)}
-        },
-    ]
-
+    // array of face colors in the order they're generated
     let faceColors = [
         "blue",     // 1
         "pink",     // 2
@@ -327,6 +315,7 @@ const MegaMinx = () => {
         "white"     // 12
     ]
     
+    // groups all the meshes for a face together
     function decaFace(n,translate,rotate,color,i){
             //if(i>1) return
         // generate object structure on each face initialization
@@ -364,630 +353,28 @@ const MegaMinx = () => {
         squareMesh(n,Corner(n,"sides","side1b"),Corner(n,"sides","side1b",1),translate,rotate,color,i,25);
     }
 
-    facePos.forEach((set,i)=>{decaObject[`face${i+1}`]={front : [],sides : []}})
+    // Generate object of piece references
+    facePos.forEach((set,i)=>{decaObject[`face${i+1}`]={front : [],sides : []}});
+
+    // Put the MegaMinx on the screen!
     facePos.forEach((set,i)=>decaFace(1,set.translate,set.rotate,faceColors[i],i));
-
-    let facesToHide = {
-        // Blue
-        face1 : [
-            // Pink side
-            {face:2,pos:6},{face:2,pos:7},
-            {face:2,pos:8},{face:2,pos:9},
-            {face:2,pos:16},{face:2,pos:17},
-
-            // Yellow side
-            {face:3,pos:6},{face:3,pos:7},
-            {face:3,pos:8},{face:3,pos:9},
-            {face:3,pos:16},{face:3,pos:17},
-
-            // Red side
-            {face:4,pos:6},{face:4,pos:7},
-            {face:4,pos:8},{face:4,pos:9},
-            {face:4,pos:16},{face:4,pos:17},
-
-            // Green side
-            {face:5,pos:6},{face:5,pos:7},
-            {face:5,pos:8},{face:5,pos:9},
-            {face:5,pos:16},{face:5,pos:17},
-
-            // Light purple side
-            {face:6,pos:6},{face:6,pos:7},
-            {face:6,pos:8},{face:6,pos:9},
-            {face:6,pos:16},{face:6,pos:17},
-        ],
-
-        // Pink
-        face2: [
-            // Blue side
-            {face:1,pos:8},{face:1,pos:9},
-            {face:1,pos:18},{face:1,pos:19},
-            {face:1,pos:10},{face:1,pos:11},
-            
-            // Yellow side
-            {face:3,pos:6},{face:3,pos:7},
-            {face:3,pos:14},{face:3,pos:15},
-            {face:3,pos:4},{face:3,pos:5},
-
-            // Light green side
-            {face:9,pos:10},{face:9,pos:11},
-            {face:9,pos:20},{face:9,pos:21},
-            {face:9,pos:2},{face:9,pos:3},
-
-            // Brown side
-            {face:8,pos:2},{face:8,pos:3},
-            {face:8,pos:12},{face:8,pos:13},
-            {face:8,pos:4},{face:8,pos:5},
-            
-            // Light purple side
-            {face:6,pos:8},{face:6,pos:9},
-            {face:6,pos:18},{face:6,pos:19},
-            {face:6,pos:10},{face:6,pos:11},
-        ],
-
-        // Yellow
-        face3: [
-            // Blue
-            {face:1,pos:6},{face:1,pos:7},
-            {face:1,pos:8},{face:1,pos:9},
-            {face:1,pos:16},{face:1,pos:17},
-
-            // Red
-            {face:4,pos:4},{face:4,pos:5},
-            {face:4,pos:14},{face:4,pos:15},
-            {face:4,pos:6},{face:4,pos:7},
-
-            // Orange
-            {face:10,pos:2},{face:10,pos:3},
-            {face:10,pos:20},{face:10,pos:21},
-            {face:10,pos:10},{face:10,pos:11},
-
-            // Green
-            {face:9,pos:4},{face:9,pos:5},
-            {face:9,pos:12},{face:9,pos:13},
-            {face:9,pos:2},{face:9,pos:3},
-
-            // Pink
-            {face:2,pos:10},{face:2,pos:11},
-            {face:2,pos:18},{face:2,pos:19},
-            {face:2,pos:8},{face:2,pos:9},
-        ],
-
-        // Red
-        face4: [
-            // Blue
-            {face:1,pos:6},{face:1,pos:7},
-            {face:1,pos:14},{face:1,pos:15},
-            {face:1,pos:4},{face:1,pos:5},
-
-            // Green
-            {face:5,pos:4},{face:5,pos:5},
-            {face:5,pos:14},{face:5,pos:15},
-            {face:5,pos:6},{face:5,pos:7},
-
-            // Purple
-            {face:11,pos:2},{face:11,pos:3},
-            {face:11,pos:20},{face:11,pos:21},
-            {face:11,pos:10},{face:11,pos:11},
-
-            // Orange
-            {face:10,pos:4},{face:10,pos:5},
-            {face:10,pos:12},{face:10,pos:13},
-            {face:10,pos:2},{face:10,pos:3},
-
-            // Yellow
-            {face:3,pos:10},{face:3,pos:11},
-            {face:3,pos:18},{face:3,pos:19},
-            {face:3,pos:8},{face:3,pos:9},
-        ],
-
-        // Green
-        face5: [
-            // Blue
-            {face:1,pos:4},{face:1,pos:5},
-            {face:1,pos:12},{face:1,pos:13},
-            {face:1,pos:2},{face:1,pos:3},
-
-            // Light purple
-            {face:6,pos:4},{face:6,pos:5},
-            {face:6,pos:14},{face:6,pos:15},
-            {face:6,pos:6},{face:6,pos:7},
-
-            // White
-            {face:12,pos:2},{face:12,pos:3},
-            {face:12,pos:20},{face:12,pos:21},
-            {face:12,pos:10},{face:12,pos:11},
-
-            // Purple
-            {face:11,pos:4},{face:11,pos:5},
-            {face:11,pos:12},{face:11,pos:13},
-            {face:11,pos:2},{face:11,pos:3},
-
-            // Red
-            {face:4,pos:10},{face:4,pos:11},
-            {face:4,pos:18},{face:4,pos:19},
-            {face:4,pos:8},{face:4,pos:9},
-        ],
-
-        // Light purple
-        face6: [
-            // Blue
-            {face:1,pos:2},{face:1,pos:3},
-            {face:1,pos:20},{face:1,pos:21},
-            {face:1,pos:10},{face:1,pos:11},
-
-            // Pink
-            {face:2,pos:4},{face:2,pos:5},
-            {face:2,pos:14},{face:2,pos:15},
-            {face:2,pos:6},{face:2,pos:7},
-
-            // Brown
-            {face:8,pos:2},{face:8,pos:3},
-            {face:8,pos:20},{face:8,pos:21},
-            {face:8,pos:10},{face:8,pos:11},
-
-            // White
-            {face:12,pos:4},{face:12,pos:5},
-            {face:12,pos:12},{face:12,pos:13},
-            {face:12,pos:2},{face:12,pos:3},
-
-            // Green
-            {face:5,pos:10},{face:5,pos:11},
-            {face:5,pos:18},{face:5,pos:19},
-            {face:5,pos:8},{face:5,pos:9},
-        ],
-
-        // Light Blue
-        face7 : [
-            // Brown side
-            {face:8,pos:6},{face:8,pos:7},
-            {face:8,pos:8},{face:8,pos:9},
-            {face:8,pos:16},{face:8,pos:17},
-
-            // Light green side
-            {face:9,pos:6},{face:9,pos:7},
-            {face:9,pos:8},{face:9,pos:9},
-            {face:9,pos:16},{face:9,pos:17},
-
-            // Orange side
-            {face:10,pos:6},{face:10,pos:7},
-            {face:10,pos:8},{face:10,pos:9},
-            {face:10,pos:16},{face:10,pos:17},
-
-            // Purple side
-            {face:11,pos:6},{face:11,pos:7},
-            {face:11,pos:8},{face:11,pos:9},
-            {face:11,pos:16},{face:11,pos:17},
-
-            // White purple side
-            {face:12,pos:6},{face:12,pos:7},
-            {face:12,pos:8},{face:12,pos:9},
-            {face:12,pos:16},{face:12,pos:17},
-        ],
-
-        // Brown
-        face8: [
-            // Light blue side
-            {face:7,pos:8},{face:7,pos:9},
-            {face:7,pos:18},{face:7,pos:19},
-            {face:7,pos:10},{face:7,pos:11},
-            
-            // White side
-            {face:12,pos:6},{face:12,pos:7},
-            {face:12,pos:14},{face:12,pos:15},
-            {face:12,pos:4},{face:12,pos:5},
-
-            // Light purple side
-            {face:6,pos:10},{face:6,pos:11},
-            {face:6,pos:20},{face:6,pos:21},
-            {face:6,pos:2},{face:6,pos:3},
-
-            // Pink side
-            {face:2,pos:2},{face:2,pos:3},
-            {face:2,pos:12},{face:2,pos:13},
-            {face:2,pos:4},{face:2,pos:5},
-            
-            // Light green side
-            {face:9,pos:8},{face:9,pos:9},
-            {face:9,pos:18},{face:9,pos:19},
-            {face:9,pos:10},{face:9,pos:11},
-        ],
-
-        // Light green
-        face9: [
-            // Light Blue
-            {face:7,pos:2},{face:7,pos:3},
-            {face:7,pos:10},{face:7,pos:11},
-            {face:7,pos:20},{face:7,pos:21},
-
-            // Brown
-            {face:8,pos:4},{face:8,pos:5},
-            {face:8,pos:14},{face:8,pos:15},
-            {face:8,pos:6},{face:8,pos:7},
-
-            // Pink
-            {face:2,pos:2},{face:2,pos:3},
-            {face:2,pos:20},{face:2,pos:21},
-            {face:2,pos:10},{face:2,pos:11},
-
-            // Yellow
-            {face:3,pos:4},{face:3,pos:5},
-            {face:3,pos:12},{face:3,pos:13},
-            {face:3,pos:2},{face:3,pos:3},
-
-            // Orange
-            {face:10,pos:10},{face:10,pos:11},
-            {face:10,pos:18},{face:10,pos:19},
-            {face:10,pos:8},{face:10,pos:9},
-        ],
-
-        // Orange
-        face10: [
-            // Light Blue
-            {face:7,pos:2},{face:7,pos:3},
-            {face:7,pos:12},{face:7,pos:13},
-            {face:7,pos:4},{face:7,pos:5},
-
-            // Light Green
-            {face:9,pos:4},{face:9,pos:5},
-            {face:9,pos:14},{face:9,pos:15},
-            {face:9,pos:6},{face:9,pos:7},
-
-            // Yellow
-            {face:3,pos:2},{face:3,pos:3},
-            {face:3,pos:20},{face:3,pos:21},
-            {face:3,pos:10},{face:3,pos:11},
-
-            // Red
-            {face:4,pos:4},{face:4,pos:5},
-            {face:4,pos:12},{face:4,pos:13},
-            {face:4,pos:2},{face:4,pos:3},
-
-            // Purple
-            {face:11,pos:10},{face:11,pos:11},
-            {face:11,pos:18},{face:11,pos:19},
-            {face:11,pos:8},{face:11,pos:9},
-        ],
-
-        // Purple
-        face11: [
-            // Light Blue
-            {face:7,pos:4},{face:7,pos:5},
-            {face:7,pos:14},{face:7,pos:15},
-            {face:7,pos:6},{face:7,pos:7},
-
-            // Orange
-            {face:10,pos:4},{face:10,pos:5},
-            {face:10,pos:14},{face:10,pos:15},
-            {face:10,pos:6},{face:10,pos:7},
-
-            // Red
-            {face:4,pos:2},{face:4,pos:3},
-            {face:4,pos:20},{face:4,pos:21},
-            {face:4,pos:10},{face:4,pos:11},
-
-            // Green
-            {face:5,pos:4},{face:5,pos:5},
-            {face:5,pos:12},{face:5,pos:13},
-            {face:5,pos:2},{face:5,pos:3},
-
-            // White
-            {face:12,pos:10},{face:12,pos:11},
-            {face:12,pos:18},{face:12,pos:19},
-            {face:12,pos:8},{face:12,pos:9},
-        ],
-
-        // White
-        face12: [
-            // Light Blue
-            {face:7,pos:8},{face:7,pos:9},
-            {face:7,pos:16},{face:7,pos:17},
-            {face:7,pos:6},{face:7,pos:7},
-
-            // Purple
-            {face:11,pos:4},{face:11,pos:5},
-            {face:11,pos:14},{face:11,pos:15},
-            {face:11,pos:6},{face:11,pos:7},
-
-            // Green
-            {face:5,pos:2},{face:5,pos:3},
-            {face:5,pos:20},{face:5,pos:21},
-            {face:5,pos:10},{face:5,pos:11},
-
-            // Light purple
-            {face:6,pos:4},{face:6,pos:5},
-            {face:6,pos:12},{face:6,pos:13},
-            {face:6,pos:2},{face:6,pos:3},
-
-            // Brown
-            {face:8,pos:10},{face:8,pos:11},
-            {face:8,pos:18},{face:8,pos:19},
-            {face:8,pos:8},{face:8,pos:9},
-        ]
-    }
-
-    let colorMatchUps = {
-        face1 : { // blue
-            //center edge
-            "1" : {side: 5,pos: 17},
-            "3" : {side: 4,pos: 17},
-            "5" : {side: 3,pos: 17},
-            "7" : {side: 2,pos: 17},
-            "9" : {side: 6,pos: 17},
-
-            //left edge
-            "11": {side: 5,pos:  9},
-            "13": {side: 4,pos:  9},
-            "15": {side: 3,pos:  9},
-            "17": {side: 2,pos:  9},
-            "19": {side: 6,pos:  9},
-
-            //right edge
-            "21": {side: 5,pos:  7},
-            "23": {side: 4,pos:  7},
-            "25": {side: 3,pos:  7},
-            "27": {side: 2,pos:  7},
-            "29": {side: 6,pos:  7},
-        },
-        face2 : { // pink
-            //center edge
-            "1": {side:8,pos:13},
-            "3": {side:6,pos:19},
-            "5": {side:1,pos:19},
-            "7": {side:3,pos:15},
-            "9": {side:9,pos:21},
-
-            //left edge
-            "11": {side: 8,pos:  5},
-            "13": {side: 6,pos:  11},
-            "15": {side: 1,pos:  11},
-            "17": {side: 3,pos:  7},
-            "19": {side: 9,pos:  3},
-
-            //right edge
-            "21": {side: 8,pos:  3},
-            "23": {side: 6,pos:  9},
-            "25": {side: 1,pos:  9},
-            "27": {side: 3,pos:  5},
-            "29": {side: 9,pos:  11},
-        },
-        face3 : { // Yellow
-            //center edge
-            "1": {side:9,pos:13},
-            "3": {side:2,pos:19},
-            "5": {side:1,pos:17},
-            "7": {side:4,pos:15},
-            "9": {side:10,pos:21},
-
-            //left edge
-            "11": {side: 9,pos:  5},
-            "13": {side: 2,pos:  11},
-            "15": {side: 1,pos:  9},
-            "17": {side: 4,pos:  7},
-            "19": {side: 10,pos:  3},
-
-            //right edge
-            "21": {side: 9,pos:  3},
-            "23": {side: 2,pos:  9},
-            "25": {side: 1,pos:  7},
-            "27": {side: 4,pos:  5},
-            "29": {side: 10,pos:  11},
-        },
-        face4 : { // Red
-            //center edge
-            "1": {side:10,pos:13},
-            "3": {side:3,pos:19},
-            "5": {side:1,pos:15},
-            "7": {side:5,pos:15},
-            "9": {side:11,pos:21},
-
-            //left edge
-            "11": {side: 10,pos:  5},
-            "13": {side: 3,pos:  11},
-            "15": {side: 1,pos:  7},
-            "17": {side: 5,pos:  7},
-            "19": {side: 11,pos:  3},
-
-            //right edge
-            "21": {side: 10,pos:  3},
-            "23": {side: 3,pos:  9},
-            "25": {side: 1,pos:  5},
-            "27": {side: 5,pos:  5},
-            "29": {side: 11,pos:  11},
-        },
-        face5 : { // Green
-            //center edge
-            "1": {side:11,pos:13},
-            "3": {side:4,pos:19},
-            "5": {side:1,pos:13},
-            "7": {side:6,pos:15},
-            "9": {side:12,pos:21},
-
-            //left edge
-            "11": {side: 11,pos:  5},
-            "13": {side: 4,pos:  11},
-            "15": {side: 1,pos:  5},
-            "17": {side: 6,pos:  7},
-            "19": {side: 12,pos:  3},
-
-            //right edge
-            "21": {side: 11,pos:  3},
-            "23": {side: 4,pos:  9},
-            "25": {side: 1,pos:  3},
-            "27": {side: 6,pos:  5},
-            "29": {side: 12,pos:  11},
-        },
-        face6 : { // Light purple
-            //center edge
-            "1": {side:12,pos:13},
-            "3": {side:5,pos:19},
-            "5": {side:1,pos:21},
-            "7": {side:2,pos:15},
-            "9": {side:8,pos:21},
-
-            //left edge
-            "11": {side: 12,pos:  5},
-            "13": {side: 5,pos:  11},
-            "15": {side: 1,pos:  3},
-            "17": {side: 2,pos:  7},
-            "19": {side: 8,pos:  3},
-
-            //right edge
-            "21": {side: 12,pos:  3},
-            "23": {side: 5,pos:  9},
-            "25": {side: 1,pos:  11},
-            "27": {side: 2,pos:  5},
-            "29": {side: 8,pos:  11},
-        },
-        face7 : { // Light blue
-            "1": {side:10, pos:17},
-            "3": {side:11, pos:17},
-            "5": {side:12, pos:17},
-            "7": {side:8, pos:17},
-            "9": {side:9, pos:17},
-
-            "11": {side:10, pos:9},
-            "13": {side:11, pos:9},
-            "15": {side:12, pos:9},
-            "17": {side:8, pos:9},
-            "19": {side:9, pos:9},
-
-            "21": {side:10, pos:7},
-            "23": {side:11, pos:7},
-            "25": {side:12, pos:7},
-            "27": {side:8, pos:7},
-            "29": {side:9, pos:7}
-        },
-        face8 : {// Brown
-            //center edge
-            "1": {side:2,pos:13},
-            "3": {side:9,pos:19},
-            "5": {side:7,pos:19},
-            "7": {side:12,pos:15},
-            "9": {side:6,pos:21},
-
-            //left edge
-            "11": {side: 2,pos:  5},
-            "13": {side: 9,pos:  11},
-            "15": {side: 7,pos:  11},
-            "17": {side: 12,pos:  7},
-            "19": {side: 6,pos:  3},
-
-            //right edge
-            "21": {side: 2,pos:  3},
-            "23": {side: 9,pos:  9},
-            "25": {side: 7,pos:  9},
-            "27": {side: 12,pos:  5},
-            "29": {side: 6,pos:  11}
-
-        },
-        face9 : { // Light green
-            //center edge
-            "1": {side:3,pos:13},
-            "3": {side:10,pos:19},
-            "5": {side:7,pos:21},
-            "7": {side:8,pos:15},
-            "9": {side:2,pos:21},
-
-            //left edge
-            "11": {side: 3,pos:  5},
-            "13": {side: 10,pos:  11},
-            "15": {side: 7,pos:  3},
-            "17": {side: 8,pos:  7},
-            "19": {side: 2,pos:  3},
-
-            //right edge
-            "21": {side: 3,pos:  3},
-            "23": {side: 10,pos:  9},
-            "25": {side: 7,pos:  11},
-            "27": {side: 8,pos:  5},
-            "29": {side: 2,pos:  11},
-        },
-        face10 : { // Orange
-            //center edge
-            "1": {side:4,pos:13},
-            "3": {side:11,pos:19},
-            "5": {side:7,pos:13},
-            "7": {side:9,pos:15},
-            "9": {side:3,pos:21},
-
-            //left edge
-            "11": {side: 4,pos:  5},
-            "13": {side: 11,pos:  11},
-            "15": {side: 7,pos:  5},
-            "17": {side: 9,pos:  7},
-            "19": {side: 3,pos:  3},
-
-            //right edge
-            "21": {side: 4,pos:  3},
-            "23": {side: 11,pos:  9},
-            "25": {side: 7,pos:  3},
-            "27": {side: 9,pos:  5},
-            "29": {side: 3,pos:  11},
-        },
-        face11 : { // Purple
-            //center edge
-            "1": {side:5,pos:13},
-            "3": {side:12,pos:19},
-            "5": {side:7,pos:15},
-            "7": {side:10,pos:15},
-            "9": {side:4,pos:21},
-
-            //left edge
-            "11": {side: 5,pos:  5},
-            "13": {side: 12,pos:  11},
-            "15": {side: 7,pos:  7},
-            "17": {side: 10,pos:  7},
-            "19": {side: 4,pos:  3},
-
-            //right edge
-            "21": {side: 5,pos:  3},
-            "23": {side: 12,pos:  9},
-            "25": {side: 7,pos:  5},
-            "27": {side: 10,pos:  5},
-            "29": {side: 4,pos:  11},
-        },
-        face12 : { // White
-            //center edge
-            "1": {side:6,pos:13},
-            "3": {side:8,pos:19},
-            "5": {side:7,pos:17},
-            "7": {side:11,pos:15},
-            "9": {side:5,pos:21},
-
-            //left edge
-            "11": {side: 6,pos:  5},
-            "13": {side: 8,pos:  11},
-            "15": {side: 7,pos:  9},
-            "17": {side: 11,pos:  7},
-            "19": {side: 5,pos:  3},
-
-            //right edge
-            "21": {side: 6,pos:  3},
-            "23": {side: 8,pos:  9},
-            "25": {side: 7,pos:  7},
-            "27": {side: 11,pos:  5},
-            "29": {side: 5,pos:  11},
-        }
-    }
-
-    let speed = 3;
-
-    let counter = 0;
-
     
-
+    // Rotates a given face of the megaminx
     let rotateFace = (face) => {
         let tempSpeed = speed;
 
-        if(!moveQueue[0]&&faceToRotate==="face0"){
+        if(counter===0&&faceToRotate==="face0"){
+            if(moveQueue[0]) {
+                faceToRotate='face'+moveQueue.shift();
+                if(faceToRotate.split('').includes("'")){
+                    faceToRotate=faceToRotate.replace("'","");
+                    speed = Math.abs(speed);
+                }else {
+                    speed = Math.abs(speed)*-1;
+                }
+            }
             return;
         }
-
-        if(moveQueue[0]&&faceToRotate==="face0"){
-            faceToRotate=moveQueue.shift();
-            return;
-        }
-
 
         // Controls what happens at the end of each turn
         if(Math.abs(counter) >= 72) {
@@ -1033,8 +420,6 @@ const MegaMinx = () => {
 
             counter=0;
             faceToRotate="face0"
-            //moveQueue.push(`face${Math.floor(Math.random() * 12)+1}`);
-            speed = Math.floor(Math.random() * 2)?speed*-1:speed;
             return;
         }
 
@@ -1052,10 +437,7 @@ const MegaMinx = () => {
             piece.visible = true;
             
             if(i%2&&i<30) {
-                
                 let {side,pos} = colorMatchUps[face][`${i}`]
-
-                //console.log(decaObject[`face${side}`].front[pos].material.color)
                 piece.material.color.set(
                     decaObject[`face${side}`].front[pos].material.color
                 );
@@ -1088,39 +470,33 @@ const MegaMinx = () => {
             
         })
         counter+=speed;
-        //squareMesh.rotateX(dToR(-58.3))
     }
 
     let animate = () => {
-
         rotateFace(faceToRotate);
-        //if(counter===0) moveQueue.push(`face${Math.floor(Math.random() * 12)+1}`);
-
         requestAnimationFrame( animate );
         controls.update();
         renderer.render( scene, camera );
     };
-
+ 
+    // setTimeout(()=>{ 
         
-    setTimeout(()=>{ 
-        document.body.children[1].appendChild( renderer.domElement );
-    },50);
+    //     console.log(document.body.children[1]);
+    // },50);
 
     animate();
 
     let addRandomMove = () => {
         if(counter!==0) return;
-        moveQueue.push(`face${Math.floor(Math.random() * 12)+1}`);
+        let randomFace = Math.floor(Math.random() * 12)+1;
+        let randomDir  = Math.floor(Math.random() * 2);
+        moveQueue.push(`${randomFace}${randomDir?"":"'"}`);
     }
 
     return (
         <div>
             {
                 <button onClick={()=>addRandomMove()}>Random move</button>
-                // menuId === 1?<SolveMenu/>:
-                // menuId === 2?<ColorPickerMenu/>:
-                // menuId === 3?<AlgorithmMenu/>:
-                // <MainMenu/>
             }
         </div>
     );
