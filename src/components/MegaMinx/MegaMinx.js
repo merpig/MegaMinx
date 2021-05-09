@@ -8,26 +8,47 @@ import colorMatchUps from "./colorMatchUps";
 import facePos from "./facePositions";
 import "./MegaMinx.css"
 import { useEffect } from "react";
+import Menu from "../Menu/Menu";
+import piecesSeed from "./pieces";
 
-const MegaMinx = () => {
+const MegaMinx = ({reset}) => {
+    // UI and megaminx controller variables
     let faceToRotate = "face0";
     let moveQueue = [];
     let speed = 3;
     let counter = 0;
     let mouseDown = false;
+    let pieces;
+    let currentFunc = "none";
+    let currentColor = "blue";
+
+    // Threejs variables
+    let scene = new THREE.Scene();
+    let camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, .1, 1000 );
+    let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    let raycaster = new THREE.Raycaster();
+    let mouse = new THREE.Vector2();
+    let controls = CameraControls(camera, renderer,scene);
+
+    let setMoveQueue = moves => {
+        if(!moveQueue.length) moveQueue = moves;
+    }
+
+    
+
+    let getCurrentColor = () => currentColor;
+    let setCurrentColor = color => currentColor=color
+
+    // getter and setter for currentFunc
+    let currentFunction = () => currentFunc;
+    let setCurrentFunction = func => currentFunc = func;
 
     const decaObject = {
     }
 
     Math.csc = function(x) { return 1 / Math.sin(x); }
     
-    let scene = new THREE.Scene();
-    let camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, .1, 1000 );
-    let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    let raycaster = new THREE.Raycaster();
-    let mouse = new THREE.Vector2();
-    
-    let controls = CameraControls(camera, renderer,scene);
+
 
     // Set background color and size
     renderer.setClearColor(new THREE.Color("black"),0);
@@ -47,27 +68,30 @@ const MegaMinx = () => {
         mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
 
-        camera.updateMatrixWorld();
-
-        //console.log(mouse,camera);
-
         raycaster.setFromCamera( mouse, camera );
+
         const intersects = raycaster.intersectObjects( scene.children );
-        let filteredIntersects = intersects.filter(e=>e.object.name);
+        let filteredIntersects = intersects.filter(
+            e=>e.object.name==="corner"||e.object.name==="edge"
+        );
+
         try{
 
-            filteredIntersects.forEach(e=>{
-                console.log(e.object.material.color);
-                console.log(e.object.position);
-                console.log(e.object.name)
-            })
+            if(currentFunc==="colorpicker"){
+                filteredIntersects[0].object.material.color.set(currentColor)
+            } 
+            //.forEach(e=>{
+                // console.log(e.object.material.color);
+                // console.log(e.object.position);
+                // console.log(e.object.name)
+                
+            //})
+
             console.log("-----------------------------")
 
         }catch(e){
 
         }
-
-        renderer.render( scene, camera );
 
     }
 
@@ -90,7 +114,7 @@ const MegaMinx = () => {
             camera.updateProjectionMatrix();
             camera.lookAt( scene.position );
 
-            renderer.setSize( window.innerWidth, window.innerHeight-10 );
+            renderer.setSize( window.innerWidth, window.innerHeight );
             renderer.render( scene, camera );
         }, false
     );
@@ -198,7 +222,6 @@ const MegaMinx = () => {
         decaObject[`face${i+1}`].front.push(pentagonMesh,pentagonMesh2);
     }
 
-
     // 
     function squareMesh (n,position,position2,translate,rotate,color,i,piece)
     {
@@ -301,11 +324,11 @@ const MegaMinx = () => {
     // array of face colors in the order they're generated
     let faceColors = [
         "blue",     // 1
-        "pink",     // 2
+        "#ff80ce",     // 2 pink
         "yellow",   // 3
         "red",      // 4
         "green",    // 5
-        "#E9D3FF",  // 6 light purple
+        "#c585f7",  // 6 light purple
 
         "#4fc3f7",  // 7 light blue
         "#C39B77",  // 8 light brown
@@ -358,6 +381,10 @@ const MegaMinx = () => {
 
     // Put the MegaMinx on the screen!
     facePos.forEach((set,i)=>decaFace(1,set.translate,set.rotate,faceColors[i],i));
+
+    pieces = piecesSeed(decaObject);
+
+    
     
     // Rotates a given face of the megaminx
     let rotateFace = (face) => {
@@ -373,6 +400,7 @@ const MegaMinx = () => {
                     speed = Math.abs(speed)*-1;
                 }
             }
+            else if(currentFunction()==="scramble") setCurrentFunction("none");
             return;
         }
 
@@ -478,27 +506,17 @@ const MegaMinx = () => {
         controls.update();
         renderer.render( scene, camera );
     };
- 
-    // setTimeout(()=>{ 
-        
-    //     console.log(document.body.children[1]);
-    // },50);
 
     animate();
-
-    let addRandomMove = () => {
-        if(counter!==0) return;
-        let randomFace = Math.floor(Math.random() * 12)+1;
-        let randomDir  = Math.floor(Math.random() * 2);
-        moveQueue.push(`${randomFace}${randomDir?"":"'"}`);
-    }
-
     return (
-        <div>
-            {
-                <button onClick={()=>addRandomMove()}>Random move</button>
-            }
-        </div>
+        <Menu 
+            setMoveQueue={setMoveQueue}
+            reset={reset}
+            setCurrentFunction={setCurrentFunction}
+            currentFunction={currentFunction}
+            setColor={setCurrentColor}
+            getColor={getCurrentColor}
+            />
     );
 }
 

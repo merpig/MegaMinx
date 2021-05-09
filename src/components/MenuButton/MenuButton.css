@@ -1,0 +1,35 @@
+.menu-button-container{
+    height: 10vh;
+}
+
+.menu-button{
+    text-align: center;
+    vertical-align: middle;
+    margin-bottom: 2px;
+    line-height: 9vh;
+
+    background-color: rgba(0,0,255,.1);
+    border: 2px solid blue;
+    border-radius: .25rem;
+
+    font-size: 1.5rem;
+    color: lightgray;
+    pointer-events: auto;
+
+    transition: background-color .4s ease;
+}
+
+.menu-button:hover{
+    /* transition: ; */
+    background-color: rgba(0,0,255,.5);
+    cursor: pointer;
+}
+
+.menu-button:active{
+    /* transition: ; */
+    background-color: rgba(0,0,255,.25);
+}
+
+.hidden{
+    visibility: hidden;
+}

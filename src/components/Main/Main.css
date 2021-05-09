@@ -1,0 +1,19 @@
+.panel{
+    position: absolute;
+    width: 48%;
+    max-width: 250px;
+    height: 100%;
+    pointer-events: none
+    /* border: 2px solid blue;
+    border-radius: .25rem; */
+}
+
+.panel-left{
+    left:0;
+    bottom:0;
+}
+
+.panel-right{
+    right:0;
+    bottom:0;
+}

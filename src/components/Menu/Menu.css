@@ -1,0 +1,41 @@
+.menu-box-container{
+    position: fixed;
+
+    left: 0;
+    bottom: 4px;
+
+    height: 30vh;
+    width: 100%;
+    pointer-events: none
+}
+
+.menu-box{
+    position: relative;
+
+    display: flex;
+
+    height: 100%;
+
+    margin: 0px 4px 0px 4px;
+    pointer-events: none
+}
+
+.menu-panel{
+    position: absolute;
+    width: 48%;
+    max-width: 250px;
+    height: 100%;
+    pointer-events: none
+    /* border: 2px solid blue;
+    border-radius: .25rem; */
+}
+
+.menu-panel-left{
+    left:0;
+    bottom:0;
+}
+
+.menu-panel-right{
+    right:0;
+    bottom:0;
+}

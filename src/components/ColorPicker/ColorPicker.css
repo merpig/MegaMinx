@@ -1,0 +1,134 @@
+.color-menu-container{
+    max-width: 320px;
+    height: 29vh;
+    
+    margin: auto;
+    margin-bottom: 4px;
+    /* border: 2px solid blue;
+    border-radius: .25rem; */
+}
+
+.color-menu{
+    min-width: 100%;
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+.color-options{
+    min-width: 100%;
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.holder-text{
+    visibility: hidden;
+}
+
+.color-button{
+    text-align: center;
+    vertical-align: middle;
+    line-height: 5.5vh;
+    margin: 2px;
+    border-radius: .5rem;
+
+    transition: opacity .4s ease;
+    pointer-events: auto;
+}
+
+.color-button:hover{
+    opacity: .8;
+    cursor: pointer;
+}
+
+.color-button:active{
+    opacity: .6;
+}
+
+.option-button{
+    text-align: center;
+    vertical-align: middle;
+    line-height: 5vh;
+    margin: 2px;
+    border: 2px solid lightgray;
+    pointer-events: auto;
+    border-radius: .25rem;
+    background-color: rgba(211,211,211,.1);
+    transition: background-color .4s ease;
+}
+
+.option-button:hover{
+    cursor: pointer;
+    background-color: rgba(0, 0, 255,.5);
+}
+
+.color-exit{
+    color: lightgray;
+    
+}
+
+.color-check{
+    color: rgb(0, 102, 255);
+    transition: color .4s ease;
+}
+
+.color-check:hover{
+    color: lightgray;
+}
+
+.blackdot{
+    height: 25px;
+    width: 25px;
+    background-color: black;
+    border-radius: 50%;
+    position: absolute;
+    margin-top: -40px;
+    margin-left: 35px;
+}
+
+.blue {
+    background-color: blue;
+}
+
+.pink{
+    background-color: #ff80ce;
+}
+
+.yellow{
+    background-color: yellow;
+}
+
+.red{
+    background-color: red;
+}
+
+.green{
+    background-color: green;
+}
+
+.light-purple{
+    background-color: #c585f7;
+}
+
+.light-blue{
+    background-color: #4fc3f7;
+}
+
+.light-brown{
+    background-color: #C39B77;
+}
+
+.light-green{
+    background-color: #64dd17;
+}
+
+.orange{
+    background-color: orange;
+}
+
+.purple{
+    background-color: purple;
+}
+
+.white{
+    background-color: white;
+}
