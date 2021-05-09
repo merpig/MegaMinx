@@ -1,0 +1,29 @@
+  
+.rc-slider-rail,.rc-slider-track{
+    height: 8px;
+}
+
+.rc-slider-rail{
+    background-color: lightgray;
+}
+
+.rc-slider-track{
+    background-color: #007bff;
+}
+
+.rc-slider-handle{
+    height: 18px;
+    width: 18px;
+    border-color: #007bff!important;
+    background-color: lightgray;
+    box-shadow: none;
+}
+
+.slider-div{
+    pointer-events: auto;
+}
+
+.speed-label{
+    color: lightgray;
+    font-size: 1.5rem;
+}

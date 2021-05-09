@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./ColorPicker.css";
 
-const ColorPicker = ({setMenuId,setCurrentFunction,setColor,getColor}) => {
+const ColorPicker = ({setMenuId,setCurrentFunction,setColor,getColor,resetMegaMinx}) => {
     // array of face colors in the order they're generated
     const [selected,setSelected] = useState(0);
 
@@ -64,6 +64,7 @@ const ColorPicker = ({setMenuId,setCurrentFunction,setColor,getColor}) => {
                         setMenuId(0);
                         setColor('blue');
                         setCurrentFunction('none');
+                        resetMegaMinx();
                     }}
                 >
                     <strong>Exit</strong>

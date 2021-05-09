@@ -15,6 +15,8 @@ const MegaMinx = ({reset}) => {
     // UI and megaminx controller variables
     let faceToRotate = "face0";
     let moveQueue = [];
+    let speedChanged = false;
+    let speedHolder = 3;
     let speed = 3;
     let counter = 0;
     let mouseDown = false;
@@ -30,11 +32,39 @@ const MegaMinx = ({reset}) => {
     let mouse = new THREE.Vector2();
     let controls = CameraControls(camera, renderer,scene);
 
-    let setMoveQueue = moves => {
-        if(!moveQueue.length) moveQueue = moves;
-    }
+    let setMoveQueue = moves => moveQueue = !moveQueue.length?moves:moveQueue;
 
-    
+    let getSpeed = () => speedHolder;
+    let setSpeed = speed => {
+        console.log(speed)
+        switch(speed){
+            case 0:
+                speedHolder = .25;
+                break;
+            case 1:
+                speedHolder = .5;
+                break;
+            case 2:
+                speedHolder = 1;
+                break;
+            case 3:
+                speedHolder = 3;
+                break;
+            case 4:
+                speedHolder = 6;
+                break;
+            case 5:
+                speedHolder = 12;
+                break;
+            case 6:
+                speedHolder = 24;
+                break;
+            case 7:
+                speedHolder = 72;
+            default:
+        }
+        speedChanged=true
+    }
 
     let getCurrentColor = () => currentColor;
     let setCurrentColor = color => currentColor=color
@@ -48,8 +78,6 @@ const MegaMinx = ({reset}) => {
 
     Math.csc = function(x) { return 1 / Math.sin(x); }
     
-
-
     // Set background color and size
     renderer.setClearColor(new THREE.Color("black"),0);
     renderer.domElement.className = "canvas";
@@ -391,6 +419,12 @@ const MegaMinx = ({reset}) => {
         let tempSpeed = speed;
 
         if(counter===0&&faceToRotate==="face0"){
+            if(speedChanged){
+                speedChanged = false;
+                speed = speedHolder;
+                tempSpeed=speed;
+                console.log("Speed changed to: "+speedHolder)
+            }
             if(moveQueue[0]) {
                 faceToRotate='face'+moveQueue.shift();
                 if(faceToRotate.split('').includes("'")){
@@ -409,23 +443,31 @@ const MegaMinx = ({reset}) => {
             // Rotate sides back to original position
             decaObject[face].sides.forEach((piece,i)=>{
                 piece.visible = false;
+
                 if(i%2){
                     piece.translateZ(-1.631)
                     piece.translateY(.895)
-                } else {
+                } 
+                
+                else {
                     piece.translateZ(-1.625)
                     piece.translateY(1)
                 }
-                    piece.rotateX(dToR(63.2))
+
+                piece.rotateX(dToR(63.2))
+
                 counter<0?
                     piece.rotateZ(dToR(Math.abs(counter))):
                     piece.rotateZ(dToR(Math.abs(counter)*-1));
+
                 piece.rotateX(dToR(-63.2))
 
                 if(i%2){
                     piece.translateZ(1.631)
                     piece.translateY(-.895)
-                } else {
+                } 
+                
+                else {
                     piece.translateZ(1.625)
                     piece.translateY(-1)
                 }
@@ -452,13 +494,14 @@ const MegaMinx = ({reset}) => {
         }
 
         if((Math.abs(speed)+Math.abs(counter))>72){
-            tempSpeed = (speed/Math.abs(speed))*(Math.abs(speed)+Math.abs(counter)-72)
+            tempSpeed = (72-Math.abs(counter))*(counter/Math.abs(counter))
         }
 
         facesToHide[face].forEach(piece=>{
             decaObject[`face${piece.face}`].front[piece.pos].visible=false;
         })
         decaObject[face].front.forEach((piece,i)=>{
+            
             piece.rotateZ(dToR(tempSpeed));
         });
         decaObject[face].sides.forEach((piece,i)=>{
@@ -507,15 +550,26 @@ const MegaMinx = ({reset}) => {
         renderer.render( scene, camera );
     };
 
+    let resetMegaMinx = () => {
+        // Generate object of piece references
+        facePos.forEach((set,i)=>{decaObject[`face${i+1}`]={front : [],sides : []}});
+
+        // Put the MegaMinx on the screen!
+        facePos.forEach((set,i)=>decaFace(1,set.translate,set.rotate,faceColors[i],i));
+    }
+
     animate();
     return (
         <Menu 
             setMoveQueue={setMoveQueue}
+            resetMegaMinx={resetMegaMinx}
             reset={reset}
             setCurrentFunction={setCurrentFunction}
             currentFunction={currentFunction}
             setColor={setCurrentColor}
             getColor={getCurrentColor}
+            setSpeed={setSpeed}
+            speed={getSpeed}
             />
     );
 }

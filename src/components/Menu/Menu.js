@@ -3,7 +3,7 @@ import Main from "../Main/Main";
 import ColorPicker from "../ColorPicker/ColorPicker";
 import { useState } from "react";
 
-const Menu = ({setMoveQueue,reset,setCurrentFunction,currentFunction,setColor,getColor}) => {
+const Menu = ({setMoveQueue,resetMegaMinx,reset,setCurrentFunction,currentFunction,setColor,getColor,speed,setSpeed}) => {
 
     const [menuId,setMenuId] = useState(0);
 
@@ -14,12 +14,15 @@ const Menu = ({setMoveQueue,reset,setCurrentFunction,currentFunction,setColor,ge
             setMenuId={setMenuId}
             setCurrentFunction={setCurrentFunction}
             currentFunction={currentFunction}
+            speed={speed}
+            setSpeed={setSpeed}
         />,
         <ColorPicker 
             setMenuId={setMenuId}
             setCurrentFunction={setCurrentFunction}
             getColor={getColor}
             setColor={setColor}
+            resetMegaMinx={resetMegaMinx}
         />,
         <div></div>,
         <div></div>
