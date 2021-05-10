@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/MegaMinx/static/css/main.f9b46f11.chunk.css",
-    "main.js": "/MegaMinx/static/js/main.0636f156.chunk.js",
-    "main.js.map": "/MegaMinx/static/js/main.0636f156.chunk.js.map",
-    "runtime-main.js": "/MegaMinx/static/js/runtime-main.fd391648.js",
-    "runtime-main.js.map": "/MegaMinx/static/js/runtime-main.fd391648.js.map",
-    "static/css/2.fe708519.chunk.css": "/MegaMinx/static/css/2.fe708519.chunk.css",
-    "static/js/2.51f2b9ea.chunk.js": "/MegaMinx/static/js/2.51f2b9ea.chunk.js",
-    "static/js/2.51f2b9ea.chunk.js.map": "/MegaMinx/static/js/2.51f2b9ea.chunk.js.map",
-    "static/js/3.6cae3f87.chunk.js": "/MegaMinx/static/js/3.6cae3f87.chunk.js",
-    "static/js/3.6cae3f87.chunk.js.map": "/MegaMinx/static/js/3.6cae3f87.chunk.js.map",
+    "main.css": "/MegaMinx/static/css/main.5e11bbe1.chunk.css",
+    "main.js": "/MegaMinx/static/js/main.952820ff.chunk.js",
+    "main.js.map": "/MegaMinx/static/js/main.952820ff.chunk.js.map",
+    "runtime-main.js": "/MegaMinx/static/js/runtime-main.00c24ecd.js",
+    "runtime-main.js.map": "/MegaMinx/static/js/runtime-main.00c24ecd.js.map",
+    "static/css/2.86b469c6.chunk.css": "/MegaMinx/static/css/2.86b469c6.chunk.css",
+    "static/js/2.d1d5c19f.chunk.js": "/MegaMinx/static/js/2.d1d5c19f.chunk.js",
+    "static/js/2.d1d5c19f.chunk.js.map": "/MegaMinx/static/js/2.d1d5c19f.chunk.js.map",
+    "static/js/3.4c538279.chunk.js": "/MegaMinx/static/js/3.4c538279.chunk.js",
+    "static/js/3.4c538279.chunk.js.map": "/MegaMinx/static/js/3.4c538279.chunk.js.map",
     "index.html": "/MegaMinx/index.html",
-    "static/css/2.fe708519.chunk.css.map": "/MegaMinx/static/css/2.fe708519.chunk.css.map",
-    "static/css/main.f9b46f11.chunk.css.map": "/MegaMinx/static/css/main.f9b46f11.chunk.css.map",
-    "static/js/2.51f2b9ea.chunk.js.LICENSE.txt": "/MegaMinx/static/js/2.51f2b9ea.chunk.js.LICENSE.txt"
+    "static/css/2.86b469c6.chunk.css.map": "/MegaMinx/static/css/2.86b469c6.chunk.css.map",
+    "static/css/main.5e11bbe1.chunk.css.map": "/MegaMinx/static/css/main.5e11bbe1.chunk.css.map",
+    "static/js/2.d1d5c19f.chunk.js.LICENSE.txt": "/MegaMinx/static/js/2.d1d5c19f.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.fd391648.js",
-    "static/css/2.fe708519.chunk.css",
-    "static/js/2.51f2b9ea.chunk.js",
-    "static/css/main.f9b46f11.chunk.css",
-    "static/js/main.0636f156.chunk.js"
+    "static/js/runtime-main.00c24ecd.js",
+    "static/css/2.86b469c6.chunk.css",
+    "static/js/2.d1d5c19f.chunk.js",
+    "static/css/main.5e11bbe1.chunk.css",
+    "static/js/main.952820ff.chunk.js"
   ]
 }

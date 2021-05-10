@@ -8,7 +8,6 @@ const scramble = () => {
     while(moves.length<25){
         const lastIndex = moves.length-1;
         const secondToLastIndex = moves.length-2;
-        const thirdToLastIndex = moves.length-3
 
         let randomFace = Math.floor(Math.random() * 12)+1;
         let randomDir  = Math.floor(Math.random() * 2);
@@ -19,10 +18,9 @@ const scramble = () => {
         if(inverse===moves[lastIndex]){
             // No move added
         }
-        else if(moves.length>3){
+        else if(moves.length>2){
             if (move===moves[lastIndex]&&
-                move===moves[secondToLastIndex]&&
-                move===moves[thirdToLastIndex]){
+                move===moves[secondToLastIndex]){
                     // No move added
             }
             else {

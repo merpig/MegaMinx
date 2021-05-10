@@ -9,20 +9,20 @@ import facePos from "./facePositions";
 import "./MegaMinx.css"
 import { useEffect } from "react";
 import Menu from "../Menu/Menu";
-import piecesSeed from "./pieces";
+//import piecesSeed from "./pieces";
 
 const MegaMinx = ({reset}) => {
     // UI and megaminx controller variables
-    let faceToRotate = "face0";
-    let moveQueue = [];
-    let speedChanged = false;
-    let speedHolder = 3;
-    let speed = 3;
-    let counter = 0;
-    let mouseDown = false;
-    let pieces;
-    let currentFunc = "none";
-    let currentColor = "blue";
+    let faceToRotate = "face0"; // Controls which face will rotate
+    let moveQueue = []; // Moves in here will be immediately played
+    let speedChanged = false; // Signals a queued speed change
+    let speedHolder = 3; // Queued speed change
+    let speed = 3; // Default move speed (must divide evenly into 72)
+    let counter = 0; // Theta counter for piece rotation (counts to 72)
+    let updateMouse = false; // Signals mouse can be updated in mousemove
+    //let pieces; 
+    let currentFunc = "none"; // Current state of the menu
+    let currentColor = "blue"; // Color used by colorpicker (default blue)
 
     // Threejs variables
     let scene = new THREE.Scene();
@@ -61,6 +61,7 @@ const MegaMinx = ({reset}) => {
                 break;
             case 7:
                 speedHolder = 72;
+                break;
             default:
         }
         speedChanged=true
@@ -73,7 +74,7 @@ const MegaMinx = ({reset}) => {
     let currentFunction = () => currentFunc;
     let setCurrentFunction = func => currentFunc = func;
 
-    const decaObject = {
+    let decaObject = {
     }
 
     Math.csc = function(x) { return 1 / Math.sin(x); }
@@ -91,41 +92,57 @@ const MegaMinx = ({reset}) => {
     renderer.render( scene, camera );
 
     function onMouseDown(e) {
-        e.stopPropagation();
 
+        // update mouse position
         mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-
+        
+        // Set the raycaster to check for intersected objects
         raycaster.setFromCamera( mouse, camera );
 
         const intersects = raycaster.intersectObjects( scene.children );
+
+        // Filter only pieces that should be interacted with
         let filteredIntersects = intersects.filter(
             e=>e.object.name==="corner"||e.object.name==="edge"
         );
 
-        try{
-
-            if(currentFunc==="colorpicker"){
-                filteredIntersects[0].object.material.color.set(currentColor)
-            } 
-            //.forEach(e=>{
-                // console.log(e.object.material.color);
-                // console.log(e.object.position);
-                // console.log(e.object.name)
-                
-            //})
-
-            console.log("-----------------------------")
-
-        }catch(e){
-
+        // if a piece is intersected disable camera rotation
+        if(intersects[0]) {
+            controls.enabled = false;
         }
+
+        // Enable mouse movement position updating
+        if(
+            filteredIntersects[0] && 
+            !moveQueue.length 
+            && ["none","solver","patterns"].includes(currentFunc)
+        ){
+            updateMouse = true;
+        }
+
+        // Change the clicked piece color to the selected color
+        if(currentFunc==="colorpicker"&&filteredIntersects[0]){
+            filteredIntersects[0].object.material.color.set(currentColor)
+        } 
+        // console.log(e.object.material.color);
+        // console.log(e.object.position);
+        // console.log(e.object.name)
+
+        console.log("-----------------------------")
 
     }
 
     function onMouseUp(e) {
-        e.stopImmediatePropagation();
-        mouseDown=false;
+        controls.enabled = true;
+        updateMouse=false;
+    }
+
+    function onMouseMove(e){
+        if(!updateMouse) return;
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
     }
 
     // Event listeners
@@ -163,7 +180,7 @@ const MegaMinx = ({reset}) => {
 
         return function cleanup () {
             window.removeEventListener("pointerdown",onMouseDown,false)
-            window.removeEventListener("pointerdown",onMouseUp,false)
+            window.removeEventListener("pointerup",onMouseUp,false)
         }
     })
 
@@ -410,7 +427,7 @@ const MegaMinx = ({reset}) => {
     // Put the MegaMinx on the screen!
     facePos.forEach((set,i)=>decaFace(1,set.translate,set.rotate,faceColors[i],i));
 
-    pieces = piecesSeed(decaObject);
+    //pieces = piecesSeed(decaObject);
 
     
     
@@ -552,9 +569,11 @@ const MegaMinx = ({reset}) => {
 
     let resetMegaMinx = () => {
         // Generate object of piece references
+        decaObject={};
         facePos.forEach((set,i)=>{decaObject[`face${i+1}`]={front : [],sides : []}});
 
         // Put the MegaMinx on the screen!
+        scene.clear();
         facePos.forEach((set,i)=>decaFace(1,set.translate,set.rotate,faceColors[i],i));
     }
 
