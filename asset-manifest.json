@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/MegaMinx/static/css/main.5e11bbe1.chunk.css",
-    "main.js": "/MegaMinx/static/js/main.952820ff.chunk.js",
-    "main.js.map": "/MegaMinx/static/js/main.952820ff.chunk.js.map",
+    "main.js": "/MegaMinx/static/js/main.15174c40.chunk.js",
+    "main.js.map": "/MegaMinx/static/js/main.15174c40.chunk.js.map",
     "runtime-main.js": "/MegaMinx/static/js/runtime-main.00c24ecd.js",
     "runtime-main.js.map": "/MegaMinx/static/js/runtime-main.00c24ecd.js.map",
     "static/css/2.86b469c6.chunk.css": "/MegaMinx/static/css/2.86b469c6.chunk.css",
@@ -20,6 +20,6 @@
     "static/css/2.86b469c6.chunk.css",
     "static/js/2.d1d5c19f.chunk.js",
     "static/css/main.5e11bbe1.chunk.css",
-    "static/js/main.952820ff.chunk.js"
+    "static/js/main.15174c40.chunk.js"
   ]
 }
