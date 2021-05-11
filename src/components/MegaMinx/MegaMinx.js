@@ -99,7 +99,7 @@ const MegaMinx = ({reset}) => {
     renderer.render( scene, camera );
 
     function onMouseDown(e) {
-
+        e.stopPropagation();
         // update mouse position
         mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -143,9 +143,9 @@ const MegaMinx = ({reset}) => {
                 selectedSide = filteredIntersects[0].object.side;
 
                 console.log("Testing piece 8")
-                console.log("2D vector: "+filteredIntersects[0].uv)
-                console.log("Face piece numebr: "+filteredIntersects[0].object.piece)
-                console.log("Sider: "+filteredIntersects[0].object.side);
+                console.log("2D vector: "+startPoint)
+                console.log("Face piece number: "+selectedPiece)
+                console.log("Side: "+selectedSide);
             }
         }
 
@@ -182,15 +182,60 @@ const MegaMinx = ({reset}) => {
 
         if(filteredIntersects[0]){
             let newPoint = filteredIntersects[0].uv;
-
-            
-            calculateTurn(startPoint,newPoint,selectedSide,selectedPiece);
+            let turn = calculateTurn(startPoint,newPoint,selectedSide,selectedPiece);
+            if(turn) {
+                updateMouse=false;
+                console.log(turn);
+                moveQueue.push(turn);
+            }
         }
     }
 
     // Calculates what turn to make when attempting to move a piece
     function calculateTurn(startPoint,newPoint,selectedSide,selectedPiece){
-
+        if(selectedPiece===8){
+            let difX = newPoint.x-startPoint.x;
+            let turnDirection = difX>0?"":"'";
+            if(Math.abs(difX)>.2){
+                if(selectedSide==="blue"){
+                    return "3"+turnDirection;
+                }
+                else if(selectedSide==="pink"){
+                    return "1"+turnDirection;
+                }
+                else if(selectedSide==="yellow"){
+                    return "1"+turnDirection;
+                }
+                else if(selectedSide==="red"){
+                    return "1"+turnDirection;
+                }
+                else if(selectedSide==="green"){
+                    return "1"+turnDirection;
+                }
+                else if(selectedSide==="lightpurple"){
+                    return "1"+turnDirection;
+                }
+                else if(selectedSide==="lightblue"){
+                    return "12"+turnDirection;
+                }
+                else if(selectedSide==="lightbrown"){
+                    return "7"+turnDirection;
+                }
+                else if(selectedSide==="lightgreen"){
+                    return "7"+turnDirection;
+                }
+                else if(selectedSide==="orange"){
+                    return "7"+turnDirection;
+                }
+                else if(selectedSide==="purple"){
+                    return "7"+turnDirection;
+                }
+                else if(selectedSide==="white"){
+                    return "7"+turnDirection;
+                }
+            }
+            console.log(newPoint.x-startPoint.x)
+        }
     }
 
     // Event listeners
@@ -225,10 +270,16 @@ const MegaMinx = ({reset}) => {
         document.body.children[1].appendChild( renderer.domElement );
         window.addEventListener("pointerdown",onMouseDown,false);
         window.addEventListener("pointerup",onMouseUp,false);
+        window.addEventListener("pointermove",onMouseMove,false);
+
+        // window.addEventListener("touchstart",onMouseDown,false);
+        // window.addEventListener("touchend",onMouseUp,false);
+        // window.addEventListener("touchmove",onMouseMove,false);
 
         return function cleanup () {
             window.removeEventListener("pointerdown",onMouseDown,false)
             window.removeEventListener("pointerup",onMouseUp,false)
+            window.removeEventListener("pointermove",onMouseMove,false);
         }
     })
 
