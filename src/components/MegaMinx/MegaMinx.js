@@ -20,9 +20,15 @@ const MegaMinx = ({reset}) => {
     let speed = 3; // Default move speed (must divide evenly into 72)
     let counter = 0; // Theta counter for piece rotation (counts to 72)
     let updateMouse = false; // Signals mouse can be updated in mousemove
-    //let pieces; 
     let currentFunc = "none"; // Current state of the menu
     let currentColor = "blue"; // Color used by colorpicker (default blue)
+
+    // Used for touch/mouse rotations
+    let startPoint = null;
+    let selectedSide = null;
+    let selectedPiece = null;
+
+    //let pieces; 
 
     // Threejs variables
     let scene = new THREE.Scene();
@@ -67,6 +73,7 @@ const MegaMinx = ({reset}) => {
         speedChanged=true
     }
 
+    // getter and setter for current color
     let getCurrentColor = () => currentColor;
     let setCurrentColor = color => currentColor=color
 
@@ -96,6 +103,11 @@ const MegaMinx = ({reset}) => {
         // update mouse position
         mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+        // reset piece selection data
+        startPoint = null;
+        selectedSide = null;
+        selectedPiece = null;
         
         // Set the raycaster to check for intersected objects
         raycaster.setFromCamera( mouse, camera );
@@ -119,6 +131,22 @@ const MegaMinx = ({reset}) => {
             && ["none","solver","patterns"].includes(currentFunc)
         ){
             updateMouse = true;
+            console.log(filteredIntersects[0]);
+
+            // Values to be used for touch turns
+            selectedPiece = filteredIntersects[0].object.piece;
+
+            // Testing for piece 8 first
+            if(selectedPiece===8){
+
+                startPoint = filteredIntersects[0].uv;
+                selectedSide = filteredIntersects[0].object.side;
+
+                console.log("Testing piece 8")
+                console.log("2D vector: "+filteredIntersects[0].uv)
+                console.log("Face piece numebr: "+filteredIntersects[0].object.piece)
+                console.log("Sider: "+filteredIntersects[0].object.side);
+            }
         }
 
         // Change the clicked piece color to the selected color
@@ -142,6 +170,26 @@ const MegaMinx = ({reset}) => {
         if(!updateMouse) return;
         mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera( mouse, camera );
+
+        const intersects = raycaster.intersectObjects( scene.children );
+
+        // Filter only pieces that should be interacted with
+        let filteredIntersects = intersects.filter(
+            e=>e.object.name==="corner"||e.object.name==="edge"
+        );
+
+        if(filteredIntersects[0]){
+            let newPoint = filteredIntersects[0].uv;
+
+            
+            calculateTurn(startPoint,newPoint,selectedSide,selectedPiece);
+        }
+    }
+
+    // Calculates what turn to make when attempting to move a piece
+    function calculateTurn(startPoint,newPoint,selectedSide,selectedPiece){
 
     }
 
@@ -303,12 +351,15 @@ const MegaMinx = ({reset}) => {
         if(piece>0&&piece<6) squareMesh2.name="corner";
         if(piece>5&&piece<11) squareMesh2.name="edge";
 
+        squareMesh2.piece = piece;
+        squareMesh2.side = colorNames[i];
+
         squareMesh2.scale.set(.95,.95)
 
         squareMesh.translateZ(translate?.z||0)
         i<6?
-            squareMesh2.translateZ(translate?.z+.01||0):
-            squareMesh2.translateZ(translate?.z-.01||0)
+            squareMesh2.translateZ(translate?.z+.005||0):
+            squareMesh2.translateZ(translate?.z-.005||0)
 
         let offsetZ =.205;
         let offsetY = -.81;
@@ -378,6 +429,21 @@ const MegaMinx = ({reset}) => {
         "#4fc3f7",  // 7 light blue
         "#C39B77",  // 8 light brown
         "#64dd17",  // 9 light green
+        "orange",   // 10
+        "purple",   // 11
+        "white"     // 12
+    ];
+
+    let colorNames = [
+        "blue",     // 1
+        "pink",     // 2 pink
+        "yellow",   // 3
+        "red",      // 4
+        "green",    // 5
+        "lightpurple",  // 6 light purple
+        "lightblue",  // 7 light blue
+        "lightbrown",  // 8 light brown
+        "lightgreen",  // 9 light green
         "orange",   // 10
         "purple",   // 11
         "white"     // 12
