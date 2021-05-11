@@ -99,7 +99,6 @@ const MegaMinx = ({reset}) => {
     renderer.render( scene, camera );
 
     function onMouseDown(e) {
-        e.stopPropagation();
         // update mouse position
         mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
