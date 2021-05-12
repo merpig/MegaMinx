@@ -162,7 +162,7 @@ const MegaMinx = ({reset}) => {
             selectedPiece = filteredIntersects[0].object.piece;
 
             // Testing for piece 8 first
-            if((selectedPiece>5&&selectedPiece<11)||selectedPiece===3){
+            if((selectedPiece>0&&selectedPiece<11)){
 
                 startPoint = filteredIntersects[0].uv;
                 selectedSide = filteredIntersects[0].object.side;
