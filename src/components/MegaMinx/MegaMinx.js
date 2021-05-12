@@ -21,7 +21,6 @@ ISSUES:
         2. Hide fullscreen button on mobile platfroms
 
 TODO:
-    1. Finish clicking/dragging corner pieces rotations
     2. Fix Bugs
     3. Solver
     4. Patterns
@@ -157,7 +156,6 @@ const MegaMinx = ({reset}) => {
         ){
             updateMouse = true;
 
-            console.log(filteredIntersects[0]);
             // Values to be used for touch turns
             selectedPiece = filteredIntersects[0].object.piece;
 
@@ -167,10 +165,10 @@ const MegaMinx = ({reset}) => {
                 startPoint = filteredIntersects[0].uv;
                 selectedSide = filteredIntersects[0].object.side;
 
-                console.log(`Testing piece ${selectedPiece}`)
-                console.log("2D vector: "+startPoint)
-                console.log("Face piece number: "+selectedPiece)
-                console.log("Side: "+selectedSide);
+                // console.log(`Testing piece ${selectedPiece}`)
+                // console.log("2D vector: "+startPoint)
+                // console.log("Face piece number: "+selectedPiece)
+                // console.log("Side: "+selectedSide);
             }
         }
         // For non interactable pieces
@@ -184,7 +182,7 @@ const MegaMinx = ({reset}) => {
             filteredIntersects[0].object.material.color.set(currentColor)
         }
 
-        console.log("-----------------------------")
+        // console.log("-----------------------------")
     }
 
     function onMouseUp(e) {
@@ -223,7 +221,6 @@ const MegaMinx = ({reset}) => {
                 newPoint=null;
                 selectedSide=null;
                 selectedPiece=null;
-                console.log(turn);
                 moveQueue.push(turn);
             }
         }
@@ -233,7 +230,10 @@ const MegaMinx = ({reset}) => {
             let turn = calculateTurn(startPoint,newPoint,selectedSide,selectedPiece,true);
             if(turn) {
                 updateMouse=false;
-                console.log(turn);
+                startPoint=null;
+                newPoint=null;
+                selectedSide=null;
+                selectedPiece=null;
                 moveQueue.push(turn);
             }
         }

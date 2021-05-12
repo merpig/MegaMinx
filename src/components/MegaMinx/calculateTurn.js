@@ -44,7 +44,6 @@ function calculateTurn(startPoint,newPoint,selectedSide,selectedPiece,touchedEdg
                 return "7"+turnDirection;
             }
         }
-        console.log(newPoint.x-startPoint.x)
     }
     else if(selectedPiece===9){
         let newStart = rotate_point(0,0,72,{...startPoint});
@@ -94,7 +93,6 @@ function calculateTurn(startPoint,newPoint,selectedSide,selectedPiece,touchedEdg
         let difX = newCurrent[0]-newStart[0];
         let turnDirection = difX>0?"":"'";
         if(touchedEdge||Math.abs(difX)>.2){
-            console.log(difX);
             if(selectedSide==="blue")return "5"+turnDirection;
             else if(selectedSide==="pink") return "8"+turnDirection;
             else if(selectedSide==="yellow") return "9"+turnDirection;
@@ -310,7 +308,6 @@ function calculateTurn(startPoint,newPoint,selectedSide,selectedPiece,touchedEdg
 
         if(touchedEdge||dist>.2){
             if(selectedSide==="blue"){
-                console.log(degrees)
                 if(degrees>=36&&degrees<126) return "2";
                 if(degrees>=126&&degrees<216) return "6'";
                 if(degrees>=216&&degrees<306) return "2'";
@@ -395,7 +392,6 @@ function calculateTurn(startPoint,newPoint,selectedSide,selectedPiece,touchedEdg
 
         if(touchedEdge||dist>.2){
             if(selectedSide==="blue"){
-                console.log(degrees)
                 if(degrees>=36&&degrees<126) return "6";
                 if(degrees>=126&&degrees<216) return "5'";
                 if(degrees>=216&&degrees<306) return "6'";
@@ -480,7 +476,6 @@ function calculateTurn(startPoint,newPoint,selectedSide,selectedPiece,touchedEdg
 
         if(touchedEdge||dist>.2){
             if(selectedSide==="blue"){
-                console.log(degrees)
                 if(degrees>=36&&degrees<126) return "5";
                 if(degrees>=126&&degrees<216) return "4'";
                 if(degrees>=216&&degrees<306) return "5'";
