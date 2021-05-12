@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/MegaMinx/static/css/main.57d6d83b.chunk.css",
+    "main.css": "/MegaMinx/static/css/main.4aa69ef5.chunk.css",
     "main.js": "/MegaMinx/static/js/main.d88b8f99.chunk.js",
     "main.js.map": "/MegaMinx/static/js/main.d88b8f99.chunk.js.map",
     "runtime-main.js": "/MegaMinx/static/js/runtime-main.37ba85ae.js",
@@ -12,14 +12,14 @@
     "static/js/3.7ca5550a.chunk.js.map": "/MegaMinx/static/js/3.7ca5550a.chunk.js.map",
     "index.html": "/MegaMinx/index.html",
     "static/css/2.86b469c6.chunk.css.map": "/MegaMinx/static/css/2.86b469c6.chunk.css.map",
-    "static/css/main.57d6d83b.chunk.css.map": "/MegaMinx/static/css/main.57d6d83b.chunk.css.map",
+    "static/css/main.4aa69ef5.chunk.css.map": "/MegaMinx/static/css/main.4aa69ef5.chunk.css.map",
     "static/js/2.c5ddc521.chunk.js.LICENSE.txt": "/MegaMinx/static/js/2.c5ddc521.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.37ba85ae.js",
     "static/css/2.86b469c6.chunk.css",
     "static/js/2.c5ddc521.chunk.js",
-    "static/css/main.57d6d83b.chunk.css",
+    "static/css/main.4aa69ef5.chunk.css",
     "static/js/main.d88b8f99.chunk.js"
   ]
 }
