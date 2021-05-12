@@ -26,6 +26,10 @@ export function dToR (degrees) {
     return degrees*(Math.PI/180)
 }
 
+export function rToD(radians){
+  return radians * (180/Math.PI);
+}
+
 export function rotate_point(cx,cy,angle,p){
     let s = Math.sin(dToR(angle));
     let c = Math.cos(dToR(angle));

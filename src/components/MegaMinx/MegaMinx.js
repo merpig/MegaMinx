@@ -1,17 +1,39 @@
 import * as THREE from "three";
-import {CameraControls, dToR} from "./utils.js";
+import {CameraControls, dToR, rotate_point} from "./utils.js";
 import Corner from "./CornerDimensions";
 import Edge from "./EdgeDimensions";
 import swapColors from "./swapColors";
 import facesToHide from "./facesToHide";
 import colorMatchUps from "./colorMatchUps";
 import facePos from "./facePositions";
+import calculateTurn from "./calculateTurn";
 import "./MegaMinx.css"
 import { useEffect } from "react";
 import Menu from "../Menu/Menu";
 //import piecesSeed from "./pieces";
 
+/*
+
+ISSUES:
+
+    GENERAL:
+        1. Fix info panel
+        2. Hide fullscreen button on mobile platfroms
+
+TODO:
+    1. Finish clicking/dragging corner pieces rotations
+    2. Fix Bugs
+    3. Solver
+    4. Patterns
+    5. Undo/Redo
+
+*/
+
 const MegaMinx = ({reset}) => {
+
+    // Added csc to Math library
+    Math.csc = function(x) { return 1 / Math.sin(x); }
+
     // UI and megaminx controller variables
     let faceToRotate = "face0"; // Controls which face will rotate
     let moveQueue = []; // Moves in here will be immediately played
@@ -25,10 +47,9 @@ const MegaMinx = ({reset}) => {
 
     // Used for touch/mouse rotations
     let startPoint = null;
+    let newPoint = null;
     let selectedSide = null;
     let selectedPiece = null;
-
-    //let pieces; 
 
     // Threejs variables
     let scene = new THREE.Scene();
@@ -38,8 +59,10 @@ const MegaMinx = ({reset}) => {
     let mouse = new THREE.Vector2();
     let controls = CameraControls(camera, renderer,scene);
 
+    // Setter for moveQueue
     let setMoveQueue = moves => moveQueue = !moveQueue.length?moves:moveQueue;
 
+    // getter and setter for speed holder
     let getSpeed = () => speedHolder;
     let setSpeed = speed => {
         console.log(speed)
@@ -81,10 +104,9 @@ const MegaMinx = ({reset}) => {
     let currentFunction = () => currentFunc;
     let setCurrentFunction = func => currentFunc = func;
 
+    // Holds references to all the rendered pieces
     let decaObject = {
     }
-
-    Math.csc = function(x) { return 1 / Math.sin(x); }
     
     // Set background color and size
     renderer.setClearColor(new THREE.Color("black"),0);
@@ -118,6 +140,10 @@ const MegaMinx = ({reset}) => {
             e=>e.object.name==="corner"||e.object.name==="edge"
         );
 
+        let filteredCenters = intersects.filter(e=>
+            e.object.name==="center"
+        );
+
         // if a piece is intersected disable camera rotation
         if(intersects[0]) {
             controls.enabled = false;
@@ -130,34 +156,35 @@ const MegaMinx = ({reset}) => {
             && ["none","solver","patterns"].includes(currentFunc)
         ){
             updateMouse = true;
-            console.log(filteredIntersects[0]);
 
+            console.log(filteredIntersects[0]);
             // Values to be used for touch turns
             selectedPiece = filteredIntersects[0].object.piece;
 
             // Testing for piece 8 first
-            if(selectedPiece===8){
+            if((selectedPiece>5&&selectedPiece<11)||selectedPiece===3){
 
                 startPoint = filteredIntersects[0].uv;
                 selectedSide = filteredIntersects[0].object.side;
 
-                console.log("Testing piece 8")
+                console.log(`Testing piece ${selectedPiece}`)
                 console.log("2D vector: "+startPoint)
                 console.log("Face piece number: "+selectedPiece)
                 console.log("Side: "+selectedSide);
             }
         }
+        // For non interactable pieces
+        else if(!filteredIntersects[0]&&intersects[0]){
+            updateMouse = true;
+            selectedPiece = intersects[0].object.piece;
+        }
 
         // Change the clicked piece color to the selected color
         if(currentFunc==="colorpicker"&&filteredIntersects[0]){
             filteredIntersects[0].object.material.color.set(currentColor)
-        } 
-        // console.log(e.object.material.color);
-        // console.log(e.object.position);
-        // console.log(e.object.name)
+        }
 
         console.log("-----------------------------")
-
     }
 
     function onMouseUp(e) {
@@ -166,12 +193,20 @@ const MegaMinx = ({reset}) => {
     }
 
     function onMouseMove(e){
-        if(!updateMouse) return;
+        if(e.pointerType==="touch") controls.enabled = true;
+        // If no piece was clicked end function
+        if(!updateMouse) {
+            return;
+        }
+        
+        // Get new mouse coordinates
         mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
 
+        // set up raycaster to detect intersected objects
         raycaster.setFromCamera( mouse, camera );
 
+        // any intersected objects go in here
         const intersects = raycaster.intersectObjects( scene.children );
 
         // Filter only pieces that should be interacted with
@@ -180,60 +215,27 @@ const MegaMinx = ({reset}) => {
         );
 
         if(filteredIntersects[0]){
-            let newPoint = filteredIntersects[0].uv;
+            newPoint = filteredIntersects[0].uv;
             let turn = calculateTurn(startPoint,newPoint,selectedSide,selectedPiece);
+            if(turn) {
+                updateMouse=false;
+                startPoint=null;
+                newPoint=null;
+                selectedSide=null;
+                selectedPiece=null;
+                console.log(turn);
+                moveQueue.push(turn);
+            }
+        }
+        else if(!filteredIntersects[0]&&intersects[0]){
+            if(!startPoint) return;
+            console.log("hit edge");
+            let turn = calculateTurn(startPoint,newPoint,selectedSide,selectedPiece,true);
             if(turn) {
                 updateMouse=false;
                 console.log(turn);
                 moveQueue.push(turn);
             }
-        }
-    }
-
-    // Calculates what turn to make when attempting to move a piece
-    function calculateTurn(startPoint,newPoint,selectedSide,selectedPiece){
-        if(selectedPiece===8){
-            let difX = newPoint.x-startPoint.x;
-            let turnDirection = difX>0?"":"'";
-            if(Math.abs(difX)>.2){
-                if(selectedSide==="blue"){
-                    return "3"+turnDirection;
-                }
-                else if(selectedSide==="pink"){
-                    return "1"+turnDirection;
-                }
-                else if(selectedSide==="yellow"){
-                    return "1"+turnDirection;
-                }
-                else if(selectedSide==="red"){
-                    return "1"+turnDirection;
-                }
-                else if(selectedSide==="green"){
-                    return "1"+turnDirection;
-                }
-                else if(selectedSide==="lightpurple"){
-                    return "1"+turnDirection;
-                }
-                else if(selectedSide==="lightblue"){
-                    return "12"+turnDirection;
-                }
-                else if(selectedSide==="lightbrown"){
-                    return "7"+turnDirection;
-                }
-                else if(selectedSide==="lightgreen"){
-                    return "7"+turnDirection;
-                }
-                else if(selectedSide==="orange"){
-                    return "7"+turnDirection;
-                }
-                else if(selectedSide==="purple"){
-                    return "7"+turnDirection;
-                }
-                else if(selectedSide==="white"){
-                    return "7"+turnDirection;
-                }
-            }
-            console.log(newPoint.x-startPoint.x)
         }
     }
 
@@ -467,7 +469,7 @@ const MegaMinx = ({reset}) => {
         
     }
 
-    // array of face colors in the order they're generated
+    // array of face colors/hex in the order they're generated
     let faceColors = [
         "blue",     // 1
         "#ff80ce",     // 2 pink
@@ -484,6 +486,7 @@ const MegaMinx = ({reset}) => {
         "white"     // 12
     ];
 
+    // array of face color names in the order they're generated
     let colorNames = [
         "blue",     // 1
         "pink",     // 2 pink
@@ -543,10 +546,6 @@ const MegaMinx = ({reset}) => {
     // Put the MegaMinx on the screen!
     facePos.forEach((set,i)=>decaFace(1,set.translate,set.rotate,faceColors[i],i));
 
-    //pieces = piecesSeed(decaObject);
-
-    
-    
     // Rotates a given face of the megaminx
     let rotateFace = (face) => {
         let tempSpeed = speed;

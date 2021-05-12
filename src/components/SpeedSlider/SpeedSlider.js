@@ -18,7 +18,7 @@ const SpeedSlider = ({speed,sliderSpeed,setSpeed,setSliderSpeed}) => (
             }}
         />
         <div className="speed-label">
-            Speed : {Math.round(sliderSpeed/7*100)}%
+            Speed
         </div>
     </div>
 );
