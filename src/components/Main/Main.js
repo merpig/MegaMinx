@@ -2,8 +2,9 @@ import "./Main.css";
 import MenuButton from "../MenuButton/MenuButton";
 import scramble from "./scramble";
 import SpeedSlider from "../SpeedSlider/SpeedSlider";
+import UndoRedo from "../UndoRedo/UndoRedo";
 import { useState } from "react";
-const Main = ({setMoveQueue,reset,setMenuId,setCurrentFunction,currentFunction,speed,setSpeed}) => {
+const Main = ({setMoveLogIndex,setMoveQueue,reset,setMenuId,setCurrentFunction,currentFunction,speed,setSpeed}) => {
 
     let [sliderSpeed,setSliderSpeed] = useState(3);
 
@@ -17,6 +18,8 @@ const Main = ({setMoveQueue,reset,setMenuId,setCurrentFunction,currentFunction,s
                 setSpeed={setSpeed} 
                 setSliderSpeed={setSliderSpeed}
             />
+
+            <UndoRedo setIndex={setMoveLogIndex}/>
 
             <div className="panel panel-left">
 

@@ -10,21 +10,19 @@ import calculateTurn from "./calculateTurn";
 import "./MegaMinx.css"
 import { useEffect } from "react";
 import Menu from "../Menu/Menu";
-//import piecesSeed from "./pieces";
+import pieces from "./pieces";
 
 /*
 
 ISSUES:
 
     GENERAL:
-        1. Fix info panel
-        2. Hide fullscreen button on mobile platfroms
+        3. Small edge case on corners when turning right by edge, turns wrong way
 
 TODO:
     2. Fix Bugs
     3. Solver
     4. Patterns
-    5. Undo/Redo
 
 */
 
@@ -36,6 +34,8 @@ const MegaMinx = ({reset}) => {
     // UI and megaminx controller variables
     let faceToRotate = "face0"; // Controls which face will rotate
     let moveQueue = []; // Moves in here will be immediately played
+    let moveLog = [];
+    let moveLogIndex = 0;
     let speedChanged = false; // Signals a queued speed change
     let speedHolder = 3; // Queued speed change
     let speed = 3; // Default move speed (must divide evenly into 72)
@@ -43,6 +43,7 @@ const MegaMinx = ({reset}) => {
     let updateMouse = false; // Signals mouse can be updated in mousemove
     let currentFunc = "none"; // Current state of the menu
     let currentColor = "blue"; // Color used by colorpicker (default blue)
+    let undoRedo = false;
 
     // Used for touch/mouse rotations
     let startPoint = null;
@@ -93,6 +94,34 @@ const MegaMinx = ({reset}) => {
             default:
         }
         speedChanged=true
+    }
+
+    let reverseMove = move => {
+        console.log(move);
+        return move.split('').includes("'")?move.replace("'",""):move+"'"
+    }
+
+    let getMoveLogIndex = () => moveLogIndex;
+    let setMoveLogIndex = n => {
+        
+        console.log(moveLogIndex)
+
+        if(n>=0&&moveLogIndex<=moveLog.length-1){
+            undoRedo=true;
+            console.log(moveLog[moveLogIndex])
+            moveQueue.push(moveLog[moveLogIndex])
+            moveLogIndex++;
+            console.log(moveLogIndex)
+        } 
+
+        else if(n<0&&moveLogIndex>0){
+            undoRedo=true;
+            moveLogIndex--;
+            console.log(moveLog[moveLogIndex])
+            moveQueue.push(reverseMove(moveLog[moveLogIndex]));
+            console.log(moveLogIndex)  
+        }
+
     }
 
     // getter and setter for current color
@@ -164,7 +193,6 @@ const MegaMinx = ({reset}) => {
 
                 startPoint = filteredIntersects[0].uv;
                 selectedSide = filteredIntersects[0].object.side;
-
                 // console.log(`Testing piece ${selectedPiece}`)
                 // console.log("2D vector: "+startPoint)
                 // console.log("Face piece number: "+selectedPiece)
@@ -546,6 +574,9 @@ const MegaMinx = ({reset}) => {
     // Put the MegaMinx on the screen!
     facePos.forEach((set,i)=>decaFace(1,set.translate,set.rotate,faceColors[i],i));
 
+    let allPieces = pieces(decaObject);
+    console.log(allPieces)
+
     // Rotates a given face of the megaminx
     let rotateFace = (face) => {
         let tempSpeed = speed;
@@ -558,7 +589,27 @@ const MegaMinx = ({reset}) => {
                 console.log("Speed changed to: "+speedHolder)
             }
             if(moveQueue[0]) {
-                faceToRotate='face'+moveQueue.shift();
+                let move = moveQueue.shift();
+                faceToRotate='face'+move;
+
+                //remove tail end of moveLog if index is lower then the last index of moveLog
+
+                // if(moveLogIndex<moveLog.length-1&&!undoRedo){
+                //     moveLog = moveLog.slice(0,moveLogIndex);
+                // }
+
+                if(!undoRedo) {
+                    moveLog = moveLog.slice(0,moveLogIndex);
+                    moveLogIndex++;
+                    moveLog.push(move);
+                }
+
+                else {
+                    undoRedo=false;
+                }
+
+                console.log(moveLog);
+
                 if(faceToRotate.split('').includes("'")){
                     faceToRotate=faceToRotate.replace("'","");
                     speed = Math.abs(speed);
@@ -572,7 +623,8 @@ const MegaMinx = ({reset}) => {
 
         // Controls what happens at the end of each turn
         if(Math.abs(counter) >= 72) {
-            // Rotate sides back to original position
+            
+            // Rotate face sides back to original position
             decaObject[face].sides.forEach((piece,i)=>{
                 piece.visible = false;
 
@@ -612,13 +664,15 @@ const MegaMinx = ({reset}) => {
                     piece.rotateZ(dToR(Math.abs(counter)*-1));
             });
 
-            // Show face sides
+            // Show face pieces that were hidden during turn
             facesToHide[face].forEach(piece=>{
                 decaObject[`face${piece.face}`].front[piece.pos].visible=true;
             });
 
             // Move colors around
             swapColors(face,decaObject,speed);
+            allPieces = pieces(decaObject);
+            //console.log(allPieces.corners[0])
 
             counter=0;
             faceToRotate="face0"
@@ -631,11 +685,13 @@ const MegaMinx = ({reset}) => {
 
         facesToHide[face].forEach(piece=>{
             decaObject[`face${piece.face}`].front[piece.pos].visible=false;
-        })
+        });
+
         decaObject[face].front.forEach((piece,i)=>{
             
             piece.rotateZ(dToR(tempSpeed));
         });
+
         decaObject[face].sides.forEach((piece,i)=>{
             piece.visible = true;
             
@@ -704,7 +760,8 @@ const MegaMinx = ({reset}) => {
             getColor={getCurrentColor}
             setSpeed={setSpeed}
             speed={getSpeed}
-            />
+            setMoveLogIndex={setMoveLogIndex}
+        />
     );
 }
 

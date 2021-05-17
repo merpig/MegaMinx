@@ -5,7 +5,7 @@
 const scramble = () => {
     let moves = [];
 
-    while(moves.length<25){
+    while(moves.length<1){
         const lastIndex = moves.length-1;
         const secondToLastIndex = moves.length-2;
 

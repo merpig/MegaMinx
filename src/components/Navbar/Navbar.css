@@ -133,6 +133,11 @@
     pointer-events: auto;
 }
 
+#infoBtn {
+    margin-right: 8px;
+    width: 80px;
+}
+
 #closeBtn:hover{
     border-color: #007bff!important;
     background-color: rgba(100, 100, 100,.5);
