@@ -15,15 +15,14 @@ import pieces from "./pieces";
 /*
 
 ISSUES:
-
+    MOBILE:
+        - All clear at the moment!
     GENERAL:
-        3. Small edge case on corners when turning right by edge, turns wrong way
-
+        - All clear nice job!
 TODO:
-    2. Fix Bugs
-    3. Solver
-    4. Patterns
-
+    1. Solver
+    2. Patterns
+    3. Mess with some offsets to make megaminx seemless
 */
 
 const MegaMinx = ({reset}) => {
@@ -108,18 +107,14 @@ const MegaMinx = ({reset}) => {
 
         if(n>=0&&moveLogIndex<=moveLog.length-1){
             undoRedo=true;
-            console.log(moveLog[moveLogIndex])
             moveQueue.push(moveLog[moveLogIndex])
             moveLogIndex++;
-            console.log(moveLogIndex)
         } 
 
         else if(n<0&&moveLogIndex>0){
             undoRedo=true;
             moveLogIndex--;
-            console.log(moveLog[moveLogIndex])
             moveQueue.push(reverseMove(moveLog[moveLogIndex]));
-            console.log(moveLogIndex)  
         }
 
     }
@@ -581,23 +576,23 @@ const MegaMinx = ({reset}) => {
     let rotateFace = (face) => {
         let tempSpeed = speed;
 
+        // if a move isn't currently being made
         if(counter===0&&faceToRotate==="face0"){
+
+            // update speed changes
             if(speedChanged){
                 speedChanged = false;
                 speed = speedHolder;
                 tempSpeed=speed;
                 console.log("Speed changed to: "+speedHolder)
             }
+
+            // moveLog handling
             if(moveQueue[0]) {
                 let move = moveQueue.shift();
                 faceToRotate='face'+move;
 
-                //remove tail end of moveLog if index is lower then the last index of moveLog
-
-                // if(moveLogIndex<moveLog.length-1&&!undoRedo){
-                //     moveLog = moveLog.slice(0,moveLogIndex);
-                // }
-
+                // if a move is being made in the middle of the log, snip tail
                 if(!undoRedo) {
                     moveLog = moveLog.slice(0,moveLogIndex);
                     moveLogIndex++;
@@ -607,8 +602,6 @@ const MegaMinx = ({reset}) => {
                 else {
                     undoRedo=false;
                 }
-
-                console.log(moveLog);
 
                 if(faceToRotate.split('').includes("'")){
                     faceToRotate=faceToRotate.replace("'","");
@@ -623,7 +616,7 @@ const MegaMinx = ({reset}) => {
 
         // Controls what happens at the end of each turn
         if(Math.abs(counter) >= 72) {
-            
+
             // Rotate face sides back to original position
             decaObject[face].sides.forEach((piece,i)=>{
                 piece.visible = false;
@@ -671,8 +664,9 @@ const MegaMinx = ({reset}) => {
 
             // Move colors around
             swapColors(face,decaObject,speed);
+
             allPieces = pieces(decaObject);
-            //console.log(allPieces.corners[0])
+            console.log(allPieces.corners[5])
 
             counter=0;
             faceToRotate="face0"

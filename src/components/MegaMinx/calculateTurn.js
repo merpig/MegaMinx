@@ -2,6 +2,7 @@ import {rotate_point,rToD} from "./utils.js";
 
 // Calculates what turn to make when attempting to move a piece
 function calculateTurn(startPoint,newPoint,selectedSide,selectedPiece,touchedEdge){
+    if(!newPoint) return;
     // Mouse/Touch turns for edges
     if(selectedPiece===8){
         let difX = newPoint.x-startPoint.x;
