@@ -29,7 +29,11 @@ const Main = ({setMoveLogIndex,setMoveQueue,reset,setMenuId,setCurrentFunction,c
                     setCurrentFunction("colorpicker")
                 }}>Color Picker</MenuButton>
 
-                <MenuButton onClick={()=>setMenuId(0/*2*/)}>Solver</MenuButton>
+                <MenuButton onClick={()=>{
+                    if(currentFunction()!=="none") return;
+                    setMenuId(2);
+                    setCurrentFunction("solver")
+                }}>Solver</MenuButton>
 
                 <MenuButton onClick={()=>setMenuId(0/*3*/)}>Patterns</MenuButton>
 

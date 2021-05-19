@@ -1,0 +1,68 @@
+.solver-container{
+    width: 100%;
+    height: 100%;
+    max-width: 600px;
+
+    margin: auto;
+    padding-bottom: 4px;
+    display: inline-flex;
+}
+
+.solver-panel{
+    width: 50%;
+    display: flex 1;
+} 
+
+.controls-wrapper{
+    width: 100%;
+    height: 33%;
+    display: flex;
+}
+
+.control-button{
+    width: 100%;
+    pointer-events: auto;
+    transition: background-color .4s ease;
+    background-color: rgba(0,0,255,.1);
+    color: #d3d3d3;
+    border-radius: .25rem;
+    border: 2px solid #007bff;
+    margin: 4px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.exit-button{
+    border-color: lightgray;
+    background-color: hsla(0,0%,82.7%,.1);
+    font-size: 2rem;
+}
+
+.control-button:hover{
+    opacity: .8;
+    cursor: pointer;
+}
+
+.control-button:active{
+    opacity: .6;
+}
+
+.moves-container{
+    overflow-y: scroll;
+    border-radius: .25rem;
+    border: 2px solid #343a40;
+    pointer-events: auto;
+    margin: 4px;
+    color: lightgray;
+    overflow-x: hidden;
+    
+}
+
+.moves{
+    width: 25px;
+    text-align: center;
+    display: inline-flex;
+    margin: 4px;
+    border: 2px solid rgba(100,100,100,1);
+    border-radius: .25rem;
+}

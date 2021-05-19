@@ -42,6 +42,7 @@ const pieces = (decaObject,type) => {
             .color
             .getHexString()];
 
+    // ###############################################
     // Corner piece 1 of 20
     pieces.corners.push({
         blue: getColor("blue",3),

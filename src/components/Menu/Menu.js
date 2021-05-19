@@ -1,9 +1,10 @@
 import "./Menu.css";
 import Main from "../Main/Main";
 import ColorPicker from "../ColorPicker/ColorPicker";
+import Solver from "../Solver/Solver"
 import { useState } from "react";
 
-const Menu = ({setMoveLogIndex,setMoveQueue,resetMegaMinx,reset,setCurrentFunction,currentFunction,setColor,getColor,speed,setSpeed}) => {
+const Menu = ({setMoveLogIndex,setMoveQueue,resetMegaMinx,reset,setCurrentFunction,currentFunction,setColor,getColor,speed,setSpeed,decaObject}) => {
 
     const [menuId,setMenuId] = useState(0);
 
@@ -25,7 +26,11 @@ const Menu = ({setMoveLogIndex,setMoveQueue,resetMegaMinx,reset,setCurrentFuncti
             setColor={setColor}
             resetMegaMinx={resetMegaMinx}
         />,
-        <div></div>,
+        <Solver
+            setMenuId={setMenuId}
+            setCurrentFunction={setCurrentFunction}
+            decaObject={decaObject}
+        />,
         <div></div>
     ]
 

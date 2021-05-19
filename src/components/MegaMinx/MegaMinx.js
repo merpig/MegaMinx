@@ -10,7 +10,6 @@ import calculateTurn from "./calculateTurn";
 import "./MegaMinx.css"
 import { useEffect } from "react";
 import Menu from "../Menu/Menu";
-import pieces from "./pieces";
 
 /*
 
@@ -64,7 +63,6 @@ const MegaMinx = ({reset}) => {
     // getter and setter for speed holder
     let getSpeed = () => speedHolder;
     let setSpeed = speed => {
-        console.log(speed)
         switch(speed){
             case 0:
                 speedHolder = .25;
@@ -351,6 +349,7 @@ const MegaMinx = ({reset}) => {
         pentagonMesh = new THREE.Mesh(geometry,material);
         pentagonMesh2 = new THREE.Mesh(geometry2,material2);
         pentagonMesh2.name = "center";
+        pentagonMesh2.side = colorNames[i];;
         
 
         let offsetZ =.205;
@@ -569,9 +568,6 @@ const MegaMinx = ({reset}) => {
     // Put the MegaMinx on the screen!
     facePos.forEach((set,i)=>decaFace(1,set.translate,set.rotate,faceColors[i],i));
 
-    let allPieces = pieces(decaObject);
-    console.log(allPieces)
-
     // Rotates a given face of the megaminx
     let rotateFace = (face) => {
         let tempSpeed = speed;
@@ -584,7 +580,7 @@ const MegaMinx = ({reset}) => {
                 speedChanged = false;
                 speed = speedHolder;
                 tempSpeed=speed;
-                console.log("Speed changed to: "+speedHolder)
+                //console.log("Speed changed to: "+speedHolder)
             }
 
             // moveLog handling
@@ -610,7 +606,10 @@ const MegaMinx = ({reset}) => {
                     speed = Math.abs(speed)*-1;
                 }
             }
-            else if(currentFunction()==="scramble") setCurrentFunction("none");
+            else if(currentFunction()==="scramble") {
+                setCurrentFunction("none");
+                //console.log(moveLog);
+            }
             return;
         }
 
@@ -665,8 +664,8 @@ const MegaMinx = ({reset}) => {
             // Move colors around
             swapColors(face,decaObject,speed);
 
-            allPieces = pieces(decaObject);
-            console.log(allPieces.corners[5])
+            // allPieces = pieces(decaObject);
+            // console.log(allPieces.corners[5])
 
             counter=0;
             faceToRotate="face0"
@@ -755,6 +754,7 @@ const MegaMinx = ({reset}) => {
             setSpeed={setSpeed}
             speed={getSpeed}
             setMoveLogIndex={setMoveLogIndex}
+            decaObject={decaObject}
         />
     );
 }
