@@ -6,7 +6,7 @@ import UndoRedo from "../UndoRedo/UndoRedo";
 import { useState } from "react";
 const Main = ({setMoveLogIndex,setMoveQueue,reset,setMenuId,setCurrentFunction,currentFunction,speed,setSpeed}) => {
 
-    let [sliderSpeed,setSliderSpeed] = useState(3);
+    let [sliderSpeed,setSliderSpeed] = useState(5);
 
     return (
 

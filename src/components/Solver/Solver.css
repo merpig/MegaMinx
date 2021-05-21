@@ -11,8 +11,14 @@
 .solver-panel{
     width: 50%;
     display: flex 1;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 } 
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+.solver-panel::-webkit-scrollbar {
+    display: none;
+}
 .controls-wrapper{
     width: 100%;
     height: 33%;
@@ -65,4 +71,20 @@
     margin: 4px;
     border: 2px solid rgba(100,100,100,1);
     border-radius: .25rem;
+    pointer-events: auto;
+}
+
+.moves:hover{
+    color: #007bff;
+    cursor: pointer;
+}
+
+.moves:active{
+    opacity: .8;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.current-move{
+    border-color: #007bff;
 }

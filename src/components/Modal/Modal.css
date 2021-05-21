@@ -4,13 +4,13 @@
     position: fixed;
     width: 100vw;
     height: 100vh;
-    border: 2px solid blue;
     background-color: rgba(0,0,0,.7);
     
     z-index: 1000;
 }
 
 .modal-container{
+    width: 90%;
     max-width: 350px;
     margin: auto;
     margin-top: 20px;

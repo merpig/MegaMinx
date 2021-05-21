@@ -238,13 +238,13 @@ const pieces = (decaObject,type) => {
     // -----------------------------------------------
     // Edge piece 11 of 30
     pieces.edges.push({
-        green : getColor("lightpurple",21),
-        white : getColor("green",21)
+        green : getColor("green",21),
+        white : getColor("white",21)
     });
     // Edge piece 12 of 30
     pieces.edges.push({
         green : getColor("green",13),
-        purple : getColor("red",13)
+        purple : getColor("purple",13)
     });
     // Edge piece 13 of 30
     pieces.edges.push({
@@ -273,7 +273,7 @@ const pieces = (decaObject,type) => {
     });
     // Edge piece 18 of 30
     pieces.edges.push({
-        pink : getColor("red",13),
+        pink : getColor("pink",13),
         lightbrown : getColor("lightbrown",13)
     });
     // Edge piece 19 of 30

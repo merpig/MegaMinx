@@ -8,7 +8,7 @@ import colorMatchUps from "./colorMatchUps";
 import facePos from "./facePositions";
 import calculateTurn from "./calculateTurn";
 import "./MegaMinx.css"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Menu from "../Menu/Menu";
 
 /*
@@ -29,14 +29,16 @@ const MegaMinx = ({reset}) => {
     // Added csc to Math library
     Math.csc = function(x) { return 1 / Math.sin(x); }
 
+    
+
     // UI and megaminx controller variables
     let faceToRotate = "face0"; // Controls which face will rotate
     let moveQueue = []; // Moves in here will be immediately played
     let moveLog = [];
     let moveLogIndex = 0;
     let speedChanged = false; // Signals a queued speed change
-    let speedHolder = 3; // Queued speed change
-    let speed = 3; // Default move speed (must divide evenly into 72)
+    let speedHolder = 12; // Queued speed change
+    let speed = 12; // Default move speed (must divide evenly into 72)
     let counter = 0; // Theta counter for piece rotation (counts to 72)
     let updateMouse = false; // Signals mouse can be updated in mousemove
     let currentFunc = "none"; // Current state of the menu
@@ -58,7 +60,11 @@ const MegaMinx = ({reset}) => {
     let controls = CameraControls(camera, renderer,scene);
 
     // Setter for moveQueue
-    let setMoveQueue = moves => moveQueue = !moveQueue.length?moves:moveQueue;
+    let setMoveQueue = (moves) => {
+        moveQueue = !moveQueue.length?moves:moveQueue;
+    }
+
+    let getCounter = () => counter;
 
     // getter and setter for speed holder
     let getSpeed = () => speedHolder;
@@ -755,6 +761,7 @@ const MegaMinx = ({reset}) => {
             speed={getSpeed}
             setMoveLogIndex={setMoveLogIndex}
             decaObject={decaObject}
+            getCounter={getCounter}
         />
     );
 }
