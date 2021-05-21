@@ -44,6 +44,10 @@ const MegaMinx = ({reset}) => {
     let currentFunc = "none"; // Current state of the menu
     let currentColor = "blue"; // Color used by colorpicker (default blue)
     let undoRedo = false;
+    let moveSetter;
+    let moveType;
+    let moveCurrent;
+    let modeSetter;
 
     // Used for touch/mouse rotations
     let startPoint = null;
@@ -60,7 +64,15 @@ const MegaMinx = ({reset}) => {
     let controls = CameraControls(camera, renderer,scene);
 
     // Setter for moveQueue
-    let setMoveQueue = (moves) => {
+    let setMoveQueue = (moves,force,setCurrentMove,currentMove,type,mode) => {
+        if(force){
+            moveQueue = moves;
+            return;
+        }
+        moveSetter=setCurrentMove;
+        moveType=moveType?moveType:type;
+        moveCurrent=currentMove;
+        modeSetter=mode;
         moveQueue = !moveQueue.length?moves:moveQueue;
     }
 
@@ -594,6 +606,7 @@ const MegaMinx = ({reset}) => {
                 let move = moveQueue.shift();
                 faceToRotate='face'+move;
 
+
                 // if a move is being made in the middle of the log, snip tail
                 if(!undoRedo) {
                     moveLog = moveLog.slice(0,moveLogIndex);
@@ -616,12 +629,30 @@ const MegaMinx = ({reset}) => {
                 setCurrentFunction("none");
                 //console.log(moveLog);
             }
+            else if(currentFunction()==="solver") {
+                if(modeSetter){
+                    modeSetter("");
+                }
+                modeSetter=undefined;
+                moveType=undefined;
+                moveSetter=undefined;
+                moveCurrent=undefined;
+            }
             return;
         }
 
         // Controls what happens at the end of each turn
         if(Math.abs(counter) >= 72) {
-
+            if(moveCurrent!==undefined) {
+                if(moveType==="play") {
+                    moveCurrent++;
+                    moveSetter(moveCurrent);
+                }
+                else if(moveType==="back"){
+                    moveCurrent--;
+                    moveSetter(moveCurrent);
+                }
+            }
             // Rotate face sides back to original position
             decaObject[face].sides.forEach((piece,i)=>{
                 piece.visible = false;

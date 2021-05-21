@@ -9,6 +9,7 @@ const Solver = ({getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject
     const [moves,setMoves] = useState([]);
     const [loadMessage,setLoadMessage] = useState("Loading ...");
     const [currentMove,setCurrentMove] = useState(0);
+    const [autoMode,setAutoMode] = useState("");
 
     useEffect(()=>{
         console.log("yo");
@@ -39,6 +40,14 @@ const Solver = ({getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject
         setLoadMessage("Already solved")
     },[]);
 
+    useEffect(()=>{
+        if(autoMode!=="") setMoveQueue([],false,setCurrentMove,currentMove,"",setAutoMode);
+    },[currentMove]);
+
+    useEffect(()=>{
+        console.log(autoMode);
+    },[setAutoMode])
+
     let jumpToMove = value => {
         if(currentMove<value) {
             let movesToJump = moves.slice(currentMove,value);
@@ -57,7 +66,9 @@ const Solver = ({getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject
     }
     
     let playOne = () =>{
+        if(autoMode!=="") return;
         if(getCounter()) return;
+        setAutoMode("");
         if(currentMove<moves.length){
             setMoveQueue([moves[currentMove]]);
             setCurrentMove(currentMove+1);
@@ -65,11 +76,35 @@ const Solver = ({getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject
     }
 
     let backOne = () =>{
+        if(autoMode!=="") return;
         if(getCounter()) return;
+        setAutoMode("");
         if(currentMove>0){
             setMoveQueue([utils.reverseMove(moves[currentMove-1])]);
             setCurrentMove(currentMove-1);
         }
+    }
+
+    let playAll = () => {
+        if(autoMode!=="") return;
+        if(moves.length<=currentMove) return;
+        if(getCounter()) return;
+        setAutoMode("autoPlay");
+        setMoveQueue(moves.slice(currentMove),false,setCurrentMove,currentMove,"play");
+    }
+
+    let backAll = () => {
+        if(autoMode!=="") return;
+        if(currentMove<=0) return;
+        if(getCounter()) return;
+        let tempMoves = moves.slice(0,currentMove).reverse().map(move=>utils.reverseMove(move))
+        setAutoMode("autoBack");
+        setMoveQueue(tempMoves,false,setCurrentMove,currentMove,"back");
+    }
+
+    let pause = () =>{
+        setAutoMode("")
+        setMoveQueue([],true,undefined,undefined,undefined);
     }
 
     let exitSolver = () => {
@@ -104,12 +139,24 @@ const Solver = ({getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject
                 </div>
                 
                 <div className="controls-wrapper">
-                    <div className="control-button" onClick={()=>{}}>
-                        Auto play
-                    </div>
-                    <div className="control-button">
-                        Auto back
-                    </div>
+                    {
+                        autoMode==="autoPlay"?
+                        <div className="control-button" onClick={pause}>
+                            Pause
+                        </div>:
+                        <div className="control-button" onClick={playAll}>
+                            Auto play
+                        </div>
+                    }
+                    {
+                        autoMode==="autoBack"?
+                        <div className="control-button" onClick={pause}>
+                            Pause
+                        </div>:
+                        <div className="control-button" onClick={backAll}>
+                            Auto Back
+                        </div>
+                    }
                 </div>
 
                 <div className="controls-wrapper">
