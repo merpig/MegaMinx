@@ -45,7 +45,7 @@ const inefficientSolver = (deca) =>{
         "11'",
         "12",
         "12'",
-];
+    ];
 
     let solveOrder = [
         ["green","blue"],
@@ -79,14 +79,15 @@ const inefficientSolver = (deca) =>{
 
         ["white","green","lightpurple"],
         ["purple","red","green"],
-        ["orange","yellow","red"]
+        ["orange","yellow","red"],
+        ["lightgreen","pink","yellow"]
     ]
 
     let solveIndex = 0;
 
     let maxValue = allMoves.length - 1;
     let moveSets = [];
-    let maxMoveLength = 7;
+    let maxMoveLength = 5;
     let tempMaxLength = 1;
     let counterSum = 0;
     let totalIterations = 0;
@@ -111,28 +112,32 @@ const inefficientSolver = (deca) =>{
         let startValues = Object.values(pieceToSolve[0]).join("");
         let possibleMoves = [];
         let checkMoves = false;
+        let pieceSolved = false;
 
         console.log("------------------")
         console.log("Solve Index: ",solveIndex)
         console.log("Piece to solve:", pieceToSolve[0]);
-        let pieceSolved = false;
 
-        if(uGenMoves[startKeys]&&uGenMoves[startKeys][startValues]){
+        // First, check if the piece is already solved
+        if(checkAll(allPieces,solveIndex)){
+            console.log("Piece already solved!")
+            solveIndex++;
+        }
+
+        // Then, check if moves exist for the piece, at it's current position
+        else if(uGenMoves[startKeys]&&uGenMoves[startKeys][startValues]){
             utils.updateDeca(uGenMoves[startKeys][startValues],deca);
             console.log("Solve set already exists!");
             moveSets.push(...uGenMoves[startKeys][startValues]);
-            // moveSets[moveSets.length]
             solveIndex++;
         }
-        else if(checkAll(allPieces,solveIndex)){
-            console.log("Piece already solved!")
-            solveIndex++;
-        } 
+
+        // If no set of moves exists create a set of moves to solve the piece
         else {
             console.log("No solved set found, generating moves..."); 
             while (counterSum!==maxValue*maxMoveLength&&!pieceSolved){
 
-                if(tempMaxLength>5) {
+                if(tempMaxLength>maxMoveLength) {
                     console.log("Depth search taking too long.");
                     if(!checkMoves) solveIndex=solveOrder.length;
                     break;
@@ -147,7 +152,7 @@ const inefficientSolver = (deca) =>{
                 while (moveCounters.reduce((a,b)=>a+b)<=maxValue*tempMaxLength&&!pieceSolved){
                     let tempMoveSet = [];
                     for(let i = 0;i<tempMaxLength;i++) {
-                        tempMoveSet.push(allMoves[moveCounters[i]]);
+                        tempMoveSet[i] = allMoves[moveCounters[i]];
                     }
 
                     let noAdd = false; 
@@ -365,7 +370,7 @@ const inefficientSolver = (deca) =>{
     moveSets.reverse();
 
 
-    let totalMoves = 275 + 265 + 225 + 175 + 125 + 44 + 41 + 38;
+    let totalMoves = 275 + 265 + 225 + 175 + 125 + 44 + 41 + 38 + 35;
     if(updated) {
         console.log("New entries",newEntries)
         let tempKeys = Object.keys(uGenMoves).sort()
