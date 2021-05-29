@@ -19,7 +19,8 @@ let solve = decaObject => {
         ["red","blue"],
         ["yellow","blue"],
         ["pink","blue"],
-        ["lightpurple","blue"]
+        ["lightpurple","blue"],
+        ["lightpurple","green","blue"]
     ]
 
     while (solveIndex<solveOrder.length){

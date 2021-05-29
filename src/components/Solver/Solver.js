@@ -3,6 +3,7 @@ import "./Solver.css";
 import solve from "./solve";
 import utils from "./utils";
 import SpeedSlider from "../SpeedSlider/SpeedSlider";
+import inefficientSolver from "./inefficientSolver"
 
 const Solver = ({getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject,speed,setSpeed}) => {
 
@@ -12,8 +13,9 @@ const Solver = ({getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject
     const [autoMode,setAutoMode] = useState("");
 
     useEffect(()=>{
-        console.log("yo");
-        let solveMoves = [].concat(solve(decaObject));
+        console.log("############# Solver #############");
+        let solveMoves = inefficientSolver(decaObject);
+        
         setCurrentMove(0);
         for(let i = 0;i<solveMoves.length;i++){
             if(solveMoves.length-3){
@@ -35,7 +37,7 @@ const Solver = ({getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject
                 }
             }
         }
-        console.log(solveMoves)
+        //console.log(solveMoves)
         setMoves(solveMoves);
         setLoadMessage("Already solved")
     },[]);
@@ -44,15 +46,10 @@ const Solver = ({getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject
         if(autoMode!=="") setMoveQueue([],false,setCurrentMove,currentMove,"",setAutoMode);
     },[currentMove]);
 
-    useEffect(()=>{
-        console.log(autoMode);
-    },[setAutoMode])
-
     let jumpToMove = value => {
         if(currentMove<value) {
             let movesToJump = moves.slice(currentMove,value);
             utils.updateDeca(movesToJump,decaObject);
-            console.log(movesToJump);
             setCurrentMove(value);
         }
         else {
@@ -60,7 +57,6 @@ const Solver = ({getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject
             movesToJump.reverse();
             movesToJump = movesToJump.map(move=>utils.reverseMove(move));
             utils.updateDeca(movesToJump,decaObject);
-            console.log(movesToJump);
             setCurrentMove(value);
         }
     }
