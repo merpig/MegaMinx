@@ -10,7 +10,7 @@ const TextFile = (genMoves) => {
     const file = new Blob([start + JSON.stringify(genMoves) + end], {type: 'js'});
     element.href = URL.createObjectURL(file);
     //element.download = "generatedMoves.js";
-   file.text().then(text => console.log(text));
+    file.text().then(text => console.log(text));
     //document.body.appendChild(element); // Required for this to work in FireFox
     //element.click();
 }
@@ -80,14 +80,15 @@ const inefficientSolver = (deca) =>{
         ["white","green","lightpurple"],
         ["purple","red","green"],
         ["orange","yellow","red"],
-        ["lightgreen","pink","yellow"]
+        ["lightgreen","pink","yellow"],
+        ["lightbrown","lightpurple","pink"]
     ]
 
     let solveIndex = 0;
 
     let maxValue = allMoves.length - 1;
     let moveSets = [];
-    let maxMoveLength = 5;
+    let maxMoveLength = 3;
     let tempMaxLength = 1;
     let counterSum = 0;
     let totalIterations = 0;
@@ -124,7 +125,7 @@ const inefficientSolver = (deca) =>{
             solveIndex++;
         }
 
-        // Then, check if moves exist for the piece, at it's current position
+        // Then, check if moves exist for the piece at it's current position
         else if(uGenMoves[startKeys]&&uGenMoves[startKeys][startValues]){
             utils.updateDeca(uGenMoves[startKeys][startValues],deca);
             console.log("Solve set already exists!");
@@ -135,8 +136,11 @@ const inefficientSolver = (deca) =>{
         // If no set of moves exists create a set of moves to solve the piece
         else {
             console.log("No solved set found, generating moves..."); 
+
+            // Check all possible moves, ranging from length 1 to maxMoveLength
             while (counterSum!==maxValue*maxMoveLength&&!pieceSolved){
 
+                // Stop after maxMoveLength to prevent infinite loop
                 if(tempMaxLength>maxMoveLength) {
                     console.log("Depth search taking too long.");
                     if(!checkMoves) solveIndex=solveOrder.length;
@@ -145,6 +149,10 @@ const inefficientSolver = (deca) =>{
 
                 console.log("Search depth: ",tempMaxLength);
         
+                // keeps track of the current moveSet
+                // Ex for a move length of 3:
+                // start: [ 0 , 0 , 0 ]
+                // end:   [ 23, 23, 23]
                 let moveCounters = [];
                 for(let i = 0; i<tempMaxLength;i++) moveCounters[i]=0;
                 let moveCountLength = moveCounters.length-1;
@@ -248,7 +256,7 @@ const inefficientSolver = (deca) =>{
                             pieceToSolve = utils.findPiece(allPieces,solveOrder[solveIndex]);
                             tempMoveSet.push(...possibleSubset);
                             if(checkAll(allPieces,solveIndex)){
-                                possibleMoves.push(tempMoveSet);
+                                possibleMoves[possibleMoves.length] = tempMoveSet;
                                 checkMoves=true;
                             }        
                         }
@@ -323,14 +331,17 @@ const inefficientSolver = (deca) =>{
         }
 
         if(checkMoves){
+
+            let currentIndex = solveIndex;
+            let currentPiece = solveOrder[solveIndex];
             possibleMoves.filter(set=>{
                 utils.updateDeca(set,deca);
                 allPieces = pieces(deca);
-                pieceToSolve = utils.findPiece(allPieces,solveOrder[solveIndex]);
+                pieceToSolve = utils.findPiece(allPieces,currentPiece);
                 set.reverse();
                 let reversedMoves = set.map(move=>move.includes("'")?move.replace("'",""):move+"'");
                 utils.updateDeca(reversedMoves,deca);
-                return checkAll(allPieces,solveIndex);
+                return checkAll(allPieces,currentIndex);
             });
             let bestMove = possibleMoves.sort((a,b)=>a.length-b.length)[0]
 
@@ -338,7 +349,7 @@ const inefficientSolver = (deca) =>{
 
             utils.updateDeca(bestMove,deca);
             allPieces = pieces(deca);
-            pieceToSolve = utils.findPiece(allPieces,solveOrder[solveIndex]);
+            pieceToSolve = utils.findPiece(allPieces,currentPiece);
 
             console.log("Subset found!")
             console.log(bestMove);
@@ -370,7 +381,7 @@ const inefficientSolver = (deca) =>{
     moveSets.reverse();
 
 
-    let totalMoves = 275 + 265 + 225 + 175 + 125 + 44 + 41 + 38 + 35;
+    let totalMoves = 275 + 265 + 225 + 175 + 125 + 44 + 41 + 38 + 35 + 32;
     if(updated) {
         console.log("New entries",newEntries)
         let tempKeys = Object.keys(uGenMoves).sort()
