@@ -1,6 +1,8 @@
 import utils from "./utils";
 import pieces from "./pieces";
 import generatedMoves from "./generatedMoves";
+import generatedMoves2 from "./generatedMoves2";
+import generateLastEdges from "./generateLastEdges"
 
 const TextFile = (genMoves) => {
     const element = document.createElement("a");
@@ -17,6 +19,8 @@ const TextFile = (genMoves) => {
 
 const inefficientSolver = (deca) =>{
     let uGenMoves = generatedMoves;
+    let uGenMoves2 = generatedMoves2;
+
     let updated = false;
     let newEntries = 0;
     let allMoves = [
@@ -81,8 +85,44 @@ const inefficientSolver = (deca) =>{
         ["purple","red","green"],
         ["orange","yellow","red"],
         ["lightgreen","pink","yellow"],
-        ["lightbrown","lightpurple","pink"]
-    ]
+        ["lightbrown","lightpurple","pink"],
+
+        ["white","purple","green"],
+        ["purple","orange","red"],
+        ["orange","lightgreen","yellow"],
+        ["lightgreen","lightbrown","pink"],
+        ["lightbrown","white","lightpurple"],
+
+
+        ["white","purple"],
+        ["purple","orange"],
+        ["orange","lightgreen"],
+        ["lightgreen","lightbrown"],
+        ["lightbrown","white"],
+    ];
+
+    let colorNames = [
+        "blue",     // 1
+        "pink",     // 2 pink
+        "yellow",   // 3
+        "red",      // 4
+        "green",    // 5
+        "lightpurple",  // 6 light purple
+        "lightblue",  // 7 light blue
+        "lightbrown",  // 8 light brown
+        "lightgreen",  // 9 light green
+        "orange",   // 10
+        "purple",   // 11
+        "white"     // 12
+    ];
+
+    const lastFiveEdges = [
+        ["lightblue","white"],
+        ["lightblue","purple"],
+        ["lightblue","orange"],
+        ["lightblue","lightgreen"],
+        ["lightblue","lightbrown"]
+    ];
 
     let solveIndex = 0;
 
@@ -108,6 +148,7 @@ const inefficientSolver = (deca) =>{
     // stop when all the counters in moveCounters reaches 23*maxMoveLength
     while (solveIndex<solveOrder.length){
         let allPieces = pieces(deca);
+        console.log(solveOrder[solveIndex])
         let pieceToSolve = utils.findPiece(allPieces,solveOrder[solveIndex]);
         let startKeys = Object.keys(pieceToSolve[0]).join("");
         let startValues = Object.values(pieceToSolve[0]).join("");
@@ -163,6 +204,10 @@ const inefficientSolver = (deca) =>{
                         tempMoveSet[i] = allMoves[moveCounters[i]];
                     }
 
+                    // console.log(tempMoveSet)
+                    // tempMoveSet = ["7","12","7'","12'","7'"].concat(tempMoveSet);
+                    // tempMoveSet = ["7'","8'","7","8","7"].concat(tempMoveSet)
+                    // console.log(tempMoveSet)
                     let noAdd = false; 
 
                     // Spins the gears on moveCounter
@@ -375,13 +420,46 @@ const inefficientSolver = (deca) =>{
     }
     console.log("Total searches:",totalIterations);
 
+
+
+    
+    if(solveOrder.length>solveIndex){
+        console.log("Unsolvable arrangement.")
+        moveSets = ["error"].concat(moveSets);
+        return moveSets;
+    }
+    else {
+        // Solve top half here
+        let allPieces = pieces(deca);
+        let newKey = "";
+        let edges = [];
+
+        for(let i = 0; i < lastFiveEdges.length; i++){
+            let pieceToSolve = utils.findPiece(allPieces,lastFiveEdges[i])[0];
+            edges[i]=pieceToSolve;
+            let pKeys = Object.keys(pieceToSolve).map(key=>colorNames.indexOf(key)+1);
+            let pVals = Object.values(pieceToSolve).map(val=>colorNames.indexOf(val)+1);
+            newKey += (newKey===""?"":"_") + pKeys.concat(pVals).join("_");
+            //console.log(pieceToSolve,newKey);
+        }
+        if(!uGenMoves2[newKey]) {
+            generateLastEdges(edges);
+            //uGenMoves2[newKey] = 1;
+        }
+        else {
+            uGenMoves2[newKey]++;
+        }
+
+        //console.log(uGenMoves2[newKey])
+        //console.log(uGenMoves2)
+    }
+    
     moveSets.reverse();
     let reversedMoves = moveSets.map(move=>move.includes("'")?move.replace("'",""):move+"'");
     utils.updateDeca(reversedMoves,deca);
     moveSets.reverse();
-
-
-    let totalMoves = 275 + 265 + 225 + 175 + 125 + 44 + 41 + 38 + 35 + 32;
+    
+    let totalMoves = 275 + 265 + 225 + 175 + 125 + 190 + 115 + 19 + 17 + 15 + 13 + 11//+ 19 + 17 + 15 + 13 + 11;
     if(updated) {
         console.log("New entries",newEntries)
         let tempKeys = Object.keys(uGenMoves).sort()

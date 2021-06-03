@@ -4,6 +4,7 @@ import solve from "./solve";
 import utils from "./utils";
 import SpeedSlider from "../SpeedSlider/SpeedSlider";
 import inefficientSolver from "./inefficientSolver"
+import revisedSolver from "./revisedSolver"
 
 const Solver = ({getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject,speed,setSpeed}) => {
 
@@ -14,8 +15,12 @@ const Solver = ({getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject
 
     useEffect(()=>{
         console.log("############# Solver #############");
-        let solveMoves = inefficientSolver(decaObject);
-        
+
+        let solveMoves = revisedSolver(decaObject);
+        if(solveMoves[0]==="error"){
+            solveMoves.shift();
+        }
+
         setCurrentMove(0);
         for(let i = 0;i<solveMoves.length;i++){
             if(solveMoves.length-3){
