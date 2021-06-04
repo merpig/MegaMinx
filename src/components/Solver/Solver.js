@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import "./Solver.css";
-import solve from "./solve";
 import utils from "./utils";
 import SpeedSlider from "../SpeedSlider/SpeedSlider";
-import inefficientSolver from "./inefficientSolver"
 import revisedSolver from "./revisedSolver"
 
 const Solver = ({getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject,speed,setSpeed}) => {

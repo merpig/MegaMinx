@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {CameraControls, dToR, rotate_point} from "./utils.js";
+import {CameraControls, dToR} from "./utils.js";
 import Corner from "./CornerDimensions";
 import Edge from "./EdgeDimensions";
 import swapColors from "./swapColors";
@@ -8,7 +8,7 @@ import colorMatchUps from "./colorMatchUps";
 import facePos from "./facePositions";
 import calculateTurn from "./calculateTurn";
 import "./MegaMinx.css"
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Menu from "../Menu/Menu";
 
 /*
@@ -22,6 +22,8 @@ TODO:
     1. Solver
     2. Patterns
     3. Mess with some offsets to make megaminx seemless
+    4. Move hints
+    5. Notation
 */
 
 const MegaMinx = ({reset}) => {
@@ -116,7 +118,7 @@ const MegaMinx = ({reset}) => {
         return move.split('').includes("'")?move.replace("'",""):move+"'"
     }
 
-    let getMoveLogIndex = () => moveLogIndex;
+    //let getMoveLogIndex = () => moveLogIndex;
     let setMoveLogIndex = n => {
         
         console.log(moveLogIndex)
@@ -156,9 +158,8 @@ const MegaMinx = ({reset}) => {
     camera.position.y = 0;
     camera.position.x = 0;
 
-    //camera.translateZ(-2.9275/2);
     renderer.render( scene, camera );
-
+ 
     function onMouseDown(e) {
         // update mouse position
         mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -179,9 +180,9 @@ const MegaMinx = ({reset}) => {
             e=>e.object.name==="corner"||e.object.name==="edge"
         );
 
-        let filteredCenters = intersects.filter(e=>
-            e.object.name==="center"
-        );
+        // let filteredCenters = intersects.filter(e=>
+        //     e.object.name==="center"
+        // );
 
         // if a piece is intersected disable camera rotation
         if(intersects[0]) {
@@ -768,21 +769,11 @@ const MegaMinx = ({reset}) => {
         renderer.render( scene, camera );
     };
 
-    let resetMegaMinx = () => {
-        // Generate object of piece references
-        decaObject={};
-        facePos.forEach((set,i)=>{decaObject[`face${i+1}`]={front : [],sides : []}});
-
-        // Put the MegaMinx on the screen!
-        scene.clear();
-        facePos.forEach((set,i)=>decaFace(1,set.translate,set.rotate,faceColors[i],i));
-    }
-
     animate();
     return (
         <Menu 
             setMoveQueue={setMoveQueue}
-            resetMegaMinx={resetMegaMinx}
+            resetMegaMinx={reset}
             reset={reset}
             setCurrentFunction={setCurrentFunction}
             currentFunction={currentFunction}
