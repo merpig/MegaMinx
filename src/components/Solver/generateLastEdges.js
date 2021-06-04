@@ -49,25 +49,40 @@ const generateLastEdges = edges => {
     });
 
     if(blueTopCount===5){
-        console.log("Top star finished.");
         return [];
     }
     else if(edgeWithTwoAdj){
         console.log(edgeWithTwoAdj);
-        console.log("Moves for 3 adjacent blue top");
+        let tempKey = Object.keys(edgeWithTwoAdj).filter(side=>side!=="lightblue")[0];
+        let sideNum = colorNames.indexOf(tempKey)+1;
+        let front = sideNum-2;
+        let right = sideNum-3;
+        if(front<8) front+=5;
+        if(right<8) right+=5;
+        let moves = [`${front}`,"7",`${right}`,"7'",`${right}'`,`${front}'`];
+        return moves;
     }
     else if(edgeWithNoAdj){
-        console.log(edgeWithNoAdj);
+        let tempKey = Object.keys(edgeWithNoAdj).filter(side=>side!=="lightblue")[0];
+        let sideNum = colorNames.indexOf(tempKey)+1;
         if(blueTopCount===1){
-            console.log("Moves for only 1 blue top");
+            let front = sideNum-1;
+            let right = sideNum-2;
+            if(front<8) front+=5;
+            if(right<8) right+=5;
+            let moves = [`${front}`,`${right}`,"7","7",`${right}'`,`${right}'`,`${front}`,`${right}`,`${front}'`,"7'","7'",`${front}'`];
+            return moves;
         }
         else if(blueTopCount===3){
-            console.log("Moves for arrow blue top");
+            let leftSide = sideNum+1;
+            if(leftSide>12) leftSide-=5;
+            let moves = [`${leftSide}`,`${sideNum}`,"7",`${sideNum}'`,"7'",`${leftSide}'`];
+            return moves;
         }
     }
+    else return ["error"];
 
-    //console.log(edges)
-    console.log("Number of lightblue on top: ", blueTopCount);
+    return [];
 }
 
 export default generateLastEdges;

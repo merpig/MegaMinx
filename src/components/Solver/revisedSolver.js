@@ -1,28 +1,11 @@
 import utils from "./utils";
 import pieces from "./pieces";
 import generatedMoves from "./generatedMoves";
-import generatedMoves2 from "./generatedMoves2";
 import generateLastEdges from "./generateLastEdges"
 
-const TextFile = (genMoves) => {
-    const element = document.createElement("a");
-    //console.log(JSON.stringify(genMoves));
-    let start = "const generatedMoves = ";
-    let end = "; export default generatedMoves;";
-    const file = new Blob([start + JSON.stringify(genMoves) + end], {type: 'js'});
-    element.href = URL.createObjectURL(file);
-    //element.download = "generatedMoves.js";
-    file.text().then(text => console.log(text));
-    //document.body.appendChild(element); // Required for this to work in FireFox
-    //element.click();
-}
 
 const revisedSolver = (deca) =>{
     let uGenMoves = generatedMoves;
-    let uGenMoves2 = generatedMoves2;
-
-    let updated = false;
-    let newEntries = 0;
 
     let solveOrder = [
         ["green","blue"],
@@ -72,21 +55,6 @@ const revisedSolver = (deca) =>{
         ["orange","lightgreen"],
         ["lightgreen","lightbrown"],
         ["lightbrown","white"],
-    ];
-
-    let colorNames = [
-        "blue",     // 1
-        "pink",     // 2 pink
-        "yellow",   // 3
-        "red",      // 4
-        "green",    // 5
-        "lightpurple",  // 6 light purple
-        "lightblue",  // 7 light blue
-        "lightbrown",  // 8 light brown
-        "lightgreen",  // 9 light green
-        "orange",   // 10
-        "purple",   // 11
-        "white"     // 12
     ];
 
     const lastFiveEdges = [
@@ -147,27 +115,15 @@ const revisedSolver = (deca) =>{
     else {
         // Solve top half here
         let allPieces = pieces(deca);
-        let newKey = "";
         let edges = [];
 
         for(let i = 0; i < lastFiveEdges.length; i++){
             let pieceToSolve = utils.findPiece(allPieces,lastFiveEdges[i])[0];
             edges[i]=pieceToSolve;
-            let pKeys = Object.keys(pieceToSolve).map(key=>colorNames.indexOf(key)+1);
-            let pVals = Object.values(pieceToSolve).map(val=>colorNames.indexOf(val)+1);
-            newKey += (newKey===""?"":"_") + pKeys.concat(pVals).join("_");
-            //console.log(pieceToSolve,newKey);
         }
-        if(!uGenMoves2[newKey]) {
-            generateLastEdges(edges);
-            //uGenMoves2[newKey] = 1;
-        }
-        else {
-            uGenMoves2[newKey]++;
-        }
-
-        //console.log(uGenMoves2[newKey])
-        //console.log(uGenMoves2)
+        let blueStarMoves = generateLastEdges(edges);
+        utils.updateDeca(blueStarMoves,deca);
+        moveSets.push(...blueStarMoves);
     }
     
     moveSets.reverse();
@@ -175,23 +131,6 @@ const revisedSolver = (deca) =>{
     utils.updateDeca(reversedMoves,deca);
     moveSets.reverse();
     
-    // if(updated) {
-    //     console.log("New entries",newEntries)
-    //     let tempKeys = Object.keys(uGenMoves).sort()
-    //     console.log(uGenMoves)
-    //     console.log(tempKeys.map(key=>[key, Object.keys(uGenMoves[key]).length] ));
-        
-        
-    //     TextFile(uGenMoves);
-    // }
-    // else{
-        
-    //     let tempKeys = Object.keys(uGenMoves).sort()
-    //     console.log(uGenMoves)
-    //     console.log(tempKeys.map(key=>[key, Object.keys(uGenMoves[key]).length] ));
-
-    //     console.log("No new entries")
-    // }
     return moveSets;
 }
 
