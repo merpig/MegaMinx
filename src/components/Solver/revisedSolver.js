@@ -1,7 +1,8 @@
 import utils from "./utils";
 import pieces from "./pieces";
 import genMoves from "./generatedMoves";
-import star from "./lastEdgeStar"
+import star from "./lastEdgeStar";
+import solveStar from "./solveStar";
 
 /*
  *  revisedSolved.js
@@ -13,7 +14,7 @@ import star from "./lastEdgeStar"
  * 
  *  - This function updates the deca object with each piece and then resets the
  *  deca object at the end of the function to its state before the solver was
- *  called.
+ *  called. This function returns a set of moves solving the cube.
  */
 const revisedSolver = (deca) =>{
 
@@ -87,11 +88,18 @@ const revisedSolver = (deca) =>{
             moves.push(...adjustmentMoves);
         }
 
-        /*
+        for(let i = 0; i < lastFiveEdges.length; i++){
+            let pieceToSolve = utils.findPiece(allPieces,lastFiveEdges[i])[0];
+            edges[i]=pieceToSolve;
+        }
 
-            solveStar here
+        let solveStarMoves = solveStar(edges);
 
-        */
+        if(solveStarMoves[0]==="error") return ["error"].concat(moves);
+
+        utils.updateDeca(solveStarMoves,deca);
+        allPieces = pieces(deca);
+        moves.push(...solveStarMoves);
 
     }
     

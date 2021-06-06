@@ -52,7 +52,6 @@ const generateLastEdges = edges => {
         return [];
     }
     else if(edgeWithTwoAdj){
-        console.log(edgeWithTwoAdj);
         let tempKey = Object.keys(edgeWithTwoAdj).filter(side=>side!=="lightblue")[0];
         let sideNum = colorNames.indexOf(tempKey)+1;
         let front = sideNum-2;
