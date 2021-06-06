@@ -43,9 +43,102 @@ const utils = {
         return solvedPairs.length===pieceKeys.length;
     },
 
+    checkAll : (allPieces,index) => {
+        let valid = false;
+        for(let i = 0; i<=index;i++){
+            let pieceToSolve = utils.findPiece(allPieces,utils.solveOrder[i]);
+            if(utils.isSolved(pieceToSolve[0])){
+                valid=true;
+            }
+            else return false;
+        }
+        return valid;
+    },
+
     reverseMove: move => {
         return move.split('').includes("'")?move.replace("'",""):move+"'"
-    }
+    },
+
+    solveOrder: [
+        ["green","blue"],
+        ["red","blue"],
+        ["yellow","blue"],
+        ["pink","blue"],
+        ["lightpurple","blue"],
+
+        ["lightpurple","green","blue"],
+        ["green","red","blue"],
+        ["red","yellow","blue"],
+        ["yellow","pink","blue"],
+        ["pink","lightpurple","blue"],
+
+        ["lightpurple","green"],
+        ["green","red"],
+        ["red","yellow"],
+        ["yellow","pink"],
+        ["pink","lightpurple"],
+
+        ["green","white"],
+        ["green","purple"],
+        ["red","purple"],
+        ["red","orange"],
+        ["yellow","orange"],
+        ["yellow","lightgreen"],
+        ["pink","lightgreen"],
+        ["pink","lightbrown"],
+        ["lightpurple","lightbrown"],
+        ["lightpurple","white"],
+
+        ["white","green","lightpurple"],
+        ["purple","red","green"],
+        ["orange","yellow","red"],
+        ["lightgreen","pink","yellow"],
+        ["lightbrown","lightpurple","pink"],
+
+        ["white","purple","green"],
+        ["purple","orange","red"],
+        ["orange","lightgreen","yellow"],
+        ["lightgreen","lightbrown","pink"],
+        ["lightbrown","white","lightpurple"],
+
+
+        ["white","purple"],
+        ["purple","orange"],
+        ["orange","lightgreen"],
+        ["lightgreen","lightbrown"],
+        ["lightbrown","white"]
+    ],
+
+    colorNames: [
+        "blue",     // 1
+        "pink",     // 2 pink
+        "yellow",   // 3
+        "red",      // 4
+        "green",    // 5
+        "lightpurple",  // 6 light purple
+        "lightblue",  // 7 light blue
+        "lightbrown",  // 8 light brown
+        "lightgreen",  // 9 light green
+        "orange",   // 10
+        "purple",   // 11
+        "white"     // 12
+    ],
+
+    faceColors: [
+        "#015be3",     // 1
+        "#ff80ce",     // 2 pink
+        "yellow",   // 3
+        "red",      // 4
+        "green",    // 5
+        "#c585f7",  // 6 light purple
+
+        "#4fc3f7",  // 7 light blue
+        "#C39B77",  // 8 light brown
+        "#64dd17",  // 9 light green
+        "orange",   // 10
+        "#BE00FE",   // 11
+        "white"     // 12
+    ]
 }
 
 export default utils;

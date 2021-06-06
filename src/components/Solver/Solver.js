@@ -111,6 +111,8 @@ const Solver = ({getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject
         setCurrentFunction('none');
     }
 
+    let moveToColor = move => utils.faceColors[parseInt(move.replace("'",""))-1]
+
     return (
         <div className="solver-container">
             <SpeedSlider 
@@ -121,8 +123,12 @@ const Solver = ({getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject
                 {
                     moves.length?
                         moves.map((move,i)=>i===currentMove?
-                            <div key={i} className="moves current-move">{move}</div>:
-                            <div key={i} className="moves" onClick={()=>jumpToMove(i)}>{move}</div>
+                            <div key={i} className="moves current-move" style={{color: `${moveToColor(move)}`}}>
+                                {move}
+                            </div>:
+                            <div key={i} className="moves" onClick={()=>jumpToMove(i)} style={{color: `${moveToColor(move)}`}}>
+                                {move}
+                            </div>
                         ):
                         loadMessage
                 }

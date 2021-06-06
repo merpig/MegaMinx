@@ -2,7 +2,7 @@ import utils from "./utils";
 import pieces from "./pieces";
 import generatedMoves from "./generatedMoves";
 import generatedMoves2 from "./generatedMoves2";
-import generateLastEdges from "./generateLastEdges"
+import generateLastEdges from "./lastEdgeStar"
 
 const TextFile = (genMoves) => {
     const element = document.createElement("a");
