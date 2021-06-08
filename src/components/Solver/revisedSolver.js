@@ -64,6 +64,8 @@ const revisedSolver = (deca) =>{
             let pieceToSolve = utils.findPiece(allPieces,lastFiveEdges[i])[0];
             edges[i]=pieceToSolve;
         }
+
+        // Solves the lightblue star
         let starMoves = star(edges);
 
         if(starMoves[0]==="error") return ["error"].concat(moves);
@@ -78,6 +80,10 @@ const revisedSolver = (deca) =>{
         let turnsToSetWLb = val-key;
         let adjustmentMoves = [];
 
+        // Makes sure that the white/lightblue edge piece is solved
+        //
+        // This cuts down on the amount of permutations needed to 
+        // solve the top lightblue star.
         for( let i = 0; i < turnsToSetWLb; i++ ){
             adjustmentMoves[i] = "7"
         }
@@ -93,8 +99,8 @@ const revisedSolver = (deca) =>{
             edges[i]=pieceToSolve;
         }
 
+        // Aligns the lightblue star
         let solveStarMoves = solveStar(edges);
-
         if(solveStarMoves[0]==="error") return ["error"].concat(moves);
 
         utils.updateDeca(solveStarMoves,deca);

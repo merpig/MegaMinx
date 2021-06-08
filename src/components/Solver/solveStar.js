@@ -7,10 +7,6 @@ const solveStar = edges => {
     let edgeValues = [];
     let edgeKeys = [];
     let joinedValues = "";
-    let U = "7";
-    let R = "11";
-    let L = "8";
-    let F = "12"
 
     let turns = {
         "U" : "7",
@@ -40,7 +36,7 @@ const solveStar = edges => {
         return newSet
     }
 
-    console.log(parseMoveSet("R2 U2' R2' U' R2 U2' R2'"));
+    //console.log(parseMoveSet("R2 U2' R2' U' R2 U2' R2'"));
 
     // Permutation set 1 of 5
     let perm1 = "whitepurplelightgreenlightbrownorange";
@@ -64,9 +60,45 @@ const solveStar = edges => {
         reverseMoves(perm3Solve[0])
     ];
 
+    
+    let perm7 = "whitelightgreenpurpleorangelightbrown";
+    let perm8 = "whiteorangelightgreenpurplelightbrown";
+    let perm7Solve = [
+        parseMoveSet("(R U R' U) (R' U' R2 U') (R' U R' U) R U2'")
+        .map(move=>turns[move]),
+    ];
+    let perm8Solve = [
+        reverseMoves(perm7Solve[0])
+    ];
+    
     // Permutation set 3 of 5
-    let perm5 = "";
-    let perm6 = "";
+    let perm5 = "whiteorangepurplelightbrownlightgreen";
+    let perm6 = "whitelightgreenlightbrownpurpleorange";
+    let perm5Solve = [
+        parseMoveSet("(R U R' F') (R U R' U') (R' F R2 U' R')")
+            .map(move=>turns[move]),
+        perm1Solve[0]
+    ];
+    let perm6Solve = [
+        perm1Solve[0],
+        perm8Solve[0]
+    ];
+
+    let perm9 = "whitelightbrownlightgreenorangepurple";
+    let perm9Solve = [
+        perm1Solve[0],
+        perm3Solve[0]
+    ];
+
+    let perm10 = "whiteorangelightbrownlightgreenpurple";
+    let perm11 = "whitelightbrownpurplelightgreenorange";
+    let perm10Solve = [
+        parseMoveSet("L2' U2' L2 U' L2' U2' L2")
+            .map(move=>turns[move]),
+    ];
+    let perm11Solve = [
+        reverseMoves(perm10Solve[0])
+    ];
 
     edges.map(edge=> delete edge.lightblue)
     edges.forEach(e=>{ 
@@ -76,7 +108,10 @@ const solveStar = edges => {
     });
     joinedValues = edgeKeys.join("");
 
-    if(solved===5) return moves;
+    if(solved===5) {
+        console.log("Solved!")
+        return moves;
+    }
     else if(perm1===joinedValues) {
         console.log("perm1");
         return perm1Solve.flat(2);
@@ -92,6 +127,34 @@ const solveStar = edges => {
     else if(perm4===joinedValues){
         console.log("perm4");
         return perm4Solve.flat(2);
+    }
+    else if (perm5===joinedValues){
+        console.log("perm5");
+        return perm5Solve.flat(2);
+    }
+    else if (perm6===joinedValues){
+        console.log("perm6");
+        return perm6Solve.flat(2);
+    }
+    else if (perm7===joinedValues){
+        console.log("perm7");
+        return perm7Solve.flat(2);
+    }
+    else if (perm8===joinedValues){
+        console.log("perm8");
+        return perm8Solve.flat(2);
+    }
+    else if (perm9===joinedValues){
+        console.log("perm9");
+        return perm9Solve.flat(2);
+    }
+    else if (perm10===joinedValues){
+        console.log("perm10");
+        return perm10Solve.flat(2);
+    }
+    else if (perm11===joinedValues){
+        console.log("perm11");
+        return perm11Solve.flat(2);
     }
 
     console.log(edgeKeys);
