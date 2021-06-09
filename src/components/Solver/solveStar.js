@@ -109,51 +109,39 @@ const solveStar = edges => {
     joinedValues = edgeKeys.join("");
 
     if(solved===5) {
-        console.log("Solved!")
         return moves;
     }
     else if(perm1===joinedValues) {
-        console.log("perm1");
         return perm1Solve.flat(2);
     }
     else if(perm2===joinedValues) {
-        console.log("perm2");
         return perm2Solve.flat(2);
     }
     else if(perm3===joinedValues){
-        console.log("perm3");
         return perm3Solve.flat(2);
     }
     else if(perm4===joinedValues){
-        console.log("perm4");
         return perm4Solve.flat(2);
     }
     else if (perm5===joinedValues){
-        console.log("perm5");
         return perm5Solve.flat(2);
     }
     else if (perm6===joinedValues){
-        console.log("perm6");
         return perm6Solve.flat(2);
     }
     else if (perm7===joinedValues){
-        console.log("perm7");
         return perm7Solve.flat(2);
     }
     else if (perm8===joinedValues){
-        console.log("perm8");
         return perm8Solve.flat(2);
     }
     else if (perm9===joinedValues){
-        console.log("perm9");
         return perm9Solve.flat(2);
     }
     else if (perm10===joinedValues){
-        console.log("perm10");
         return perm10Solve.flat(2);
     }
     else if (perm11===joinedValues){
-        console.log("perm11");
         return perm11Solve.flat(2);
     }
 

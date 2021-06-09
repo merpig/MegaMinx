@@ -3,6 +3,8 @@ import pieces from "./pieces";
 import genMoves from "./generatedMoves";
 import star from "./lastEdgeStar";
 import solveStar from "./solveStar";
+import alignCorners from "./alignCorners";
+import solveCorners from "./solveCorners";
 
 /*
  *  revisedSolved.js
@@ -25,6 +27,14 @@ const revisedSolver = (deca) =>{
         ["lightblue","lightgreen"],
         ["lightblue","lightbrown"]
     ];
+
+    const lastFiveCorners = [
+        ["lightblue","lightbrown","white"],
+        ["lightblue","lightgreen","lightbrown"],
+        ["lightblue","orange","lightgreen"],
+        ["lightblue","purple","orange"],
+        ["lightblue","white","purple"]
+    ]
 
     let solveIndex = 0;
     let moves = [];
@@ -59,6 +69,7 @@ const revisedSolver = (deca) =>{
     else {
         let allPieces = pieces(deca);
         let edges = [];
+        let corners = [];
 
         for(let i = 0; i < lastFiveEdges.length; i++){
             let pieceToSolve = utils.findPiece(allPieces,lastFiveEdges[i])[0];
@@ -106,6 +117,44 @@ const revisedSolver = (deca) =>{
         utils.updateDeca(solveStarMoves,deca);
         allPieces = pieces(deca);
         moves.push(...solveStarMoves);
+
+        // Aligns the lightblue corners
+        for(let i = 0; i < lastFiveCorners.length; i++){
+            corners[i] = utils.findPiece(allPieces,lastFiveCorners[i])[0];
+        }
+
+        while(alignCorners(corners).length){
+
+            for(let i = 0; i < lastFiveCorners.length; i++){
+                corners[i] = utils.findPiece(allPieces,lastFiveCorners[i])[0];
+            }
+    
+            let alignCornerMoves = alignCorners(corners);
+            if(alignCornerMoves[0]==="error") return ["error"].concat(moves);
+    
+            utils.updateDeca(alignCornerMoves,deca);
+            allPieces = pieces(deca);
+            moves.push(...alignCornerMoves);
+        }
+
+
+        while(solveCorners(corners).length){
+
+            for(let i = 0; i < lastFiveCorners.length; i++){
+                corners[i] = utils.findPiece(allPieces,lastFiveCorners[i])[0];
+            }
+    
+            let solveCornersMoves = solveCorners(corners);
+            if(solveCornersMoves[0]==="error") return ["error"].concat(moves);
+
+            console.log(solveCornersMoves)
+            console.log("---------------------------")
+    
+            utils.updateDeca(solveCornersMoves,deca);
+            allPieces = pieces(deca);
+            moves.push(...solveCornersMoves);
+        }
+
 
     }
     
