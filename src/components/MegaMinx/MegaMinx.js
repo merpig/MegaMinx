@@ -33,8 +33,6 @@ const MegaMinx = ({reset}) => {
     // Added csc to Math library
     Math.csc = function(x) { return 1 / Math.sin(x); }
 
-    
-
     // UI and megaminx controller variables
     let faceToRotate = "face0"; // Controls which face will rotate
     let moveQueue = []; // Moves in here will be immediately played
@@ -51,6 +49,7 @@ const MegaMinx = ({reset}) => {
     let moveType;
     let moveCurrent;
     let modeSetter;
+    let manualTurn = "none";
 
     // Used for touch/mouse rotations
     let startPoint = null;
@@ -65,6 +64,10 @@ const MegaMinx = ({reset}) => {
     let raycaster = new THREE.Raycaster();
     let mouse = new THREE.Vector2();
     let controls = CameraControls(camera, renderer,scene);
+
+    // Set/Get manualTurn
+    let getTurn = () => manualTurn;
+    let setTurn = () => manualTurn="none";
 
     // Setter for moveQueue
     let setMoveQueue = (moves,force,setCurrentMove,currentMove,type,mode) => {
@@ -222,7 +225,7 @@ const MegaMinx = ({reset}) => {
     }
 
     function onMouseMove(e){
-        if(currentFunc === "colorpicker" || currentFunc === "solver") return;
+        if(currentFunc === "colorpicker") return;
         if(e.pointerType==="touch") controls.enabled = true;
         // If no piece was clicked end function
         if(!updateMouse) {
@@ -253,12 +256,12 @@ const MegaMinx = ({reset}) => {
                 newPoint=null;
                 selectedSide=null;
                 selectedPiece=null;
-                moveQueue.push(turn);
+                if(currentFunc === "solver") manualTurn=turn;
+                else moveQueue.push(turn);
             }
         }
         else if(!filteredIntersects[0]&&intersects[0]){
             if(!startPoint) return;
-            console.log("hit edge");
             let turn = calculateTurn(startPoint,newPoint,selectedSide,selectedPiece,true);
             if(turn) {
                 updateMouse=false;
@@ -266,7 +269,8 @@ const MegaMinx = ({reset}) => {
                 newPoint=null;
                 selectedSide=null;
                 selectedPiece=null;
-                moveQueue.push(turn);
+                if(currentFunc === "solver") manualTurn=turn;
+                else moveQueue.push(turn);
             }
         }
     }
@@ -834,6 +838,8 @@ const MegaMinx = ({reset}) => {
             getCpVars={getCpVars}
             rightHints={rightHints}
             leftHints={leftHints}
+            getTurn={getTurn}
+            setTurn={setTurn}
         />
     );
 }

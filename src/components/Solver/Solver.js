@@ -4,17 +4,50 @@ import utils from "./utils";
 import SpeedSlider from "../SpeedSlider/SpeedSlider";
 import revisedSolver from "./revisedSolver"
 
-const Solver = ({rightHints,leftHints,getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject,getDeca,speed,setSpeed}) => {
+const Solver = ({getTurn,setTurn,rightHints,leftHints,getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject,getDeca,speed,setSpeed}) => {
 
     const [moves,setMoves] = useState([]);
     const [loadMessage,setLoadMessage] = useState("Loading ...");
     const [currentMove,setCurrentMove] = useState(0);
     const [autoMode,setAutoMode] = useState("");
-    const [blocker,setBlocker] = useState(false)
+    const [blocker,setBlocker] = useState(false);
 
+    let mouseDown = false;
+
+    function onSolverMouseDown(e){
+        mouseDown=true;
+    }
+
+    function onSolverMouseUp(e){
+        mouseDown=false;
+    }
+
+    function onSolverMouseMove(e) {
+        if(!mouseDown) return;
+        let move = currentMove;
+        let moveSet = moves;
+        console.log(getTurn(),move);
+        if(getTurn()===moveSet[move]) {
+            playOne();
+            setTurn();
+        }
+    }
+    
+    useEffect(()=>{
+        window.addEventListener("pointerdown",onSolverMouseDown,false);
+        window.addEventListener("pointerup",onSolverMouseUp,false);
+        window.addEventListener("pointermove",onSolverMouseMove,false);
+        
+        return () => {
+            window.removeEventListener("pointerdown",onSolverMouseDown,false)
+            window.removeEventListener("pointerup",onSolverMouseUp,false)
+            window.removeEventListener("pointermove",onSolverMouseMove,false);
+        }
+    })
+    
     useEffect(()=>{
         let solveMoves = revisedSolver(getDeca());
-
+        
         setCurrentMove(0);
         for(let i = 0;i<solveMoves.length;i++){
             if(solveMoves.length-3){
@@ -54,6 +87,7 @@ const Solver = ({rightHints,leftHints,getCounter,setMoveQueue,setMenuId,setCurre
 
         setMoves(solveMoves);
         setLoadMessage("Already solved")
+
     },[]);
 
     useEffect(()=>{
