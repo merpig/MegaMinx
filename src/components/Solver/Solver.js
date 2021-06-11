@@ -26,7 +26,6 @@ const Solver = ({getTurn,setTurn,rightHints,leftHints,getCounter,setMoveQueue,se
         if(!mouseDown) return;
         let move = currentMove;
         let moveSet = moves;
-        console.log(getTurn(),move);
         if(getTurn()===moveSet[move]) {
             playOne();
             setTurn();
