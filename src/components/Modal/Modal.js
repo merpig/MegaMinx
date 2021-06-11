@@ -12,6 +12,7 @@ const Modal = ({modal,toggleModal}) => {
                     <b>Instructions</b>
                 </div>
                 <div className="modal-body">
+                    <br></br>
                     Click and drag anywhere not on the megaminx to rotate the camera
                     <hr></hr>
                     Click and drag on any piece except middle pieces to make turns
@@ -25,7 +26,8 @@ const Modal = ({modal,toggleModal}) => {
                         <i className="fa fa-linkedin"></i>
                     </a>
                     <hr></hr>
-                    Site design / MegaMinxProgram model © 2021 MegaMinxProgram
+                    Site design / program © 2021 Sasha Peters
+                    <p></p>
                 </div>
             </div>
         </div>:[]
