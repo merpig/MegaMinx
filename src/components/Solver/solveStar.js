@@ -1,7 +1,7 @@
 
 
-const solveStar = edges => {
-
+const solveStar = _edges => {
+    const edges = _edges.slice(0)
     const moves = [];
     let solved = 0;
     let edgeValues = [];
@@ -21,7 +21,6 @@ const solveStar = edges => {
         "F" : "12",
         "F'" : "12'"
     }
- 
     
     let reverseMoves = set => set.slice().reverse().map(e=>e.includes("'")?e.replace("'",""):e+"'")
     let parseMoveSet = set => {
@@ -107,7 +106,7 @@ const solveStar = edges => {
         edgeKeys.push(Object.keys(e)[0]);
     });
     joinedValues = edgeKeys.join("");
-
+    
     if(solved===5) {
         return moves;
     }
@@ -144,11 +143,9 @@ const solveStar = edges => {
     else if (perm11===joinedValues){
         return perm11Solve.flat(2);
     }
-
-    console.log(edgeKeys);
-    console.log(joinedValues)
-    console.log(solved);
-
+    else{ 
+        console.log("perm not found:",joinedValues)
+    }
     return moves;
 
 }

@@ -1,10 +1,10 @@
 
 const solveCorners = corners => {
-
     const moves = [];
     let solved = 0;
     let cornerAtFirstPos;
     for(const corner of corners){
+        if(!Object.keys(corner).length) return [];
         if(corner.lightblue==="lightblue") solved++;
         if(Object.keys(corner).sort().join("")==="lightbluelightbrownwhite"){
             cornerAtFirstPos=corner;

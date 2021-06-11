@@ -22,7 +22,7 @@ const Main = ({setMoveLogIndex,setMoveQueue,reset,setMenuId,setCurrentFunction,c
             <UndoRedo setIndex={setMoveLogIndex}/>
 
             <div className="panel panel-left">
-
+                <MenuButton></MenuButton>
                 <MenuButton setCurrentFunction={setCurrentFunction} onClick={()=>{
                     if(currentFunction()!=="none") return;
                     setMenuId(1);
@@ -35,7 +35,9 @@ const Main = ({setMoveLogIndex,setMoveQueue,reset,setMenuId,setCurrentFunction,c
                     setCurrentFunction("solver")
                 }}>Solver</MenuButton>
 
-                <MenuButton onClick={()=>setMenuId(0/*3*/)}>Patterns</MenuButton>
+                {/* <MenuButton onClick={()=>setMenuId(0)}>
+                    Patterns
+                </MenuButton> */}
 
             </div>
 

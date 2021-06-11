@@ -45,6 +45,7 @@
 }
 
 .option-button{
+    font-family: "Courier New", Courier, monospace;
     text-align: center;
     vertical-align: middle;
     line-height: 5vh;
@@ -61,9 +62,10 @@
     background-color: rgba(0, 0, 255,.5);
 }
 
+
 .color-exit{
     color: lightgray;
-    
+    background-color: rgba(0, 0, 0,.2);
 }
 
 .color-check{
@@ -75,14 +77,46 @@
     color: lightgray;
 }
 
+.Solve{
+    color: rgb(0, 201, 0);
+    background-color: rgba(0, 0, 0,.2);
+}
+.Solve:hover{
+    color: rgb(0, 201, 0);
+    background-color: rgba(0, 128, 0,.2);
+}
+
+.Invalid{
+    color: red;
+    background-color: rgba(0, 0, 0,.2);
+}
+.Invalid:hover{
+    color: red;
+    background-color: rgba(0, 0, 0,.2);
+    cursor: default;
+}
 .blackdot{
-    height: 25px;
-    width: 25px;
+    height: 15px;
+    width: 15px;
     background-color: black;
     border-radius: 50%;
     position: absolute;
     margin-top: -30px;
-    margin-left: 35px;
+    margin-left: 40px;
+}
+
+.cp-info-panel{
+    position: fixed;
+    color: lightgray;
+    right: 10px;
+    top: 85px;
+    text-align: left;
+}
+.cp-info-data{
+    width: 40px;
+    height: 1.5rem;
+    border-radius: .25rem;
+    margin-left: 8px;
 }
 
 .blue {

@@ -38,15 +38,20 @@
     vertical-align: middle;
 }
 
+
+.control-button:hover{
+    background-color: rgba(0, 0, 255,.5);
+    cursor: pointer;
+}
+
 .exit-button{
     border-color: lightgray;
-    background-color: hsla(0,0%,82.7%,.1);
+    background-color: rgba(0, 0, 0,.2);
     font-size: 2rem;
 }
 
-.control-button:hover{
-    opacity: .8;
-    cursor: pointer;
+.exit-button:hover{
+    background-color: rgba(0, 0, 255,.5);
 }
 
 .control-button:active{
@@ -90,4 +95,31 @@
 
 .current-move{
     border-color: #007bff;
+}
+
+.solver-info-panel{
+    position: fixed;
+    color: lightgray;
+    right: 10px;
+    top: 85px;
+    text-align: left;
+}
+
+.total-moves,.current-moves{
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
+    padding: 4px;
+}
+
+.solver-info-data{
+    width: 50px;
+    height: 1.5rem;
+}
+
+.info-content{
+    border-radius: .25rem;
+    text-align: center;
+    background-color: #007bff;
+    margin-left: 4px;
 }

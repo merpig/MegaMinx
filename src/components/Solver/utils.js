@@ -46,11 +46,27 @@ const utils = {
     checkAll : (allPieces,index) => {
         let valid = false;
         for(let i = 0; i<=index;i++){
-            let pieceToSolve = utils.findPiece(allPieces,utils.solveOrder[i]);
-            if(utils.isSolved(pieceToSolve[0])){
-                valid=true;
-            }
-            else return false;
+            let pieceToSolve = utils.findPiece(allPieces,utils.solveOrder[i])[0];
+
+            let pieceKeys = Object.keys(pieceToSolve);
+            let pieceValues = Object.values(pieceToSolve);
+            let solvedPairs = pieceKeys.filter((sticker,i)=>sticker===pieceValues[i]);
+            valid = solvedPairs.length===pieceKeys.length&&solvedPairs.length>0;
+            if(!valid) break;
+        }
+        return valid;
+    },
+
+    checkFull : (allPieces) => {
+        let valid = true;
+        for(let i = 0; i<utils.solveOrderFull.length;i++){
+            let pieceToSolve = utils.findPiece(allPieces,utils.solveOrderFull[i])[0];
+
+            let pieceKeys = Object.keys(pieceToSolve);
+            let pieceValues = Object.values(pieceToSolve);
+            let solvedPairs = pieceKeys.filter((sticker,i)=>sticker===pieceValues[i]);
+            valid = solvedPairs.length===pieceKeys.length&&solvedPairs.length>0;
+            if(!valid) break;
         }
         return valid;
     },
@@ -108,7 +124,67 @@ const utils = {
         ["lightgreen","lightbrown"],
         ["lightbrown","white"]
     ],
+    solveOrderFull: [
+        ["green","blue"],
+        ["red","blue"],
+        ["yellow","blue"],
+        ["pink","blue"],
+        ["lightpurple","blue"],
 
+        ["lightpurple","green","blue"],
+        ["green","red","blue"],
+        ["red","yellow","blue"],
+        ["yellow","pink","blue"],
+        ["pink","lightpurple","blue"],
+
+        ["lightpurple","green"],
+        ["green","red"],
+        ["red","yellow"],
+        ["yellow","pink"],
+        ["pink","lightpurple"],
+
+        ["green","white"],
+        ["green","purple"],
+        ["red","purple"],
+        ["red","orange"],
+        ["yellow","orange"],
+        ["yellow","lightgreen"],
+        ["pink","lightgreen"],
+        ["pink","lightbrown"],
+        ["lightpurple","lightbrown"],
+        ["lightpurple","white"],
+
+        ["white","green","lightpurple"],
+        ["purple","red","green"],
+        ["orange","yellow","red"],
+        ["lightgreen","pink","yellow"],
+        ["lightbrown","lightpurple","pink"],
+
+        ["white","purple","green"],
+        ["purple","orange","red"],
+        ["orange","lightgreen","yellow"],
+        ["lightgreen","lightbrown","pink"],
+        ["lightbrown","white","lightpurple"],
+
+
+        ["white","purple"],
+        ["purple","orange"],
+        ["orange","lightgreen"],
+        ["lightgreen","lightbrown"],
+        ["lightbrown","white"],
+
+        ["lightblue","white"],
+        ["lightblue","purple"],
+        ["lightblue","orange"],
+        ["lightblue","lightgreen"],
+        ["lightblue","lightbrown"],
+
+        ["lightblue","lightbrown","white"],
+        ["lightblue","lightgreen","lightbrown"],
+        ["lightblue","orange","lightgreen"],
+        ["lightblue","purple","orange"],
+        ["lightblue","white","purple"]
+    ],
     colorNames: [
         "blue",     // 1
         "pink",     // 2 pink

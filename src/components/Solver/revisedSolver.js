@@ -19,6 +19,7 @@ import solveCorners from "./solveCorners";
  *  called. This function returns a set of moves solving the cube.
  */
 const revisedSolver = (deca) =>{
+    let validSolve = false;
 
     const lastFiveEdges = [
         ["lightblue","white"],
@@ -46,7 +47,10 @@ const revisedSolver = (deca) =>{
         let pKeys = Object.keys(piece[0]).join("");
         let pValues = Object.values(piece[0]).join("");
 
-        // First, check if the piece is already solved
+        // If the piece isn't a valid piece
+        if(Object.keys(piece[0]).length===0) break;
+
+        // Then, check if the piece is already solved
         if(utils.checkAll(allPieces,solveIndex)){
             solveIndex++;
         }
@@ -63,23 +67,22 @@ const revisedSolver = (deca) =>{
     }
 
     // In the case that a piece wasn't able to be solved
-    if(utils.solveOrder.length>solveIndex) return ["error"].concat(moves);
+    if(utils.solveOrder.length>solveIndex) {
+        //return ['error'].concat(moves);
+    }
 
     // Solve top half here
     else {
         let allPieces = pieces(deca);
-        let edges = [];
+        const edges = [];
         let corners = [];
 
-        for(let i = 0; i < lastFiveEdges.length; i++){
-            let pieceToSolve = utils.findPiece(allPieces,lastFiveEdges[i])[0];
-            edges[i]=pieceToSolve;
+        for(const edge of lastFiveEdges){
+            edges.push(utils.findPiece(allPieces,edge)[0]);
         }
-
+        
         // Solves the lightblue star
         let starMoves = star(edges);
-
-        if(starMoves[0]==="error") return ["error"].concat(moves);
 
         utils.updateDeca(starMoves,deca);
         allPieces = pieces(deca);
@@ -106,13 +109,11 @@ const revisedSolver = (deca) =>{
         }
 
         for(let i = 0; i < lastFiveEdges.length; i++){
-            let pieceToSolve = utils.findPiece(allPieces,lastFiveEdges[i])[0];
-            edges[i]=pieceToSolve;
+            edges[i]=utils.findPiece(allPieces,lastFiveEdges[i])[0];;
         }
 
         // Aligns the lightblue star
         let solveStarMoves = solveStar(edges);
-        if(solveStarMoves[0]==="error") return ["error"].concat(moves);
 
         utils.updateDeca(solveStarMoves,deca);
         allPieces = pieces(deca);
@@ -123,40 +124,39 @@ const revisedSolver = (deca) =>{
             corners[i] = utils.findPiece(allPieces,lastFiveCorners[i])[0];
         }
 
-        while(alignCorners(corners).length){
+        let cap = 100;
+        let counter = 0;
 
+        while(alignCorners(corners).length && counter<cap){
+            counter++;
             for(let i = 0; i < lastFiveCorners.length; i++){
                 corners[i] = utils.findPiece(allPieces,lastFiveCorners[i])[0];
             }
     
             let alignCornerMoves = alignCorners(corners);
-            if(alignCornerMoves[0]==="error") return ["error"].concat(moves);
     
             utils.updateDeca(alignCornerMoves,deca);
             allPieces = pieces(deca);
             moves.push(...alignCornerMoves);
         }
 
-
-        while(solveCorners(corners).length){
-
+        counter = 0;
+        while(solveCorners(corners).length && counter<cap){
+            counter++;
             for(let i = 0; i < lastFiveCorners.length; i++){
                 corners[i] = utils.findPiece(allPieces,lastFiveCorners[i])[0];
             }
     
             let solveCornersMoves = solveCorners(corners);
-            if(solveCornersMoves[0]==="error") return ["error"].concat(moves);
-
-            console.log(solveCornersMoves)
-            console.log("---------------------------")
     
             utils.updateDeca(solveCornersMoves,deca);
             allPieces = pieces(deca);
             moves.push(...solveCornersMoves);
         }
 
-
+        validSolve = utils.checkFull(allPieces);
     }
+
     
     // Undo all changes to the deca Object and return the moves
     moves.reverse();
@@ -164,7 +164,7 @@ const revisedSolver = (deca) =>{
     utils.updateDeca(inverseMoves,deca);
     moves.reverse();
     
-    return moves;
+    return validSolve?moves:["error"];
 }
 
 export default revisedSolver;

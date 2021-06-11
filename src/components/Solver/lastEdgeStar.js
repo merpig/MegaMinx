@@ -35,8 +35,14 @@ const generateLastEdges = edges => {
     let blueTopCount = 0;
     let edgeWithTwoAdj = null;
     let edgeWithNoAdj = null;
+    
+    for(const edge of edges){
+        if(!Object.keys(edge).length) {
+            return [];
+        }
+    }
 
-    edges.forEach(edge=>{
+    for(const edge of edges){
         if(edge.lightblue==="lightblue") {
             if(rightEdge(edge,edges) && leftEdge(edge,edges)){
                 edgeWithTwoAdj=edge;
@@ -46,7 +52,8 @@ const generateLastEdges = edges => {
             }
             blueTopCount++;
         }
-    });
+    };
+
 
     if(blueTopCount===5){
         return [];
