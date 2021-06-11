@@ -222,7 +222,7 @@ const MegaMinx = ({reset}) => {
     }
 
     function onMouseMove(e){
-        if(currentFunc === "colorpicker") return;
+        if(currentFunc === "colorpicker" || currentFunc === "solver") return;
         if(e.pointerType==="touch") controls.enabled = true;
         // If no piece was clicked end function
         if(!updateMouse) {
