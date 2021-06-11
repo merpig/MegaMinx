@@ -77,7 +77,7 @@
     padding: 0;
     margin: 4px;
     border: 2px solid rgba(100,100,100,1);
-    background-color: rgba(100,100,100,.1);
+    background-color: rgba(0,0,0,.8);
     border-radius: .25rem;
     pointer-events: auto;
 }
@@ -85,6 +85,7 @@
 .moves:hover{
     color: #007bff;
     cursor: pointer;
+    background-color: rgba(0,0,0,.3);
 }
 
 .moves:active{
@@ -95,6 +96,7 @@
 
 .current-move{
     border-color: #007bff;
+    background-color: rgba(0,0,0,0);
 }
 
 .solver-info-panel{
