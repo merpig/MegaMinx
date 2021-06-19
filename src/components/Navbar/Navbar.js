@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./Navbar.css";
 import 'react-dropdown/style.css'
-import Popup from "reactjs-popup";
 import Modal from "../Modal/Modal"
 
 const Navbar = () => {

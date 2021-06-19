@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {CameraControls, dToR, rotate_point} from "./utils.js";
+import {CameraControls, dToR} from "./utils.js";
 import Corner from "./CornerDimensions";
 import Edge from "./EdgeDimensions";
 import swapColors from "./swapColors";
@@ -8,8 +8,10 @@ import colorMatchUps from "./colorMatchUps";
 import facePos from "./facePositions";
 import calculateTurn from "./calculateTurn";
 import "./MegaMinx.css"
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Menu from "../Menu/Menu";
+import rightArrow from "./arrow.png";
+import leftArrow from "./leftArrow.png";
 
 /*
 
@@ -22,14 +24,14 @@ TODO:
     1. Solver
     2. Patterns
     3. Mess with some offsets to make megaminx seemless
+    4. Move hints
+    5. Notation
 */
 
 const MegaMinx = ({reset}) => {
 
     // Added csc to Math library
     Math.csc = function(x) { return 1 / Math.sin(x); }
-
-    
 
     // UI and megaminx controller variables
     let faceToRotate = "face0"; // Controls which face will rotate
@@ -42,12 +44,12 @@ const MegaMinx = ({reset}) => {
     let counter = 0; // Theta counter for piece rotation (counts to 72)
     let updateMouse = false; // Signals mouse can be updated in mousemove
     let currentFunc = "none"; // Current state of the menu
-    let currentColor = "blue"; // Color used by colorpicker (default blue)
     let undoRedo = false;
     let moveSetter;
     let moveType;
     let moveCurrent;
     let modeSetter;
+    let manualTurn = "none";
 
     // Used for touch/mouse rotations
     let startPoint = null;
@@ -62,6 +64,10 @@ const MegaMinx = ({reset}) => {
     let raycaster = new THREE.Raycaster();
     let mouse = new THREE.Vector2();
     let controls = CameraControls(camera, renderer,scene);
+
+    // Set/Get manualTurn
+    let getTurn = () => manualTurn;
+    let setTurn = () => manualTurn="none";
 
     // Setter for moveQueue
     let setMoveQueue = (moves,force,setCurrentMove,currentMove,type,mode) => {
@@ -116,7 +122,7 @@ const MegaMinx = ({reset}) => {
         return move.split('').includes("'")?move.replace("'",""):move+"'"
     }
 
-    let getMoveLogIndex = () => moveLogIndex;
+    //let getMoveLogIndex = () => moveLogIndex;
     let setMoveLogIndex = n => {
         
         console.log(moveLogIndex)
@@ -135,17 +141,18 @@ const MegaMinx = ({reset}) => {
 
     }
 
-    // getter and setter for current color
-    let getCurrentColor = () => currentColor;
-    let setCurrentColor = color => currentColor=color
-
     // getter and setter for currentFunc
     let currentFunction = () => currentFunc;
     let setCurrentFunction = func => currentFunc = func;
 
+    let getCpVars = () => {return {camera,mouse,raycaster,scene};}
+    
     // Holds references to all the rendered pieces
-    let decaObject = {
-    }
+    let decaObject = {};
+    let rightHints = {};
+    let leftHints = {};
+
+    let getDeca = () => decaObject;
     
     // Set background color and size
     renderer.setClearColor(new THREE.Color("black"),0);
@@ -156,9 +163,8 @@ const MegaMinx = ({reset}) => {
     camera.position.y = 0;
     camera.position.x = 0;
 
-    //camera.translateZ(-2.9275/2);
     renderer.render( scene, camera );
-
+ 
     function onMouseDown(e) {
         // update mouse position
         mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -179,10 +185,6 @@ const MegaMinx = ({reset}) => {
             e=>e.object.name==="corner"||e.object.name==="edge"
         );
 
-        let filteredCenters = intersects.filter(e=>
-            e.object.name==="center"
-        );
-
         // if a piece is intersected disable camera rotation
         if(intersects[0]) {
             controls.enabled = false;
@@ -201,13 +203,8 @@ const MegaMinx = ({reset}) => {
 
             // Testing for piece 8 first
             if((selectedPiece>0&&selectedPiece<11)){
-
                 startPoint = filteredIntersects[0].uv;
                 selectedSide = filteredIntersects[0].object.side;
-                // console.log(`Testing piece ${selectedPiece}`)
-                // console.log("2D vector: "+startPoint)
-                // console.log("Face piece number: "+selectedPiece)
-                // console.log("Side: "+selectedSide);
             }
         }
         // For non interactable pieces
@@ -218,10 +215,8 @@ const MegaMinx = ({reset}) => {
 
         // Change the clicked piece color to the selected color
         if(currentFunc==="colorpicker"&&filteredIntersects[0]){
-            filteredIntersects[0].object.material.color.set(currentColor)
+            //filteredIntersects[0].object.material.color.set(currentColor)
         }
-
-        // console.log("-----------------------------")
     }
 
     function onMouseUp(e) {
@@ -230,6 +225,7 @@ const MegaMinx = ({reset}) => {
     }
 
     function onMouseMove(e){
+        if(currentFunc === "colorpicker") return;
         if(e.pointerType==="touch") controls.enabled = true;
         // If no piece was clicked end function
         if(!updateMouse) {
@@ -260,12 +256,12 @@ const MegaMinx = ({reset}) => {
                 newPoint=null;
                 selectedSide=null;
                 selectedPiece=null;
-                moveQueue.push(turn);
+                if(currentFunc === "solver") manualTurn=turn;
+                else moveQueue.push(turn);
             }
         }
         else if(!filteredIntersects[0]&&intersects[0]){
             if(!startPoint) return;
-            console.log("hit edge");
             let turn = calculateTurn(startPoint,newPoint,selectedSide,selectedPiece,true);
             if(turn) {
                 updateMouse=false;
@@ -273,7 +269,8 @@ const MegaMinx = ({reset}) => {
                 newPoint=null;
                 selectedSide=null;
                 selectedPiece=null;
-                moveQueue.push(turn);
+                if(currentFunc === "solver") manualTurn=turn;
+                else moveQueue.push(turn);
             }
         }
     }
@@ -509,6 +506,43 @@ const MegaMinx = ({reset}) => {
         
     }
 
+    const loader = new THREE.TextureLoader();
+    const right = loader.load(rightArrow);
+    const left = loader.load(leftArrow);
+    // Prevents bluring
+    right.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    left.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+    function hintArrowMesh (rotate,i,piece,direction){
+        const geometry = new THREE.PlaneGeometry( 2, 1 );
+        const material = new THREE.MeshBasicMaterial( {
+            side: THREE.FrontSide,
+            map: direction==="right"?right:left,
+            transparent: true,
+            opacity:.8
+        } );
+        const plane = new THREE.Mesh( geometry, material );
+        
+        // Black background (outline effect)
+        plane.rotateZ(rotate?.z||0)
+        plane.rotateY(rotate?.y||0)
+        
+
+        plane.rotateX(rotate?.x||0)
+
+        plane.rotateZ(dToR(-36+-(72*(piece-11))))
+        plane.rotateX(dToR(-63.2))
+
+        plane.translateZ(3)
+        plane.translateY(-1.3)
+        scene.add( plane );
+        if(!rightHints[`${i+1}`]) rightHints[`${i+1}`] = [];
+        if(!leftHints[`${i+1}'`]) leftHints[`${i+1}'`] = [];
+        direction==="right"?rightHints[`${i+1}`][piece-11] = plane:leftHints[`${i+1}'`][piece-11] = plane
+        plane.visible=false;
+    }
+    //hintArrowMesh();
+
     // array of face colors/hex in the order they're generated
     let faceColors = [
         "blue",     // 1
@@ -566,6 +600,18 @@ const MegaMinx = ({reset}) => {
         squareMesh(n,Edge(n,"sides","side1"),Edge(n,"sides","side1",2),translate,rotate,color,i,13);
         squareMesh(n,Edge(n,"sides","side1"),Edge(n,"sides","side1",2),translate,rotate,color,i,14);
         squareMesh(n,Edge(n,"sides","side1"),Edge(n,"sides","side1",2),translate,rotate,color,i,15);
+
+        hintArrowMesh(rotate,i,11,'right');
+        hintArrowMesh(rotate,i,12,'right');
+        hintArrowMesh(rotate,i,13,'right');
+        hintArrowMesh(rotate,i,14,'right');
+        hintArrowMesh(rotate,i,15,'right');
+
+        hintArrowMesh(rotate,i,11,'left');
+        hintArrowMesh(rotate,i,12,'left');
+        hintArrowMesh(rotate,i,13,'left');
+        hintArrowMesh(rotate,i,14,'left');
+        hintArrowMesh(rotate,i,15,'left');
 
         squareMesh(n,Corner(n,"sides","side1a"),Corner(n,"sides","side1a",1),translate,rotate,color,i,16);
         squareMesh(n,Corner(n,"sides","side1a"),Corner(n,"sides","side1a",1),translate,rotate,color,i,17);
@@ -643,6 +689,13 @@ const MegaMinx = ({reset}) => {
 
         // Controls what happens at the end of each turn
         if(Math.abs(counter) >= 72) {
+            if(currentFunc==="solver"&&!moveType){
+                if(moveCurrent){
+                    moveCurrent.includes("'")?
+                    leftHints[`${moveCurrent}`].forEach(arrow=>arrow.visible=true):
+                    rightHints[`${moveCurrent}`].forEach(arrow=>arrow.visible=true)
+                }
+            }
             if(moveCurrent!==undefined) {
                 if(moveType==="play") {
                     moveCurrent++;
@@ -768,31 +821,25 @@ const MegaMinx = ({reset}) => {
         renderer.render( scene, camera );
     };
 
-    let resetMegaMinx = () => {
-        // Generate object of piece references
-        decaObject={};
-        facePos.forEach((set,i)=>{decaObject[`face${i+1}`]={front : [],sides : []}});
-
-        // Put the MegaMinx on the screen!
-        scene.clear();
-        facePos.forEach((set,i)=>decaFace(1,set.translate,set.rotate,faceColors[i],i));
-    }
-
     animate();
     return (
         <Menu 
             setMoveQueue={setMoveQueue}
-            resetMegaMinx={resetMegaMinx}
+            resetMegaMinx={reset}
             reset={reset}
             setCurrentFunction={setCurrentFunction}
             currentFunction={currentFunction}
-            setColor={setCurrentColor}
-            getColor={getCurrentColor}
             setSpeed={setSpeed}
             speed={getSpeed}
             setMoveLogIndex={setMoveLogIndex}
             decaObject={decaObject}
+            getDeca={getDeca}
             getCounter={getCounter}
+            getCpVars={getCpVars}
+            rightHints={rightHints}
+            leftHints={leftHints}
+            getTurn={getTurn}
+            setTurn={setTurn}
         />
     );
 }
