@@ -145,6 +145,8 @@ const inefficientSolver = (deca) =>{
         return valid
     }
 
+    
+
     // stop when all the counters in moveCounters reaches 23*maxMoveLength
     while (solveIndex<solveOrder.length){
         let allPieces = pieces(deca);
