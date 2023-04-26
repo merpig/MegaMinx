@@ -545,19 +545,19 @@ const MegaMinx = ({reset}) => {
 
     // array of face colors/hex in the order they're generated
     let faceColors = [
-        "blue",     // 1
-        "#ff80ce",     // 2 pink
-        "yellow",   // 3
-        "red",      // 4
-        "green",    // 5
-        "#c585f7",  // 6 light purple
+        "#0000ff",  // 1
+        "#ff80ce",  // 2
+        "#d7ff72",  // 3
+        "#ffff00",  // 4
+        "#ffffff",  // 5
+        "#ff0000",  // 6
 
-        "#4fc3f7",  // 7 light blue
-        "#C39B77",  // 8 light brown
-        "#64dd17",  // 9 light green
-        "orange",   // 10
-        "purple",   // 11
-        "white"     // 12
+        "#00d8ff",  // 7 
+        "#e8d7b2",  // 8 
+        "#8f8983",  // 9 
+        "#ff6b22",  // 10
+        "#8b2381",  // 11
+        "#00ff00"   // 12
     ];
 
     // array of face color names in the order they're generated

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import revisedSolver from "../Solver/revisedSolver"
 import "./ColorPicker.css";
 
@@ -7,39 +7,38 @@ const ColorPicker = ({getCpVars,getDeca,setMenuId,setCurrentFunction,resetMegaMi
     const [selected,setSelected] = useState(0);
     const [status,setStatus] = useState("Solve");
 
-    let faceColors = [
-        "blue",     // 1
-        "pink",     // 2
-        "yellow",   // 3
-        "red",      // 4
-        "green",    // 5
-        "light purple",  // 6 light purple
-
-        "light blue",  // 7 light blue
-        "light brown",  // 8 light brown
-        "light green",  // 9 light green
-        "orange",   // 10
-        "purple",   // 11
-        "white"     // 12
+    const faceColorsKeys = [
+        "face-one",
+        "face-two",
+        "face-three",
+        "face-four",
+        "face-five",
+        "face-six",
+        "face-seven",
+        "face-eight",
+        "face-nine",
+        "face-ten",
+        "face-eleven",
+        "face-twelve"
     ];
 
-    let faceColorsValues = [
-        "blue",     // 1
-        "#ff80ce",     // 2 pink
-        "yellow",   // 3
-        "red",      // 4
-        "green",    // 5
-        "#c585f7",  // 6 light purple
+    const faceColorsValues = useMemo(() => [
+        "#0000ff",  // 1
+        "#ff80ce",  // 2
+        "#d7ff72",  // 3
+        "#ffff00",  // 4
+        "#ffffff",  // 5
+        "#ff0000",  // 6
 
-        "#4fc3f7",  // 7 light blue
-        "#C39B77",  // 8 light brown
-        "#64dd17",  // 9 light green
-        "orange",   // 10
-        "purple",   // 11
-        "white"     // 12
-    ];
+        "#00d8ff",  // 7 
+        "#e8d7b2",  // 8 
+        "#8f8983",  // 9 
+        "#ff6b22",  // 10
+        "#8b2381",  // 11
+        "#00ff00"   // 12
+    ],[]);
 
-    function onMouseDown(e) {
+    const onMouseDown = useCallback((e) => {
         let {mouse,camera,raycaster,scene} = getCpVars();
         mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -59,7 +58,7 @@ const ColorPicker = ({getCpVars,getDeca,setMenuId,setCurrentFunction,resetMegaMi
             let check = revisedSolver(getDeca())[0];
             check==="error"?setStatus("Invalid"):setStatus("Solve")
         }
-    }
+    },[faceColorsValues, getCpVars, getDeca, selected]);
 
     useEffect(()=>{
         window.addEventListener("pointerdown",onMouseDown,false);
@@ -67,7 +66,7 @@ const ColorPicker = ({getCpVars,getDeca,setMenuId,setCurrentFunction,resetMegaMi
         return function cleanup () {
             window.removeEventListener("pointerdown",onMouseDown,false)
         }
-    },[selected]);
+    },[onMouseDown, selected]);
 
     let switchToSolver = currentStatus => {
         if(currentStatus==="Solve"){
@@ -76,17 +75,18 @@ const ColorPicker = ({getCpVars,getDeca,setMenuId,setCurrentFunction,resetMegaMi
         }
     }
 
-
     return (
         <div className="color-menu-container">
             <div className="cp-info-panel">
                 <div className="total-moves">
                     <div>Current Color:</div>
-                    <div className={`cp-info-data ${faceColors[selected]}`}></div>
+
+                    <div className={`cp-info-data ${faceColorsKeys[selected].replace(' ','-')}`}></div>
                 </div>
             </div>
+
             <div className="color-menu">
-                {faceColors.map((color,i)=>
+                {faceColorsKeys.map((color,i)=>
                     <div 
                         className={`color-button ${color.replace(' ','-')}`} 
                         key={color} 
@@ -103,6 +103,7 @@ const ColorPicker = ({getCpVars,getDeca,setMenuId,setCurrentFunction,resetMegaMi
                     </div>
                 )}
             </div>
+
             <div className="color-options">
                 <div className="option-button color-exit" onClick=
                     {()=>{
@@ -117,9 +118,7 @@ const ColorPicker = ({getCpVars,getDeca,setMenuId,setCurrentFunction,resetMegaMi
                     <strong>{status}{status==="Solve"?"r!":""}</strong>
                 </div>
             </div>
-            
         </div>
-        
     )
 
 }

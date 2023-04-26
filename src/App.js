@@ -5,7 +5,7 @@ import MegaMinx from './components/MegaMinx/MegaMinx';
 import Navbar from './components/Navbar/Navbar';
 
 const App = () => {
-  const [reset,setReset] = useState(0);
+  const [,setReset] = useState(0);
   return (
     <div className="App">
       <Navbar/>

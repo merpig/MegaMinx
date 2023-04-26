@@ -23,18 +23,18 @@ const pieces = (decaObject,type) => {
     }
 
     let hexToColorName = {
-        "0000ff":"blue",
-        "ff80ce":"pink",
-        "ffff00":"yellow",
-        "ff0000":"red",
-        "008000":"green",
-        "c585f7":"lightpurple",
-        "4fc3f7":"lightblue",
-        "c39b77":"lightbrown",
-        "64dd17":"lightgreen",
-        "ffa500":"orange",
-        "800080":"purple",
-        "ffffff":"white",
+        "0000ff":"blue", // 1
+        "ff80ce":"pink", // 2
+        "d7ff72":"yellow", // 3
+        "ffff00":"red", // 4
+        "ffffff":"green", // 5
+        "ff0000":"lightpurple", // 6
+        "00d8ff":"lightblue", // 7
+        "e8d7b2":"lightbrown", // 8
+        "8f8983":"lightgreen", // 9
+        "ff6b22":"orange", // 10
+        "8b2381":"purple", // 11
+        "00ff00":"white", // 12
     }
 
     let getColor = (color,piece) => 

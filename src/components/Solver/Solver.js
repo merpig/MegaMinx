@@ -69,25 +69,25 @@ const Solver = ({getTurn,setTurn,rightHints,leftHints,getCounter,setMoveQueue,se
             }
         }
 
-        if(solveMoves.length){
+        if(solveMoves.length && solveMoves[0] !== 'error'){
             for(const key in leftHints){
                 leftHints[`${key}`].forEach(arrow=>arrow.visible=false)
             }
             for(const key in rightHints){
                 rightHints[`${key}`].forEach(arrow=>arrow.visible=false)
             }
-            if(solveMoves[currentMove])
-            
 
-            solveMoves[currentMove].includes("'")?
-                leftHints[`${solveMoves[currentMove]}`].forEach(arrow=>arrow.visible=true):
-                rightHints[`${solveMoves[currentMove]}`].forEach(arrow=>arrow.visible=true)
+            if(solveMoves[currentMove]){
+                solveMoves[currentMove].includes("'")?
+                    leftHints[`${solveMoves[currentMove]}`].forEach(arrow=>arrow.visible=true):
+                    rightHints[`${solveMoves[currentMove]}`].forEach(arrow=>arrow.visible=true)
+            }
         }
 
         setMoves(solveMoves);
         setLoadMessage("Already solved")
 
-    },[]);
+    },[getDeca, leftHints, rightHints]);
 
     useEffect(()=>{
         if(moves.length){
@@ -105,7 +105,7 @@ const Solver = ({getTurn,setTurn,rightHints,leftHints,getCounter,setMoveQueue,se
         if(autoMode!=="") {
             setMoveQueue([],false,setCurrentMove,currentMove,"",setAutoMode);
         }
-    },[currentMove,autoMode]);
+    },[currentMove, autoMode, moves, blocker, leftHints, rightHints, setMoveQueue]);
 
     let jumpToMove = value => {
         setBlocker(false)
