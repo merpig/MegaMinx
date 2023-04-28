@@ -198,22 +198,6 @@ const utils = {
         "purple",   // 11
         "white"     // 12
     ],
-
-    faceColors: [
-        "#0000ff",  // 1
-        "#ff80ce",  // 2
-        "#d7ff72",  // 3
-        "#ffff00",  // 4
-        "#ffffff",  // 5
-        "#ff0000",  // 6
-
-        "#00d8ff",  // 7 
-        "#e8d7b2",  // 8 
-        "#8f8983",  // 9 
-        "#ff6b22",  // 10
-        "#8b2381",  // 11
-        "#00ff00"   // 12
-    ]
 }
 
 export default utils;

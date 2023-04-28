@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import { useContext, useEffect } from "react";
+
 import {CameraControls, dToR} from "./utils.js";
 import Corner from "./CornerDimensions";
 import Edge from "./EdgeDimensions";
@@ -8,10 +10,10 @@ import colorMatchUps from "./colorMatchUps";
 import facePos from "./facePositions";
 import calculateTurn from "./calculateTurn";
 import "./MegaMinx.css"
-import { useEffect } from "react";
 import Menu from "../Menu/Menu";
 import rightArrow from "./arrow.png";
 import leftArrow from "./leftArrow.png";
+import { ColorsContext } from "../../contexts/colors.js";
 
 /*
 
@@ -29,6 +31,7 @@ TODO:
 */
 
 const MegaMinx = ({reset}) => {
+    const { colorsArray } = useContext(ColorsContext);
 
     // Added csc to Math library
     Math.csc = function(x) { return 1 / Math.sin(x); }
@@ -543,23 +546,6 @@ const MegaMinx = ({reset}) => {
     }
     //hintArrowMesh();
 
-    // array of face colors/hex in the order they're generated
-    let faceColors = [
-        "#0000ff",  // 1
-        "#ff80ce",  // 2
-        "#d7ff72",  // 3
-        "#ffff00",  // 4
-        "#ffffff",  // 5
-        "#ff0000",  // 6
-
-        "#00d8ff",  // 7 
-        "#e8d7b2",  // 8 
-        "#8f8983",  // 9 
-        "#ff6b22",  // 10
-        "#8b2381",  // 11
-        "#00ff00"   // 12
-    ];
-
     // array of face color names in the order they're generated
     let colorNames = [
         "blue",     // 1
@@ -630,7 +616,7 @@ const MegaMinx = ({reset}) => {
     facePos.forEach((set,i)=>{decaObject[`face${i+1}`]={front : [],sides : []}});
 
     // Put the MegaMinx on the screen!
-    facePos.forEach((set,i)=>decaFace(1,set.translate,set.rotate,faceColors[i],i));
+    facePos.forEach((set,i)=>decaFace(1,set.translate,set.rotate,colorsArray[i][1],i));
 
     // Rotates a given face of the megaminx
     let rotateFace = (face) => {

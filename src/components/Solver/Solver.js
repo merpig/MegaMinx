@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+
 import "./Solver.css";
 import utils from "./utils";
 import SpeedSlider from "../SpeedSlider/SpeedSlider";
 import revisedSolver from "./revisedSolver"
+import { ColorsContext } from "../../contexts/colors";
 
 const Solver = ({getTurn,setTurn,rightHints,leftHints,getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject,getDeca,speed,setSpeed}) => {
 
@@ -11,6 +13,9 @@ const Solver = ({getTurn,setTurn,rightHints,leftHints,getCounter,setMoveQueue,se
     const [currentMove,setCurrentMove] = useState(0);
     const [autoMode,setAutoMode] = useState("");
     const [blocker,setBlocker] = useState(false);
+    const { colorsArray } = useContext(ColorsContext);
+
+    const colors = colorsArray.map(item => item[1]);
 
     let mouseDown = false;
 
@@ -45,7 +50,7 @@ const Solver = ({getTurn,setTurn,rightHints,leftHints,getCounter,setMoveQueue,se
     })
     
     useEffect(()=>{
-        let solveMoves = revisedSolver(getDeca());
+        let solveMoves = revisedSolver(getDeca(), colors);
         
         setCurrentMove(0);
         for(let i = 0;i<solveMoves.length;i++){
@@ -87,7 +92,7 @@ const Solver = ({getTurn,setTurn,rightHints,leftHints,getCounter,setMoveQueue,se
         setMoves(solveMoves);
         setLoadMessage("Already solved")
 
-    },[getDeca, leftHints, rightHints]);
+    },[colors, getDeca, leftHints, rightHints]);
 
     useEffect(()=>{
         if(moves.length){
@@ -180,7 +185,7 @@ const Solver = ({getTurn,setTurn,rightHints,leftHints,getCounter,setMoveQueue,se
         setCurrentFunction('none');
     }
 
-    let moveToColor = move => utils.faceColors[parseInt(move.replace("'",""))-1]
+    const moveToColor = move => colorsArray[parseInt(move.replace("'",""))-1][1];
 
     return (
         <div className="solver-container">

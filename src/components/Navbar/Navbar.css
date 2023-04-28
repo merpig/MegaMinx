@@ -109,7 +109,7 @@
     margin-left: 8px;
 }
 
-#infoBtn,#fullscreenBtn,.settings > button,.cubes > button{
+#infoBtn,#fullscreenBtn,#colorsSettings,.settings > button,.cubes > button{
     height: 40px;
     border: 2px solid blue;
     border-radius: .25rem;
@@ -118,7 +118,7 @@
     color: lightgray;
 }
 
-#infoBtn:hover,#fullscreenBtn:hover,.settings > button:hover,.cubes > button:hover{
+#infoBtn:hover,#fullscreenBtn:hover,#colorsSettings:hover,.settings > button:hover,.cubes > button:hover{
     background-color: blue;
     border: 2px solid blue;
 }
@@ -136,6 +136,10 @@
 #infoBtn {
     margin-right: 8px;
     width: 80px;
+}
+
+#colorsSettings {
+    margin-right: 8px;
 }
 
 #closeBtn:hover{

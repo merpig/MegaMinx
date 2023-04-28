@@ -1,11 +1,13 @@
 import React, { useState } from "react";
+import 'react-dropdown/style.css';
+
 import "./Navbar.css";
-import 'react-dropdown/style.css'
 import Modal from "../Modal/Modal"
+import ModalColorsSettings from "../ModalColorsSettings";
 
 const Navbar = () => {
-
-  let [modal,toggleModal] = useState(false);
+  const [modal,toggleModal] = useState(false);
+  const [modalSettings,toggleModalSettings] = useState(false);
 
   return (
     <nav className="navbar navbar-dark fixed-top">
@@ -19,8 +21,10 @@ const Navbar = () => {
       </ul>
       <div style={{ float: "right", height: "100%" }} >
         <button id="infoBtn" onClick={()=>toggleModal(true)}>Info</button>
+        <button id="colorsSettings" onClick={()=>toggleModalSettings(true)}>Color settings</button>
         <button id="fullscreenBtn" value="true">Fullscreen</button>
         <Modal modal={modal} toggleModal={toggleModal} />
+        <ModalColorsSettings isOpen={modalSettings} toggleModal={toggleModalSettings} />
       </div>
     </nav>)
 };

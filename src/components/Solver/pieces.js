@@ -1,7 +1,6 @@
 
 
-const pieces = (decaObject,type) => {
-
+const pieces = (decaObject,type,colors) => {
     const pieces = {
         corners : [],
         edges : []
@@ -22,19 +21,19 @@ const pieces = (decaObject,type) => {
         white: "face12",
     }
 
-    let hexToColorName = {
-        "0000ff":"blue", // 1
-        "ff80ce":"pink", // 2
-        "d7ff72":"yellow", // 3
-        "ffff00":"red", // 4
-        "ffffff":"green", // 5
-        "ff0000":"lightpurple", // 6
-        "00d8ff":"lightblue", // 7
-        "e8d7b2":"lightbrown", // 8
-        "8f8983":"lightgreen", // 9
-        "ff6b22":"orange", // 10
-        "8b2381":"purple", // 11
-        "00ff00":"white", // 12
+    const hexToColorName = {
+        [colors[0].replace('#', '')]:"blue", // 1
+        [colors[1].replace('#', '')]:"pink", // 2
+        [colors[2].replace('#', '')]:"yellow", // 3
+        [colors[3].replace('#', '')]:"red", // 4
+        [colors[4].replace('#', '')]:"green", // 5
+        [colors[5].replace('#', '')]:"lightpurple", // 6
+        [colors[6].replace('#', '')]:"lightblue", // 7
+        [colors[7].replace('#', '')]:"lightbrown", // 8
+        [colors[8].replace('#', '')]:"lightgreen", // 9
+        [colors[9].replace('#', '')]:"orange", // 10
+        [colors[10].replace('#', '')]:"purple", // 11
+        [colors[11].replace('#', '')]:"white", // 12
     }
 
     let getColor = (color,piece) => 
