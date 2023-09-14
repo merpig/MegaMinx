@@ -8,27 +8,48 @@ import colorMatchUps from "./colorMatchUps";
 import facePos from "./facePositions";
 import calculateTurn from "./calculateTurn";
 import "./MegaMinx.css"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Menu from "../Menu/Menu";
 import rightArrow from "./arrow.png";
 import leftArrow from "./leftArrow.png";
 
-/*
-
-ISSUES:
-    MOBILE:
-        - All clear at the moment!
-    GENERAL:
-        - All clear nice job!
-TODO:
-    1. Solver
-    2. Patterns
-    3. Mess with some offsets to make megaminx seemless
-    4. Move hints
-    5. Notation
-*/
-
 const MegaMinx = ({reset}) => {
+
+    // Default colors for MegaMinx
+    const [faceColors, setFaceColors] = useState([
+        "#0000ff",     // 1
+        "#ff80ce",     // 2 pink
+        "#ffff00",   // 3
+        "#ff0000",      // 4
+        "#008000",    // 5
+        "#c585f7",  // 6 light purple
+
+        "#4fc3f7",  // 7 light blue
+        "#c39b77",  // 8 light brown
+        "#64dd17",  // 9 light green
+        "#ffa500",   // 10
+        "#800080",   // 11
+        "#ffffff"     // 12
+    ]);
+
+    
+    /* Array of face color names in the order they're generated.
+    * These shouldn't be changed if changing default colors.
+    */
+    const [colorNames,setColorNames] = useState([
+        "blue",
+        "pink",
+        "yellow",
+        "red",
+        "green",
+        "lightpurple",
+        "lightblue",
+        "lightbrown",
+        "lightgreen",
+        "orange",
+        "purple",
+        "white"
+    ]);
 
     // Added csc to Math library
     Math.csc = function(x) { return 1 / Math.sin(x); }
@@ -118,14 +139,11 @@ const MegaMinx = ({reset}) => {
     }
 
     let reverseMove = move => {
-        console.log(move);
         return move.split('').includes("'")?move.replace("'",""):move+"'"
     }
 
     //let getMoveLogIndex = () => moveLogIndex;
     let setMoveLogIndex = n => {
-        
-        console.log(moveLogIndex)
 
         if(n>=0&&moveLogIndex<=moveLog.length-1){
             undoRedo=true;
@@ -544,37 +562,7 @@ const MegaMinx = ({reset}) => {
     //hintArrowMesh();
 
     // array of face colors/hex in the order they're generated
-    let faceColors = [
-        "blue",     // 1
-        "#ff80ce",     // 2 pink
-        "yellow",   // 3
-        "red",      // 4
-        "green",    // 5
-        "#c585f7",  // 6 light purple
-
-        "#4fc3f7",  // 7 light blue
-        "#C39B77",  // 8 light brown
-        "#64dd17",  // 9 light green
-        "orange",   // 10
-        "purple",   // 11
-        "white"     // 12
-    ];
-
-    // array of face color names in the order they're generated
-    let colorNames = [
-        "blue",     // 1
-        "pink",     // 2 pink
-        "yellow",   // 3
-        "red",      // 4
-        "green",    // 5
-        "lightpurple",  // 6 light purple
-        "lightblue",  // 7 light blue
-        "lightbrown",  // 8 light brown
-        "lightgreen",  // 9 light green
-        "orange",   // 10
-        "purple",   // 11
-        "white"     // 12
-    ]
+    
     
     // groups all the meshes for a face together
     function decaFace(n,translate,rotate,color,i){
@@ -840,6 +828,14 @@ const MegaMinx = ({reset}) => {
             leftHints={leftHints}
             getTurn={getTurn}
             setTurn={setTurn}
+            hexToColor={(() => {
+                const temp = {};
+                faceColors.forEach((color,i) => temp[`${faceColors[i].replace('#','').toLowerCase()}`] = colorNames[i]);
+                return temp;
+            })()}
+            faceColors={faceColors}
+            setFaceColors={setFaceColors}
+            colorNames={colorNames}
         />
     );
 }

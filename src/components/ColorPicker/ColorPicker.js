@@ -2,42 +2,10 @@ import { useEffect, useState } from "react";
 import revisedSolver from "../Solver/revisedSolver"
 import "./ColorPicker.css";
 
-const ColorPicker = ({getCpVars,getDeca,setMenuId,setCurrentFunction,resetMegaMinx}) => {
+const ColorPicker = ({getCpVars,getDeca,setMenuId,setCurrentFunction,resetMegaMinx,colorNames,faceColors,hexToColor}) => {
     // array of face colors in the order they're generated
     const [selected,setSelected] = useState(0);
     const [status,setStatus] = useState("Solve");
-
-    let faceColors = [
-        "blue",     // 1
-        "pink",     // 2
-        "yellow",   // 3
-        "red",      // 4
-        "green",    // 5
-        "light purple",  // 6 light purple
-
-        "light blue",  // 7 light blue
-        "light brown",  // 8 light brown
-        "light green",  // 9 light green
-        "orange",   // 10
-        "purple",   // 11
-        "white"     // 12
-    ];
-
-    let faceColorsValues = [
-        "blue",     // 1
-        "#ff80ce",     // 2 pink
-        "yellow",   // 3
-        "red",      // 4
-        "green",    // 5
-        "#c585f7",  // 6 light purple
-
-        "#4fc3f7",  // 7 light blue
-        "#C39B77",  // 8 light brown
-        "#64dd17",  // 9 light green
-        "orange",   // 10
-        "purple",   // 11
-        "white"     // 12
-    ];
 
     function onMouseDown(e) {
         let {mouse,camera,raycaster,scene} = getCpVars();
@@ -55,8 +23,8 @@ const ColorPicker = ({getCpVars,getDeca,setMenuId,setCurrentFunction,resetMegaMi
         );
 
         if(filteredIntersects[0]){
-            filteredIntersects[0].object.material.color.set(faceColorsValues[selected]);
-            let check = revisedSolver(getDeca())[0];
+            filteredIntersects[0].object.material.color.set(faceColors[selected]);
+            let check = revisedSolver(getDeca(),colorNames,hexToColor)[0];
             check==="error"?setStatus("Invalid"):setStatus("Solve")
         }
     }
@@ -82,14 +50,18 @@ const ColorPicker = ({getCpVars,getDeca,setMenuId,setCurrentFunction,resetMegaMi
             <div className="cp-info-panel">
                 <div className="total-moves">
                     <div>Current Color:</div>
-                    <div className={`cp-info-data ${faceColors[selected]}`}></div>
+                    <div 
+                        className={`cp-info-data ${colorNames[selected]}`}
+                        style={{backgroundColor:`${faceColors[selected]}`}}
+                    ></div>
                 </div>
             </div>
             <div className="color-menu">
-                {faceColors.map((color,i)=>
+                {colorNames.map((color,i)=>
                     <div 
                         className={`color-button ${color.replace(' ','-')}`} 
-                        key={color} 
+                        key={color}
+                        style={{backgroundColor:`${faceColors[i]}`}}
                         onClick={
                             ()=>{
                                 setSelected(i);

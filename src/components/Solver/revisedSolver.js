@@ -18,7 +18,7 @@ import solveCorners from "./solveCorners";
  *  deca object at the end of the function to its state before the solver was
  *  called. This function returns a set of moves solving the cube.
  */
-const revisedSolver = (deca) =>{
+const revisedSolver = (deca,colorNames,hexToColor) =>{
     let validSolve = false;
 
     const lastFiveEdges = [
@@ -39,10 +39,10 @@ const revisedSolver = (deca) =>{
 
     let solveIndex = 0;
     let moves = [];
-
+    
     // Loop through all non last layer pieces
     while (solveIndex<utils.solveOrder.length){
-        let allPieces = pieces(deca);
+        let allPieces = pieces(deca,undefined,hexToColor);
         let piece = utils.findPiece(allPieces,utils.solveOrder[solveIndex]);
         let pKeys = Object.keys(piece[0]).join("");
         let pValues = Object.values(piece[0]).join("");
@@ -73,7 +73,7 @@ const revisedSolver = (deca) =>{
 
     // Solve top half here
     else {
-        let allPieces = pieces(deca);
+        let allPieces = pieces(deca,undefined,hexToColor);
         const edges = [];
         let corners = [];
 
@@ -85,12 +85,12 @@ const revisedSolver = (deca) =>{
         let starMoves = star(edges);
 
         utils.updateDeca(starMoves,deca);
-        allPieces = pieces(deca);
+        allPieces = pieces(deca,undefined,hexToColor);
         moves.push(...starMoves);
 
         let pieceToSet = utils.findPiece(allPieces,lastFiveEdges[0])[0];
-        let val = utils.colorNames.indexOf(Object.values(pieceToSet)[1]);
-        let key = utils.colorNames.indexOf(Object.keys(pieceToSet)[1]);
+        let val = colorNames.indexOf(Object.values(pieceToSet)[1]);
+        let key = colorNames.indexOf(Object.keys(pieceToSet)[1]);
         let turnsToSetWLb = val-key;
         let adjustmentMoves = [];
 
@@ -104,7 +104,7 @@ const revisedSolver = (deca) =>{
 
         if(adjustmentMoves.length) {
             utils.updateDeca(adjustmentMoves,deca);
-            allPieces = pieces(deca);
+            allPieces = pieces(deca,undefined,hexToColor);
             moves.push(...adjustmentMoves);
         }
 
@@ -116,7 +116,7 @@ const revisedSolver = (deca) =>{
         let solveStarMoves = solveStar(edges);
 
         utils.updateDeca(solveStarMoves,deca);
-        allPieces = pieces(deca);
+        allPieces = pieces(deca,undefined,hexToColor);
         moves.push(...solveStarMoves);
 
         // Aligns the lightblue corners
@@ -136,7 +136,7 @@ const revisedSolver = (deca) =>{
             let alignCornerMoves = alignCorners(corners);
     
             utils.updateDeca(alignCornerMoves,deca);
-            allPieces = pieces(deca);
+            allPieces = pieces(deca,undefined,hexToColor);
             moves.push(...alignCornerMoves);
         }
 
@@ -150,13 +150,12 @@ const revisedSolver = (deca) =>{
             let solveCornersMoves = solveCorners(corners);
     
             utils.updateDeca(solveCornersMoves,deca);
-            allPieces = pieces(deca);
+            allPieces = pieces(deca,undefined,hexToColor);
             moves.push(...solveCornersMoves);
         }
 
         validSolve = utils.checkFull(allPieces);
     }
-
     
     // Undo all changes to the deca Object and return the moves
     moves.reverse();

@@ -4,10 +4,10 @@ import ColorPicker from "../ColorPicker/ColorPicker";
 import Solver from "../Solver/Solver"
 import { useState } from "react";
 
-const Menu = ({setTurn,getTurn,rightHints,leftHints,getDeca,getCpVars,getCounter,setMoveLogIndex,setMoveQueue,resetMegaMinx,reset,setCurrentFunction,currentFunction,speed,setSpeed,decaObject}) => {
+const Menu = ({setTurn,getTurn,rightHints,leftHints,getDeca,getCpVars,getCounter,setMoveLogIndex,setMoveQueue,resetMegaMinx,reset,setCurrentFunction,currentFunction,speed,setSpeed,decaObject,hexToColor,colorNames,faceColors,setFaceColors}) => {
 
     const [menuId,setMenuId] = useState(0);
-
+    
     let menus = [
         <Main 
             setMoveQueue={setMoveQueue}
@@ -18,6 +18,8 @@ const Menu = ({setTurn,getTurn,rightHints,leftHints,getDeca,getCpVars,getCounter
             speed={speed}
             setSpeed={setSpeed}
             setMoveLogIndex={setMoveLogIndex}
+            faceColors={faceColors}
+            setFaceColors={setFaceColors}
         />,
         <ColorPicker 
             setMenuId={setMenuId}
@@ -25,6 +27,9 @@ const Menu = ({setTurn,getTurn,rightHints,leftHints,getDeca,getCpVars,getCounter
             resetMegaMinx={resetMegaMinx}
             getDeca={getDeca}
             getCpVars={getCpVars}
+            colorNames={colorNames}
+            faceColors={faceColors}
+            hexToColor={hexToColor}
         />,
         <Solver
             setMenuId={setMenuId}
@@ -39,6 +44,9 @@ const Menu = ({setTurn,getTurn,rightHints,leftHints,getDeca,getCpVars,getCounter
             leftHints={leftHints}
             setTurn={setTurn}
             getTurn={getTurn}
+            colorNames={colorNames}
+            faceColors={faceColors}
+            hexToColor={hexToColor}
         />,
         <div></div>
     ]

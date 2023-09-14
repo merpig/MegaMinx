@@ -1,7 +1,6 @@
 
 
-const pieces = (decaObject,type) => {
-
+const pieces = (decaObject,type,hexToColor) => {
     const pieces = {
         corners : [],
         edges : []
@@ -22,23 +21,8 @@ const pieces = (decaObject,type) => {
         white: "face12",
     }
 
-    let hexToColorName = {
-        "0000ff":"blue",
-        "ff80ce":"pink",
-        "ffff00":"yellow",
-        "ff0000":"red",
-        "008000":"green",
-        "c585f7":"lightpurple",
-        "4fc3f7":"lightblue",
-        "c39b77":"lightbrown",
-        "64dd17":"lightgreen",
-        "ffa500":"orange",
-        "800080":"purple",
-        "ffffff":"white",
-    }
-
     let getColor = (color,piece) => 
-        hexToColorName[decaObject[colorFace[color]]
+        hexToColor[decaObject[colorFace[color]]
             .front[piece]
             .material
             .color

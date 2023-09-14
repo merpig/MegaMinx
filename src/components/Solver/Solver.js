@@ -4,7 +4,7 @@ import utils from "./utils";
 import SpeedSlider from "../SpeedSlider/SpeedSlider";
 import revisedSolver from "./revisedSolver"
 
-const Solver = ({getTurn,setTurn,rightHints,leftHints,getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject,getDeca,speed,setSpeed}) => {
+const Solver = ({getTurn,setTurn,rightHints,leftHints,getCounter,setMoveQueue,setMenuId,setCurrentFunction,decaObject,getDeca,speed,setSpeed,hexToColor,colorNames,faceColors}) => {
 
     const [moves,setMoves] = useState([]);
     const [loadMessage,setLoadMessage] = useState("Loading ...");
@@ -45,7 +45,8 @@ const Solver = ({getTurn,setTurn,rightHints,leftHints,getCounter,setMoveQueue,se
     })
     
     useEffect(()=>{
-        let solveMoves = revisedSolver(getDeca());
+
+        let solveMoves = revisedSolver(getDeca(),colorNames,hexToColor);
         
         setCurrentMove(0);
         for(let i = 0;i<solveMoves.length;i++){
@@ -76,7 +77,7 @@ const Solver = ({getTurn,setTurn,rightHints,leftHints,getCounter,setMoveQueue,se
             for(const key in rightHints){
                 rightHints[`${key}`].forEach(arrow=>arrow.visible=false)
             }
-            if(solveMoves[currentMove])
+            if(solveMoves[currentMove] && solveMoves[currentMove]!=="error")
             
 
             solveMoves[currentMove].includes("'")?
@@ -180,7 +181,7 @@ const Solver = ({getTurn,setTurn,rightHints,leftHints,getCounter,setMoveQueue,se
         setCurrentFunction('none');
     }
 
-    let moveToColor = move => utils.faceColors[parseInt(move.replace("'",""))-1]
+    let moveToColor = move => faceColors[parseInt(move.replace("'",""))-1];
 
     return (
         <div className="solver-container">

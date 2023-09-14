@@ -184,36 +184,6 @@ const utils = {
         ["lightblue","orange","lightgreen"],
         ["lightblue","purple","orange"],
         ["lightblue","white","purple"]
-    ],
-    colorNames: [
-        "blue",     // 1
-        "pink",     // 2 pink
-        "yellow",   // 3
-        "red",      // 4
-        "green",    // 5
-        "lightpurple",  // 6 light purple
-        "lightblue",  // 7 light blue
-        "lightbrown",  // 8 light brown
-        "lightgreen",  // 9 light green
-        "orange",   // 10
-        "purple",   // 11
-        "white"     // 12
-    ],
-
-    faceColors: [
-        "#015be3",     // 1
-        "#ff80ce",     // 2 pink
-        "yellow",   // 3
-        "red",      // 4
-        "green",    // 5
-        "#c585f7",  // 6 light purple
-
-        "#4fc3f7",  // 7 light blue
-        "#C39B77",  // 8 light brown
-        "#64dd17",  // 9 light green
-        "orange",   // 10
-        "#BE00FE",   // 11
-        "white"     // 12
     ]
 }
 
