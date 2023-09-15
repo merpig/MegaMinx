@@ -327,10 +327,6 @@ const MegaMinx = ({reset}) => {
         window.addEventListener("pointerup",onMouseUp,false);
         window.addEventListener("pointermove",onMouseMove,false);
 
-        // window.addEventListener("touchstart",onMouseDown,false);
-        // window.addEventListener("touchend",onMouseUp,false);
-        // window.addEventListener("touchmove",onMouseMove,false);
-
         return function cleanup () {
             window.removeEventListener("pointerdown",onMouseDown,false)
             window.removeEventListener("pointerup",onMouseUp,false)

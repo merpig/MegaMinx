@@ -3,6 +3,7 @@ import Main from "../Main/Main";
 import ColorPicker from "../ColorPicker/ColorPicker";
 import Solver from "../Solver/Solver"
 import { useState } from "react";
+import Navbar from '../Navbar/Navbar';
 
 const Menu = ({setTurn,getTurn,rightHints,leftHints,getDeca,getCpVars,getCounter,setMoveLogIndex,setMoveQueue,resetMegaMinx,reset,setCurrentFunction,currentFunction,speed,setSpeed,decaObject,hexToColor,colorNames,faceColors,setFaceColors}) => {
 
@@ -52,11 +53,19 @@ const Menu = ({setTurn,getTurn,rightHints,leftHints,getDeca,getCpVars,getCounter
     ]
 
     return (
-        <div className="menu-box-container">
-            <div className="menu-box">
-                {menus[menuId]}
+        <>
+            <Navbar 
+                menuId={menuId}
+                faceColors={faceColors}
+                setFaceColors={setFaceColors}
+                currentFunction={currentFunction}
+            />
+            <div className="menu-box-container">
+                <div className="menu-box">
+                    {menus[menuId]}
+                </div>
             </div>
-        </div>
+        </>
     );
 
 }
