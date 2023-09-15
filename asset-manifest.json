@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/MegaMinx/static/css/main.154ddb36.css",
-    "main.js": "/MegaMinx/static/js/main.5143f6c1.js",
+    "main.css": "/MegaMinx/static/css/main.79c7fe88.css",
+    "main.js": "/MegaMinx/static/js/main.38632c5a.js",
     "static/js/787.b27c3e12.chunk.js": "/MegaMinx/static/js/787.b27c3e12.chunk.js",
     "service-worker.js": "/MegaMinx/service-worker.js",
     "index.html": "/MegaMinx/index.html",
-    "main.154ddb36.css.map": "/MegaMinx/static/css/main.154ddb36.css.map",
-    "main.5143f6c1.js.map": "/MegaMinx/static/js/main.5143f6c1.js.map",
+    "main.79c7fe88.css.map": "/MegaMinx/static/css/main.79c7fe88.css.map",
+    "main.38632c5a.js.map": "/MegaMinx/static/js/main.38632c5a.js.map",
     "787.b27c3e12.chunk.js.map": "/MegaMinx/static/js/787.b27c3e12.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.154ddb36.css",
-    "static/js/main.5143f6c1.js"
+    "static/css/main.79c7fe88.css",
+    "static/js/main.38632c5a.js"
   ]
 }
