@@ -29,27 +29,6 @@ const Main = ({setMoveLogIndex,setMoveQueue,reset,setMenuId,setCurrentFunction,c
                     setCurrentFunction("colorpicker")
                 }}>Color Picker</MenuButton>
 
-{/* <MenuButton onClick={()=>{
-    if(currentFunction()!=="none") return;
-    
-    setFaceColors([
-        "#0000ff",     // 1
-        "#ff80ce",     // 2 pink
-        "#ffff00",   // 3
-        "#ff0000",      // 4
-        "#008000",    // 5
-        "#c585f7",  // 6 light purple
-
-        "#4fc3f7",  // 7 light blue
-        "#c39b77",  // 8 light brown
-        "#64dd17",  // 9 light green
-        "#ffa500",   // 10
-        "#800080",   // 11
-        "#000000"     // 12
-    ]);
-
-}}>Change white</MenuButton> */}
-
                 <MenuButton onClick={()=>{
                     if(currentFunction()!=="none") return;
                     setMenuId(2);
@@ -74,7 +53,7 @@ const Main = ({setMoveLogIndex,setMoveQueue,reset,setMenuId,setCurrentFunction,c
                     setCurrentFunction("scramble");
                 }}>Scramble</MenuButton>
 
-                <MenuButton onClick={()=>reset(Date.now())}>Reset</MenuButton>
+                <MenuButton onClick={()=>window.location.reload()}>Reset</MenuButton>
 
             </div>
 

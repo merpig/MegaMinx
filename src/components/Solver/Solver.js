@@ -177,6 +177,7 @@ const Solver = ({getTurn,setTurn,rightHints,leftHints,getCounter,setMoveQueue,se
         for(const key in rightHints){
             rightHints[`${key}`].forEach(arrow=>arrow.visible=false)
         }
+        setMoveQueue([],true,undefined,undefined,undefined);
         setMenuId(0);
         setCurrentFunction('none');
     }

@@ -36,7 +36,7 @@ const MegaMinx = ({reset}) => {
     /* Array of face color names in the order they're generated.
     * These shouldn't be changed if changing default colors.
     */
-    const [colorNames,setColorNames] = useState([
+    const [colorNames] = useState([
         "blue",
         "pink",
         "yellow",

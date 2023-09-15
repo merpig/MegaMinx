@@ -31,8 +31,7 @@ const SpeedSlider = ({speed,setSpeed}) => {
     const [current,setCurrent] = useState(speedToValue(speed()))
     return (<div className="slider-div" style = {style}>
         <Slider 
-            defaultValue={current} 
-            value={current}
+            defaultValue={current}
             min={0} max={7} 
             step={1}
             onChange={newSpeed=> {
