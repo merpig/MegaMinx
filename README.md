@@ -24,6 +24,7 @@ All pull requests will be reviewed and replied to. Any code/suggestions that are
 ## Contributors
 
 merpig: [https://github.com/merpig](https://github.com/merpig)
-    - main author
+- main author
+
 AdeilsonESilva: [https://github.com/AdeilsonESilva](https://github.com/AdeilsonESilva)
-    - color settings
+- color settings
