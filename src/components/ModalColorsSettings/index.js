@@ -63,9 +63,8 @@ const ModalColorsSettings = ({isOpen,toggleModal,faceColors,setFaceColors}) => {
         // check hex length, must be 3 or 6
         for(let i = 0; i< newColors.length; i++){
             const colorLength = newColors[i].replace("#","").length;
-            console.log(colorLength!==3 && colorLength!==6)
-            rgbColors[i] = (colorLength!==3 && colorLength!==6)?"":hexToRgb(newColors[i]).join('');
-            if(colorLength!==3 && colorLength!==6) {
+            rgbColors[i] = colorLength!==6?"":hexToRgb(newColors[i]).join('');
+            if(colorLength!==6) {
                 valid = false;
                 tempValidColors[i] = false;
             }
@@ -73,7 +72,6 @@ const ModalColorsSettings = ({isOpen,toggleModal,faceColors,setFaceColors}) => {
                 tempValidColors[i] = true;
             }
         }
-        console.log(valid,tempValidColors)
 
         // check for duplicate hex values
         if(valid){
