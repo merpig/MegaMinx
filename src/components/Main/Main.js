@@ -53,7 +53,7 @@ const Main = ({setMoveLogIndex,setMoveQueue,reset,setMenuId,setCurrentFunction,c
                     setCurrentFunction("scramble");
                 }}>Scramble</MenuButton>
 
-                <MenuButton onClick={()=>window.location.reload()}>Reset</MenuButton>
+                <MenuButton onClick={()=>reset(Date.now())}>Reset</MenuButton>
 
             </div>
 
