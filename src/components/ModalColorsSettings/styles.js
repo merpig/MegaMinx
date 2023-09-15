@@ -63,4 +63,6 @@ export const DivModalBody = styled.div`
 
 export const DivModalTable = styled.table`
   margin: auto;
+  margin-top: 8px;
+  margin-bottom: 8px;
 `;

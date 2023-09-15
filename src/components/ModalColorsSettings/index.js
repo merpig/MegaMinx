@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { DivButtonCloseModal, DivColorFace, DivModaContainer, DivModalBody, ModalContainer,DivModalTable } from "./styles";
+import { DivButtonCloseModal, DivModaContainer, DivModalBody, ModalContainer,DivModalTable } from "./styles";
 import { useState } from "react";
 
 // 
@@ -25,6 +24,7 @@ const faceNames = [
 
 const allowedHex = [
     "a","b","c","d","e","f",
+    "A","B","C","D","E","F",
     "0","1","2","3","4","5","6","7","8","9",
     "Backspace"
 ]
@@ -49,7 +49,7 @@ const ModalColorsSettings = ({isOpen,toggleModal,faceColors,setFaceColors}) => {
 
         const newColors = [
             ...colors.slice(0,i),
-            "#"+color,
+            "#"+color.toLowerCase().replace('#',''),
             ...colors.slice(i+1)
         ]
 
@@ -89,7 +89,6 @@ const ModalColorsSettings = ({isOpen,toggleModal,faceColors,setFaceColors}) => {
     }
 
     const handleKeyDown = event => {
-        console.log(event.key)
         if(!allowedHex.includes(event.key))
             event.preventDefault()
     };
@@ -119,12 +118,14 @@ const ModalColorsSettings = ({isOpen,toggleModal,faceColors,setFaceColors}) => {
                 <DivModalBody>
                     <div>
                         <div>
+                            <div style={{margin:"auto"}}>Color to hex converter: <a target="#" href="https://htmlcolorcodes.com/">https://htmlcolorcodes.com/</a></div>
+                            
                             <DivModalTable>
                                 <thead>
                                     <tr>
                                         <th>Face</th>
                                         <th>Color</th>
-                                        <th>Value</th>
+                                        <th>Hex Value</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -137,7 +138,7 @@ const ModalColorsSettings = ({isOpen,toggleModal,faceColors,setFaceColors}) => {
                                             }}></td>
                                             <td style={{border: `${!validColors[i]?"2px solid red":"0px"}`}}><input 
                                                 type="text" 
-                                                maxLength={6} 
+                                                maxLength={7} 
                                                 defaultValue={colors[i].replace('#','')}
                                                 onKeyDown={handleKeyDown}
                                                 onChange={event => handleChangeColor(event.target.value,i)}
