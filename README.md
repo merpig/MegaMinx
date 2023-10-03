@@ -2,6 +2,8 @@
 
 Online simulate and solver for the megaminx puzzle.
 
+Deployed link: [https://merpig.github.io/MegaMinx](https://merpig.github.io/MegaMinx)
+
 ## Developer Usage
 
 Requirements: ```Node.js, GitBash(windows users)```
