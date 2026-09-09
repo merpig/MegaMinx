@@ -2,7 +2,7 @@
 
 # **Any commercial use of this application is prohibitted without permission of the author.**
 
-# **- Copying or distributing this code without consent is a direct violation of GitHub copyright policy.**
+# **Copying or distributing this code without consent is a direct violation of GitHub copyright policy.**
 
 Online simulate and solver for the megaminx puzzle.
 
