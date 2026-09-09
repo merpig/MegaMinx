@@ -1,5 +1,9 @@
 # MegaMinx
 
+# **Any commercial use of this application is prohibitted without permission of the author.**
+
+# **The application is free for educational, personal and non-profit use.**
+
 Online simulate and solver for the megaminx puzzle.
 
 Deployed link: [https://merpig.github.io/MegaMinx](https://merpig.github.io/MegaMinx)
