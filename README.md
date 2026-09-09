@@ -2,7 +2,7 @@
 
 # **Any commercial use of this application is prohibitted without permission of the author.**
 
-# **The application is free for educational, personal and non-profit use.**
+# **The application is free for educational use.**
 
 Online simulate and solver for the megaminx puzzle.
 
